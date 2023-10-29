@@ -7,6 +7,10 @@ android {
     namespace = "kr.ac.wku.albeapp"
     compileSdk = 34
 
+    dataBinding {
+        enable = true
+    }
+
     defaultConfig {
         applicationId = "kr.ac.wku.albeapp"
         minSdk = 24

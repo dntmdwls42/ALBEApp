@@ -1,90 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFF8C9"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+<layout>
 
-    <TextView
-        android:id="@+id/i_settings"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="개인 설정"
-        android:textSize="24sp" />
+        android:layout_height="match_parent"
+        android:background="#FFF8C9"
+        android:orientation="vertical"
+        android:padding="10dp"
+        tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#5A5151"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="계정 로그아웃" />
-
-    <Button
-        android:id="@+id/backgroundoff"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#ED5A5A"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="백그라운드 어플 끄기" />
-
-    <Switch
-        android:id="@+id/moresetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="중요 설정"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/userdelete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFEB3B"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="계정 탈퇴"
-        android:textColor="#0E0E0E"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/appsettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="센서별 설정" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Spinner
-            android:fontFamily="@font/soyo_maple_bold"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:id="@+id/sensorlist"
-            android:entries="@array/sensor_list">
-
-        </Spinner>
-
-        <Switch
-            android:id="@+id/sensoroff"
+        <TextView
+            android:id="@+id/i_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="비활성화"
+            android:text="개인 설정"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#5A5151"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="계정 로그아웃" />
+
+        <Button
+            android:id="@+id/backgroundoff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#ED5A5A"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="백그라운드 어플 끄기" />
+
+        <Switch
+            android:id="@+id/moresetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="중요 설정"
             android:textStyle="bold" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/userdelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFEB3B"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="계정 탈퇴"
+            android:textColor="#0E0E0E"
+            android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        <TextView
+            android:id="@+id/appsettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="센서별 설정" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/sensorlist"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:entries="@array/sensor_list"
+                android:fontFamily="@font/soyo_maple_bold">
+
+            </Spinner>
+
+            <Switch
+                android:id="@+id/sensoroff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="비활성화"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        </TextView>
+
         <Button
             android:id="@+id/alloff"
             android:layout_width="match_parent"
@@ -93,6 +100,7 @@
             android:backgroundTint="#ED5A5A"
             android:fontFamily="@font/soyo_maple_bold"
             android:text="모든 알림 끄기" />
-    </LinearLayout>
 
-</LinearLayout>
+
+    </LinearLayout>
+</layout>
