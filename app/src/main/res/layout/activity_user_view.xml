@@ -1,285 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff8c9"
+    android:background="#F0F6F6"
     android:orientation="vertical"
+    android:padding="15dp"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#4499ff"
-            android:orientation="horizontal">
+            android:text="AliveBeacon 회원가입"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:textSize="30dp">
 
-            <ImageView
-                android:id="@+id/profilePic"
-                android:layout_width="200px"
-                android:layout_height="200px"
-                android:src="@mipmap/user_pro" />
+        </TextView>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="박진우"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="010-1234-5678" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/statusIcon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@mipmap/statusIcon1" />
-
-                    <TextView
-                        android:id="@+id/status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="활동상태" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <Button
-                android:id="@+id/confirm"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:text="상호작용 버튼" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_centerInParent="true"
-            android:layout_margin="10dp"
-            android:background="#999999" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="#4499ff"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/profilePic1"
-                    android:layout_width="200px"
-                    android:layout_height="200px"
-                    android:src="@mipmap/user_pro" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="우승진"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/phone1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="010-1234-5678" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/statusIcon1"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@mipmap/statusIcon1" />
-
-                        <TextView
-                            android:id="@+id/status1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="활동상태" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/confirm1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:text="상호작용 버튼" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="#4499ff"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/profilePic2"
-                    android:layout_width="200px"
-                    android:layout_height="200px"
-                    android:src="@mipmap/user_pro" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="조영재"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/phone2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="010-1234-5678" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/statusIcon2"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@mipmap/statusIcon1" />
-
-                        <TextView
-                            android:id="@+id/status2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="활동상태" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/confirm2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:text="상호작용 버튼" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="#4499ff"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/profilePic3"
-                    android:layout_width="200px"
-                    android:layout_height="200px"
-                    android:src="@mipmap/user_pro" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="탁혁재"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/phone3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="010-1234-5678" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/statusIcon3"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@mipmap/statusIcon1" />
-
-                        <TextView
-                            android:id="@+id/status3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="활동상태" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/confirm3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:text="상호작용 버튼" />
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/soyo_maple_bold"
+        android:text="아이디 입력">
+
+    </TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#2196F3"
+        android:fontFamily="@font/soyo_maple_bold"
+        android:hint="아이디는 이메일 양식 입니다."
+        android:inputType="textEmailAddress">
+
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/soyo_maple_bold"
+        android:text="비밀번호 입력">
+
+    </TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#2196F3"
+        android:fontFamily="@font/soyo_maple_bold"
+        android:hint="비밀번호는 8자 이상 입니다."
+        android:inputType="textPassword">
+
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/soyo_maple_bold"
+        android:text="추천인의 이름(선택)">
+
+    </TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#2196F3"
+        android:fontFamily="@font/soyo_maple_bold"
+        android:hint="추천인을 입력해주세요(선택)"
+        android:imeOptions="actionSearch"
+        android:inputType="textEmailAddress"
+        android:singleLine="true">
+
+    </EditText>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/soyo_maple_bold"
+        android:text="성별">
+
+    </TextView>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="남성">
+
+        </RadioButton>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="여성">
+
+        </RadioButton>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="공개하지 않음">
+
+        </RadioButton>
+    </RadioGroup>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이용 약관에 동의합니다.">
+
+    </CheckBox>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="개인정보 이용 방안에 동의합니다.">
+
+    </CheckBox>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#E3BBEA"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:layout_weight="1"
+            android:text="회원 가입 완료"
+            android:textColor="@color/black">
+
+        </Button>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#E3BBEA"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="취소"
+            android:textColor="@color/black">
+
+        </Button>
+
+    </LinearLayout>
+
+</LinearLayout>
