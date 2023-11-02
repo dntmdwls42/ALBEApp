@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1088633522705",
+    "project_id": "albe-a5bea",
+    "storage_bucket": "albe-a5bea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088633522705:android:b7b5341dcf0530f0273fb0",
+        "android_client_info": {
+          "package_name": "kr.ac.wku.albeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIFirAb06l2Sum_X7sxB3FWlHjqsjQYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
