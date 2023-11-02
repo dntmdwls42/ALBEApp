@@ -75,7 +75,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/yeongdo"
+        android:fontFamily="@font/soyo_maple_bold"
         android:text="AlBe"
         android:textSize="80sp"
         tools:layout_editor_absoluteX="132dp"
