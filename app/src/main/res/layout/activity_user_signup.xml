@@ -1,183 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F0F6F6"
-    android:orientation="vertical"
-    android:padding="15dp"
-    tools:context=".MainActivity">
+<layout>
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:background="#F0F6F6"
+        android:orientation="vertical"
+        android:padding="15dp"
+        tools:context=".MainActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="AliveBeacon 회원가입"
+                android:textSize="30dp">
+
+            </TextView>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        </TextView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AliveBeacon 회원가입"
             android:fontFamily="@font/soyo_maple_bold"
-            android:textSize="30dp">
+            android:text="사용자 이름 입력">
 
         </TextView>
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2196F3"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:hint="이름을 입력해 주세요.">
+
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="전화번호(ID) 입력">
+
+        </TextView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2196F3"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:hint="아이디는 전화번호 양식 입니다."
+            android:inputType="phone">
+
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="비밀번호 입력">
+
+        </TextView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2196F3"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:hint="비밀번호는 8자 이상 입니다."
+            android:inputType="textPassword">
+
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="프로필 사진 등록(선택)">
+
+        </TextView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2196F3"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:hint="추천인을 입력해주세요(선택)"
+            android:imeOptions="actionSearch"
+            android:inputType="textEmailAddress"
+            android:singleLine="true">
+
+        </EditText>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="성별">
+
+        </TextView>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="남성">
+
+            </RadioButton>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="여성">
+
+            </RadioButton>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="공개하지 않음">
+
+            </RadioButton>
+        </RadioGroup>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이용 약관에 동의합니다.">
+
+        </CheckBox>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="개인정보 이용 방안에 동의합니다.">
+
+        </CheckBox>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#E3BBEA"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="회원 가입 완료"
+                android:textColor="@color/black">
+
+            </Button>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#E3BBEA"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="취소"
+                android:textColor="@color/black">
+
+            </Button>
+
+        </LinearLayout>
 
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </TextView>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="전화번호(ID) 입력">
-
-    </TextView>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#2196F3"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:hint="아이디는 전화번호 양식 입니다."
-        android:inputType="phone">
-
-    </EditText>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="비밀번호 입력">
-
-    </TextView>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#2196F3"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:hint="비밀번호는 8자 이상 입니다."
-        android:inputType="textPassword">
-
-    </EditText>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="추천인의 이름(선택)">
-
-    </TextView>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#2196F3"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:hint="추천인을 입력해주세요(선택)"
-        android:imeOptions="actionSearch"
-        android:inputType="textEmailAddress"
-        android:singleLine="true">
-
-    </EditText>
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/soyo_maple_bold"
-        android:text="성별">
-
-    </TextView>
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="남성">
-
-        </RadioButton>
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="여성">
-
-        </RadioButton>
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="공개하지 않음">
-
-        </RadioButton>
-    </RadioGroup>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="이용 약관에 동의합니다.">
-
-    </CheckBox>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="개인정보 이용 방안에 동의합니다.">
-
-    </CheckBox>
-
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#E3BBEA"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:layout_weight="1"
-            android:text="회원 가입 완료"
-            android:textColor="@color/black">
-
-        </Button>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#E3BBEA"
-            android:layout_marginStart="5dp"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="취소"
-            android:textColor="@color/black">
-
-        </Button>
-
-    </LinearLayout>
-
-</LinearLayout>
+</layout>

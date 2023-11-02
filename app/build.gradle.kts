@@ -54,4 +54,7 @@ dependencies {
     // 파이어베이스 연동
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    // 프로필 사진 저장 관련 파이어베이스 라이브러리
+    implementation("com.google.firebase:firebase-storage:20.3.0")
 }
