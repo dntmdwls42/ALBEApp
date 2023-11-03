@@ -8,5 +8,5 @@
 
     <font android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/Yeongdo"/>
+        android:font="@font/yeongdo"/>
 </font-family>
