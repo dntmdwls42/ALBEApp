@@ -13,7 +13,7 @@
             android:id="@+id/projecttitle"
             android:layout_width="match_parent"
             android:layout_height="202dp"
-            android:fontFamily="@font/Yeongdo"
+            android:fontFamily="@font/yeongdo"
             android:text="AlBe"
             android:textAlignment="center"
             android:textSize="90dp" />
