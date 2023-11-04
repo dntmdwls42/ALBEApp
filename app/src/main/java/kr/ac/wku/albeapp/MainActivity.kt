@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import kr.ac.wku.albeapp.databinding.ActivityMainBinding
 import kr.ac.wku.albeapp.setting.SettingActivity
 
@@ -13,6 +15,10 @@ import kr.ac.wku.albeapp.setting.SettingActivity
 class MainActivity : AppCompatActivity() {
     // "메인 페이지" 데이터 바인딩 세팅 1
     lateinit var binding: ActivityMainBinding
+
+    // 파이어베이스 리얼타임 데이터베이스 테스트 용 변수
+    private val db = Firebase.database
+    private val myRef = db.getReference("안녕 파이어베이스")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +44,15 @@ class MainActivity : AppCompatActivity() {
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1
         )
 
+        binding.textUpload.setOnClickListener {
+            // 데이터 쓰기 버튼 했을때 파이어베이스에 쓰이는지
+            writeValue("테스트 1")
+        }
 
+    }
+
+    // 데이터 쓰기
+    private fun writeValue(data: String){
+        myRef.setValue(data)
     }
 }

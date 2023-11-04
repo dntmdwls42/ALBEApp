@@ -4,7 +4,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".MainActivity">
@@ -15,6 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="이미지 업로드 화면으로 이동">
+
+        </Button>
+
+        <Button
+            android:id="@+id/textUpload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="파이어 베이스에 데이터 쓰기">
 
         </Button>
 
