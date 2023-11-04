@@ -16,15 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
-        <activity
-            android:name=".PhotoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddPhotoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ImageActivity"
-            android:exported="false" />
+
         <activity
             android:name=".userViewActivity"
             android:exported="false" />

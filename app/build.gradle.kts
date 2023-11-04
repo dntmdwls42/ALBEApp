@@ -12,6 +12,10 @@ android {
         enable = true
     }
 
+    viewBinding {
+        enable = true
+    }
+
     defaultConfig {
         applicationId = "kr.ac.wku.albeapp"
         minSdk = 24
@@ -57,10 +61,21 @@ dependencies {
     // 파이어베이스 연동
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.firebaseui:firebase-ui-storage:8.0.1")
 
     // 프로필 사진 저장 관련 파이어베이스 라이브러리
     implementation("com.google.firebase:firebase-storage:20.3.0")
 
     // Glide 이미지 라이브러리 저장
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:compiler:4.13.2")
+
+    // 파이어베이스 사전 설정
+    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // 파이어베이스 사전 설정2
+    implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("androidx.multidex:multidex:2.0.1")
 }
