@@ -126,4 +126,7 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         startActivity(intent)
     }
 
+    // 리사이클러 뷰 빠르게 로딩하면 화면 길어지는 버그 수정하는 내용
+
+
 }
