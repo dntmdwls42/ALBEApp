@@ -11,6 +11,7 @@
         android:padding="10dp"
         tools:context=".MainActivity">
 
+<!--        개인 설정 -->
         <TextView
             android:id="@+id/i_settings"
             android:layout_width="match_parent"
@@ -19,6 +20,7 @@
             android:text="개인 설정"
             android:textSize="24sp" />
 
+<!--        계정 로그아웃 버튼 -->
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
@@ -27,6 +29,12 @@
             android:fontFamily="@font/soyo_maple_bold"
             android:text="계정 로그아웃" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+
+<!--        백그라운드 어플 끄기 버튼 -->
         <Button
             android:id="@+id/backgroundoff"
             android:layout_width="match_parent"
@@ -35,6 +43,11 @@
             android:fontFamily="@font/soyo_maple_bold"
             android:text="백그라운드 어플 끄기" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+<!--        중요 설정 버튼 (회원 탈퇴) -->
         <Switch
             android:id="@+id/moresetting"
             android:layout_width="match_parent"
@@ -52,6 +65,10 @@
             android:text="계정 탈퇴"
             android:textColor="#0E0E0E"
             android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
 
         <TextView
             android:id="@+id/appsettings"

@@ -22,6 +22,12 @@
             android:name=".photos.PhotoActivity"
             android:exported="false" />
         <activity
+            android:name=".LoginPageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".userViewActivity"
+            android:exported="true" />
+        <activity
             android:name=".photos.AddPhotoActivity"
             android:exported="false" />
 

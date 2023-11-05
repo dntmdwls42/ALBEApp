@@ -5,4 +5,8 @@
         android:fontWeight="400"
         android:font="@font/soyo_maple_bold">
     </font>
+
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/yeongdo"/>
 </font-family>
