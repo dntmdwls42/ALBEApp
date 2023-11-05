@@ -3,10 +3,9 @@ package kr.ac.wku.albeapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-// 메인(유저) 화면 액티비티
-class MainActivity : AppCompatActivity() {
+class LoginPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login_page)
     }
 }
