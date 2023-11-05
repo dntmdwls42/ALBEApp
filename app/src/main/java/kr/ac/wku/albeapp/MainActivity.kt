@@ -98,6 +98,14 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             startActivity(myIntent)
         }
 
+        binding.fromlogin.setOnClickListener {
+            // 로그인 화면으로 이동하는 이벤트
+            var myIntent = Intent(this, LoginPageActivity::class.java)
+
+            // 로그인 화면 레이아웃으로 이동
+            startActivity(myIntent)
+        }
+
         
         binding.textUpload.setOnClickListener {
             // 데이터 쓰기 버튼 했을때 파이어베이스에 쓰이는지

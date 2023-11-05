@@ -34,6 +34,15 @@
 
         </Button>
 
+        <Button
+            android:id="@+id/fromlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그인 하러 가기">
+
+        </Button>
+
+
 
 
         <TextView
