@@ -16,10 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
-
+        <activity android:name=".UserSignUp"
+            android:exported="true"/>
         <activity
-            android:name=".userViewActivity"
+            android:name=".photos.PhotoActivity"
             android:exported="false" />
+        <activity
+            android:name=".photos.AddPhotoActivity"
+            android:exported="false" />
+
         <activity
             android:name=".setting.SettingActivity"
             android:exported="true" />

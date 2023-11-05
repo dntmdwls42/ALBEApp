@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -11,10 +11,10 @@
 
 
         <Button
-            android:id="@+id/fromImagePage"
+            android:id="@+id/fromSetting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="이미지 업로드 화면으로 이동">
+            android:text="환경 설정 세팅">
 
         </Button>
 
@@ -25,6 +25,31 @@
             android:text="파이어 베이스에 데이터 쓰기">
 
         </Button>
+
+        <Button
+            android:id="@+id/fromSignup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회원가입 하러 가기">
+
+        </Button>
+
+
+
+        <TextView
+            android:id="@+id/email_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이미지 업로드 테스트">
+
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
         <!--    <androidx.constraintlayout.widget.ConstraintLayout-->

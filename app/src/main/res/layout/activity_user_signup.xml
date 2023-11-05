@@ -96,17 +96,16 @@
 
         </TextView>
 
-        <EditText
+        <Button
+            android:id="@+id/imageUpload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#2196F3"
+            android:backgroundTint="#E3BBEA"
+            android:textColor="@color/black"
             android:fontFamily="@font/soyo_maple_bold"
-            android:hint="추천인을 입력해주세요(선택)"
-            android:imeOptions="actionSearch"
-            android:inputType="textEmailAddress"
-            android:singleLine="true">
+            android:text="이미지 업로드 하기">
 
-        </EditText>
+        </Button>
 
 
         <TextView
@@ -175,6 +174,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/completeSignup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
