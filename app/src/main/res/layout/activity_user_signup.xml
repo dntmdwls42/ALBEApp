@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
             android:fontFamily="@font/soyo_maple_bold"
-            android:hint="아이디는 전화번호 양식 입니다."
+            android:hint="아이디는 전화번호입니다,(-)없이 입력하세요"
             android:inputType="phone">
 
         </EditText>
