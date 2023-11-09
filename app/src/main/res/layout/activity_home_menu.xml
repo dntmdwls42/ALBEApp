@@ -46,43 +46,50 @@
                 android:src="@drawable/ic_launcher_background"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="246dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="10dp"
                     android:text="우승진"
                     android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="10dp"/>
+                    android:textStyle="bold" />
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="3dp"/>
+                    android:layout_height="3dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
-                    android:text="01083307259"/>
+                    android:text="01083307259" />
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="10dp"/>
+                    android:layout_height="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:paddingLeft="15dp">
 
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_launcher_foreground"/>
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/check" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:text="활성 상태" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
