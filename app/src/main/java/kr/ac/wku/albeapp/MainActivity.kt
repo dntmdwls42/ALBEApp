@@ -43,6 +43,9 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         // "메인 페이지" 데이터 바인딩 세팅 2
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        // 전화번호를 가져옴
+        val phoneNumber = intent.getStringExtra("phoneNumber") ?: ""
+
         // 사진 업로드 세팅 2
         auth = FirebaseAuth.getInstance()
 
@@ -84,10 +87,12 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             // 화면 이동 :  intent
             // imageupload 레이아웃이 도착지로 설정함.
 
-            var myIntent = Intent(this, SettingActivity::class.java)
+            val intent = Intent(this, SettingActivity::class.java)
+            intent.putExtra("phoneNumber", phoneNumber) // 전화번호를 Intent에 추가
 
-            // 이미지 업로드 레이아웃으로 이동
-            startActivity(myIntent)
+            // 환경 설정 레이아웃으로 이동
+            startActivity(intent)
+
         }
         
         binding.fromSignup.setOnClickListener { 
@@ -125,8 +130,5 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         intent.putExtra("id", photo.id)
         startActivity(intent)
     }
-
-    // 리사이클러 뷰 빠르게 로딩하면 화면 길어지는 버그 수정하는 내용
-
 
 }

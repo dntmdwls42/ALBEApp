@@ -28,7 +28,6 @@
         <activity
             android:name=".photos.AddPhotoActivity"
             android:exported="false" />
-
         <activity
             android:name=".setting.SettingActivity"
             android:exported="true" />

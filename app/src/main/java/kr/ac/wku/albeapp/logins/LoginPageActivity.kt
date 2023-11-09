@@ -86,6 +86,7 @@ class LoginPageActivity : AppCompatActivity() {
                         Toast.makeText(this@LoginPageActivity, "${userName}님 환영합니다.", Toast.LENGTH_SHORT).show()
                         // 로그인 성공
                         val intent = Intent(this@LoginPageActivity, MainActivity::class.java)
+                        intent.putExtra("phoneNumber", inputPhoneNumber) // 전화번호를 Intent에 추가
                         startActivity(intent)
                     } else {
                         // 로그인 실패
