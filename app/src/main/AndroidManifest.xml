@@ -17,13 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
-        <activity android:name=".UserSignUp"
+        <activity android:name=".logins.UserSignUp"
             android:exported="true"/>
         <activity
             android:name=".photos.PhotoActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginPageActivity"
+            android:name=".logins.LoginPageActivity"
             android:exported="true" />
         <activity
             android:name=".photos.AddPhotoActivity"

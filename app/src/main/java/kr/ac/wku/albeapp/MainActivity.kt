@@ -8,14 +8,14 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kr.ac.wku.albeapp.databinding.ActivityMainBinding
 import kr.ac.wku.albeapp.setting.SettingActivity
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import kr.ac.wku.albeapp.photos.AddPhotoActivity
+import kr.ac.wku.albeapp.logins.LoginPageActivity
+import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
 import kr.ac.wku.albeapp.photos.PhotoActivity
 import kr.ac.wku.albeapp.photos.PhotoAdapter

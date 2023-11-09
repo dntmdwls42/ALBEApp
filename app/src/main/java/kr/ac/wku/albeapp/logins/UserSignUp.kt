@@ -1,4 +1,4 @@
-package kr.ac.wku.albeapp
+package kr.ac.wku.albeapp.logins
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.auth.User
+import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityUserSignupBinding
 import kr.ac.wku.albeapp.photos.AddPhotoActivity
 

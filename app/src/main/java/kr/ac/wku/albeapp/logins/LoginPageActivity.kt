@@ -1,4 +1,4 @@
-package kr.ac.wku.albeapp
+package kr.ac.wku.albeapp.logins
 
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +12,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kr.ac.wku.albeapp.MainActivity
+import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityLoginPageBinding
 
 // 로그인 페이지 액티비티
