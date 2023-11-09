@@ -78,8 +78,12 @@ class LoginPageActivity : AppCompatActivity() {
 
             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // 비밀번호를 가져와서 저장
                     val savedPassword = dataSnapshot.child("userPW").getValue(String::class.java)
+                    // 사용자 이름을 가져와서 저장
+                    val userName = dataSnapshot.child("userName").getValue(String::class.java)
                     if (savedPassword == inputPassword) {
+                        Toast.makeText(this@LoginPageActivity, "${userName}님 환영합니다.", Toast.LENGTH_SHORT).show()
                         // 로그인 성공
                         val intent = Intent(this@LoginPageActivity, MainActivity::class.java)
                         startActivity(intent)
@@ -91,6 +95,9 @@ class LoginPageActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    // 로그인 버튼 누른 후 , EditText 내용 비우는 코드
+                    binding.loginpagePhonenumber.text.clear()
+                    binding.loginpagePassword.text.clear()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
