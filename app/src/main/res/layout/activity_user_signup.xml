@@ -44,6 +44,7 @@
         </TextView>
 
         <EditText
+            android:id="@+id/newName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
@@ -61,11 +62,12 @@
         </TextView>
 
         <EditText
+            android:id="@+id/newPhoneID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
             android:fontFamily="@font/soyo_maple_bold"
-            android:hint="아이디는 전화번호 양식 입니다."
+            android:hint="아이디는 전화번호입니다,(-)없이 입력하세요"
             android:inputType="phone">
 
         </EditText>
@@ -79,6 +81,7 @@
         </TextView>
 
         <EditText
+            android:id="@+id/newPW"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
@@ -122,6 +125,7 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/radioMale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
@@ -130,6 +134,7 @@
             </RadioButton>
 
             <RadioButton
+                android:id="@+id/radioFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
@@ -138,6 +143,7 @@
             </RadioButton>
 
             <RadioButton
+                android:id="@+id/radioUnknown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
@@ -147,6 +153,7 @@
         </RadioGroup>
 
         <CheckBox
+            android:id="@+id/access1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="이용 약관에 동의합니다.">
@@ -154,6 +161,7 @@
         </CheckBox>
 
         <CheckBox
+            android:id="@+id/access2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="개인정보 이용 방안에 동의합니다.">
@@ -186,6 +194,7 @@
             </Button>
 
             <Button
+                android:id="@+id/cancelSignup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"

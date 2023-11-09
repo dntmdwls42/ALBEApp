@@ -8,14 +8,14 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kr.ac.wku.albeapp.databinding.ActivityMainBinding
 import kr.ac.wku.albeapp.setting.SettingActivity
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import kr.ac.wku.albeapp.photos.AddPhotoActivity
+import kr.ac.wku.albeapp.logins.LoginPageActivity
+import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
 import kr.ac.wku.albeapp.photos.PhotoActivity
 import kr.ac.wku.albeapp.photos.PhotoAdapter
@@ -42,6 +42,9 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         super.onCreate(savedInstanceState)
         // "메인 페이지" 데이터 바인딩 세팅 2
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        // 전화번호를 가져옴
+        val phoneNumber = intent.getStringExtra("phoneNumber") ?: ""
 
         // 사진 업로드 세팅 2
         auth = FirebaseAuth.getInstance()
@@ -84,10 +87,12 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             // 화면 이동 :  intent
             // imageupload 레이아웃이 도착지로 설정함.
 
-            var myIntent = Intent(this, SettingActivity::class.java)
+            val intent = Intent(this, SettingActivity::class.java)
+            intent.putExtra("phoneNumber", phoneNumber) // 전화번호를 Intent에 추가
 
-            // 이미지 업로드 레이아웃으로 이동
-            startActivity(myIntent)
+            // 환경 설정 레이아웃으로 이동
+            startActivity(intent)
+
         }
         
         binding.fromSignup.setOnClickListener { 

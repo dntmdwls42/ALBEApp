@@ -1,40 +1,126 @@
 package kr.ac.wku.albeapp.setting
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kr.ac.wku.albeapp.R
+import kr.ac.wku.albeapp.databinding.ActivitySettingBinding
+import kr.ac.wku.albeapp.logins.LoginPageActivity
+import kr.ac.wku.albeapp.logins.UserData
 
 // 설정 화면 액티비티
 class SettingActivity : AppCompatActivity() {
+    // 실시간 데이터베이스에서 인스턴스 가져옴
+    val database = FirebaseDatabase.getInstance()
+
+
+    // 데이터바인딩 설정
+    private lateinit var binding: ActivitySettingBinding
+
+    // 로그인 페이지로 부터 전화번호 정보 받아옴.
+    lateinit var phoneNumber: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.setting)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_setting)
+
+
+        // 전화번호를 가져옴
+        phoneNumber = intent.getStringExtra("phoneNumber") ?: ""
+
+        // 특정 사용자(로그인한 사용자를 말함)을 참조
+        val myRef = database.getReference("users").child(phoneNumber)
 
         val moreSettingSwitch = findViewById<Switch>(R.id.moresetting)
         val userDeleteButton = findViewById<Button>(R.id.userdelete)
         val backgroundrunoff = findViewById<Button>(R.id.backgroundoff)
 
-        //회원 탈퇴 버튼 숨김
-        userDeleteButton.visibility = View.GONE //회원 탈퇴 버튼은 숨겨져 있음(공간차지 x)
+        // 로그아웃 버튼을 눌렀을때 로그아웃을 하는 내용
+        binding.logout.setOnClickListener {
+            // SharedPreferences에서 사용자 세션 정보를 삭제합니다.
+            val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.clear() // 세션 정보 삭제
+            editor.apply()
 
-        moreSettingSwitch.setOnCheckedChangeListener { _, isChecked ->
+            // '로그아웃합니다' 라는 토스트 메시지를 표시합니다.
+            Toast.makeText(this, "로그아웃합니다", Toast.LENGTH_SHORT).show()
+
+            // 로그인 액티비티로 이동합니다.
+            val intent = Intent(this, LoginPageActivity::class.java)
+            startActivity(intent)
+            finish() // SettingActivity를 종료합니다.
+        }
+
+
+        //회원 탈퇴 버튼 숨김
+        binding.userdelete.visibility = View.GONE //회원 탈퇴 버튼은 숨겨져 있음(공간차지 x)
+
+        binding.moresetting.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) { //버튼이 켜지면
-                userDeleteButton.visibility = View.VISIBLE // 탈퇴버튼 표시
+                binding.userdelete.visibility = View.VISIBLE // 탈퇴버튼 표시
             } else { //버튼이 꺼져 있다면
-                userDeleteButton.visibility = View.GONE // 탈퇴버튼 숨김상태
+                binding.userdelete.visibility = View.GONE // 탈퇴버튼 숨김상태
+            }
+        }
+
+        // userID에서 가져온 정보와 관련된 이벤트리스너
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val value = dataSnapshot.getValue(UserData::class.java)
+                Log.d("로그인 테스트", "값은 바로: $value")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("로그인 테스트", "값을 읽는데 실패했습니다.", error.toException())
+            }
+        })
+
+        // 회원 탈퇴를 눌렀을때 실시간 데이터베이스에서 삭제 하는 내용
+        binding.userdelete.setOnClickListener {
+            val inputPhoneNumber = phoneNumber.toString()
+
+            val userRef = database.getReference("users").child(inputPhoneNumber)  // 특정 사용자 참조
+
+            userRef.removeValue().addOnSuccessListener {
+                Toast.makeText(
+                    this@SettingActivity,
+                    "회원 탈퇴가 완료되었습니다, 로그인 페이지로 돌아갑니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                // 로그인 액티비티로 이동하는 인텐트 생성
+                val intent = Intent(this, LoginPageActivity::class.java)
+                // 액티비티 시작
+                startActivity(intent)
+                // SettingActivity 종료
+                finish()
+
+            }.addOnFailureListener {
+                Toast.makeText(
+                    this@SettingActivity,
+                    "다시 시도해주세요.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
         //백그라운드버튼 -> 앱 종료
         backgroundrunoff.setOnClickListener {
-
             Toast.makeText(this, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
-
             finish()
         }
+
+
     }
 }
