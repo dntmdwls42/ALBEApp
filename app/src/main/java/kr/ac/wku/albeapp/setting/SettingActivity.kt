@@ -95,14 +95,21 @@ class SettingActivity : AppCompatActivity() {
             userRef.removeValue().addOnSuccessListener {
                 Toast.makeText(
                     this@SettingActivity,
-                    "회원 탈퇴가 완료되었습니다.",
+                    "회원 탈퇴가 완료되었습니다, 로그인 페이지로 돌아갑니다.",
                     Toast.LENGTH_SHORT
                 ).show()
+
+                // 로그인 액티비티로 이동하는 인텐트 생성
+                val intent = Intent(this, LoginPageActivity::class.java)
+                // 액티비티 시작
+                startActivity(intent)
+                // SettingActivity 종료
+                finish()
 
             }.addOnFailureListener {
                 Toast.makeText(
                     this@SettingActivity,
-                    "회원 탈퇴를 실패했습니다. 다시 시도해주세요.",
+                    "다시 시도해주세요.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
