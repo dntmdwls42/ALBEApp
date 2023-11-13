@@ -22,6 +22,7 @@
             android:id="@+id/text_et"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:fontFamily="@font/soyo_maple_bold"
             android:inputType="textMultiLine">
 
         </EditText>
@@ -29,6 +30,7 @@
         <Button
             android:id="@+id/upload_btn"
             android:layout_width="match_parent"
+            android:fontFamily="@font/soyo_maple_bold"
             android:layout_height="wrap_content"
             android:text="업로드">
 

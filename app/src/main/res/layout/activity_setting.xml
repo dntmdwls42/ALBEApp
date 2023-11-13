@@ -99,7 +99,24 @@
                 android:text="비활성화"
                 android:textStyle="bold" />
 
+
+
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="센서 시간 설정">
+
+        </TextView>
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </SeekBar>
 
 
         <TextView

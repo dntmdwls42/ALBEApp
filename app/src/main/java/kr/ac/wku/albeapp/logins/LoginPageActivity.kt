@@ -106,5 +106,14 @@ class LoginPageActivity : AppCompatActivity() {
                 }
             })
         }
+        
+        // 아이디 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
+        binding.loginpageSearchIdButton.setOnClickListener {
+            // 아이디찾기 화면으로 이동하는 이벤트
+            var myIntent = Intent(this, FindMyId::class.java)
+
+            // 아이디찾기 화면 레이아웃으로 이동
+            startActivity(myIntent)
+        }
     }
 }
