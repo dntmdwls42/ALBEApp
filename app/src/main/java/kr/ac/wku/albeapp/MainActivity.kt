@@ -114,7 +114,16 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         
         binding.textUpload.setOnClickListener {
             // 데이터 쓰기 버튼 했을때 파이어베이스에 쓰이는지
-            writeValue("테스트 1")
+            writeValue("센서값 : 12")
+            writeValue("다르게 한번 써보기")
+        }
+
+        binding.frommain.setOnClickListener {
+            // 메인 화면으로 이동하는 이벤트
+            var myIntent = Intent(this, LoginPageActivity::class.java)
+
+            // 메인 화면 레이아웃으로 이동
+            startActivity(myIntent)
         }
 
     }
