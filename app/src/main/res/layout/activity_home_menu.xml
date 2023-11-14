@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"/>
 
             <Button
+                android:id="@+id/home_friendadd_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="친구추가"
@@ -41,6 +42,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/home_profileimage"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_launcher_background"/>
@@ -51,6 +53,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/home_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
@@ -64,6 +67,7 @@
                     android:layout_height="3dp" />
 
                 <TextView
+                    android:id="@+id/home_userphonenumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
@@ -81,11 +85,13 @@
 
 
                     <ImageView
+                        android:id="@+id/home_userstatus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/check" />
 
                     <TextView
+                        android:id="@+id/home_userstatus_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
@@ -108,6 +114,7 @@
             android:layout_height="13dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/home_friendlist_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
