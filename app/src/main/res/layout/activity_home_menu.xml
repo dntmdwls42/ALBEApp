@@ -22,11 +22,12 @@
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="친구추가"
-                android:layout_gravity="end"/>
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:scaleType="centerInside"
+                android:src="@drawable/friendaddreverse"/>
         </LinearLayout>
 
         <Space
@@ -37,10 +38,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:background="#C3C3C3"
+            android:background="#EAE4E4"
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/home_profileimage"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_launcher_background"/>
@@ -51,12 +53,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/home_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
-                    android:text="우승진"
-                    android:textSize="15dp"
+                    android:text="이름"
+                    android:textSize="20dp"
                     android:textStyle="bold" />
 
                 <Space
@@ -64,14 +67,15 @@
                     android:layout_height="3dp" />
 
                 <TextView
+                    android:id="@+id/home_userphonenumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
-                    android:text="01083307259" />
+                    android:text="01012345678" />
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="10dp" />
+                    android:layout_height="7dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,11 +85,13 @@
 
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:id="@+id/home_userstatus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/check" />
 
                     <TextView
+                        android:id="@+id/home_userstatus_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
@@ -101,10 +107,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="#616161"/>
+            android:background="#BFBFBF"/>
 
         <Space
             android:layout_width="0dp"
             android:layout_height="13dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/home_friendlist_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
     </LinearLayout>
 </layout>
