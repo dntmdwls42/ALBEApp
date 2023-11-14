@@ -15,8 +15,9 @@ import kr.ac.wku.albeapp.photos.AddPhotoActivity
 data class UserData(
     var userName: String? = null,
     var userID: String? = null,
-    var userPW: String? = null
+    var userPW: String? = null,
     // 필요한 정보가 더 있다면 추가하세요.
+    var userState: Int? = null // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
 )
 
 // 회원 가입 페이지 레이아웃의 액티비티
@@ -53,7 +54,7 @@ class UserSignUp : AppCompatActivity() {
             // 이 밑에 하단에 성별 , 이용약관 등 데이터 추가하라. 일단은 3개만
 
             // 파이어베이스 실시간 데이터베이스에 저장
-            var user = UserData(userName, userID, userPW)
+            var user = UserData(userName, userID, userPW, userState = 1) // 유저 상태 기본값 1
             database.child(userID).setValue(user)
 
             var myIntent = Intent(this, LoginPageActivity::class.java)

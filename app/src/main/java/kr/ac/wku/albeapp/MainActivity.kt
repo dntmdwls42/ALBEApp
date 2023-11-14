@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.logins.LoginPageActivity
 import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
@@ -120,7 +121,7 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
 
         binding.frommain.setOnClickListener {
             // 메인 화면으로 이동하는 이벤트
-            var myIntent = Intent(this, LoginPageActivity::class.java)
+            var myIntent = Intent(this, HomeMenu::class.java)
 
             // 메인 화면 레이아웃으로 이동
             startActivity(myIntent)
