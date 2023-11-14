@@ -24,12 +24,10 @@
 
             <ImageButton
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="transparent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:scaleType="centerInside"
-                android:src="@drawable/friendaddreverse"
-                android:layout_gravity=""/>
-
+                android:src="@drawable/friendaddreverse"/>
         </LinearLayout>
 
         <Space
@@ -60,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
-                    android:text="우승진"
+                    android:text="이름"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -73,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
-                    android:text="01083307259" />
+                    android:text="01012345678" />
 
                 <Space
                     android:layout_width="0dp"
