@@ -1,39 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="15dp"
+        android:padding="30dp"
         tools:context=".logins.FindMyId">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
-                android:text="AliveBeacon 아이디찾기"
+                android:text="AlBe  회원 비밀번호찾기"
                 android:textSize="30dp">
-
             </TextView>
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="20dp" />
 
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="비밀번호를 잊으셨나요?"
+                android:layout_gravity="center">
+            </CheckBox>
         </LinearLayout>
 
-        <CheckBox
-            android:layout_width="wrap_content"
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="45dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="아이디를 잊으셨나요?">
+            android:orientation="vertical">
 
-        </CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:textSize="25sp"
+                android:text="전화번호를 입력해주세요">
+            </TextView>
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="15dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint=" 전화번호 입력 (-)없이"
+                android:fontFamily="@font/soyo_maple_bold">
+            </EditText>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="5dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/find_my_password_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="찾기">
+
+                </Button>
+
+                <Button
+                    android:id="@+id/find_cancelfind_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="취소"
+                    ></Button>
+            </LinearLayout>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="90dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:textSize="25sp"
+                android:text="검색 결과">
+            </TextView>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:textSize="25sp"
+                android:text="(데이터)">
+            </TextView>
+
+        </LinearLayout>
     </LinearLayout>
 </layout>
