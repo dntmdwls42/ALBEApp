@@ -24,7 +24,7 @@ class LoginPageActivity : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
 
     // 특정 위치(userID)에서 데이터 참조
-    val myRef = database.getReference("userID")
+    val myRef = database.getReference("users").child("userID")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
@@ -60,7 +60,7 @@ class LoginPageActivity : AppCompatActivity() {
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val value = dataSnapshot.getValue(String::class.java)
-                Log.d("로그인 테스트", "값은 바로: $value")
+                Log.w("로그인 테스트", "값은 바로: $value")
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -76,27 +76,69 @@ class LoginPageActivity : AppCompatActivity() {
             val userRef = database.getReference("users").child(inputPhoneNumber)
 
 
+//            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//                override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                    // 비밀번호를 가져와서 저장
+//                    val savedPassword = dataSnapshot.child("userPW").getValue(String::class.java)
+//                    // 사용자 이름을 가져와서 저장
+//                    val userName = dataSnapshot.child("userName").getValue(String::class.java)
+//                    if (savedPassword == inputPassword) {
+//                        Toast.makeText(this@LoginPageActivity, "${userName}님 환영합니다.", Toast.LENGTH_SHORT).show()
+//                        // 로그인 성공
+//                        val intent = Intent(this@LoginPageActivity, MainActivity::class.java)
+//                        intent.putExtra("phoneNumber", inputPhoneNumber) // 전화번호를 Intent에 추가
+//                        startActivity(intent)
+//                    } else {
+//                        // 로그인 실패
+//                        Toast.makeText(
+//                            this@LoginPageActivity,
+//                            "전화번호나 비밀번호를 확인해보세요",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                    // 로그인 버튼 누른 후 , EditText 내용 비우는 코드
+//                    binding.loginpagePhonenumber.text.clear()
+//                    binding.loginpagePassword.text.clear()
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    Log.w("로그인 버튼후", "값을 읽는데 실패했습니다.", error.toException())
+//                }
+//            })
+
             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // 비밀번호를 가져와서 저장
-                    val savedPassword = dataSnapshot.child("userPW").getValue(String::class.java)
-                    // 사용자 이름을 가져와서 저장
-                    val userName = dataSnapshot.child("userName").getValue(String::class.java)
-                    if (savedPassword == inputPassword) {
-                        Toast.makeText(this@LoginPageActivity, "${userName}님 환영합니다.", Toast.LENGTH_SHORT).show()
-                        // 로그인 성공
-                        val intent = Intent(this@LoginPageActivity, MainActivity::class.java)
-                        intent.putExtra("phoneNumber", inputPhoneNumber) // 전화번호를 Intent에 추가
-                        startActivity(intent)
+                    val userData = dataSnapshot.getValue(UserData::class.java)
+
+                    if (userData != null) {
+                        val savedPassword = userData.userPW
+                        val userName = userData.userName
+
+                        if (savedPassword == inputPassword) {
+                            Toast.makeText(
+                                this@LoginPageActivity,
+                                "${userName}님 환영합니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            val intent = Intent(this@LoginPageActivity, MainActivity::class.java)
+                            intent.putExtra("phoneNumber", inputPhoneNumber)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(
+                                this@LoginPageActivity,
+                                "전화번호나 비밀번호를 확인해보세요",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     } else {
-                        // 로그인 실패
                         Toast.makeText(
                             this@LoginPageActivity,
-                            "전화번호나 비밀번호를 확인해보세요",
+                            "유효하지 않은 전화번호입니다.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    // 로그인 버튼 누른 후 , EditText 내용 비우는 코드
+
                     binding.loginpagePhonenumber.text.clear()
                     binding.loginpagePassword.text.clear()
                 }
