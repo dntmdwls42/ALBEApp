@@ -60,9 +60,11 @@ class UserSignUp : AppCompatActivity() {
             var myIntent = Intent(this, LoginPageActivity::class.java)
             startActivity(myIntent)
         }
+        val cancelSignup: Button = findViewById(R.id.cancelSignup)
 
-
+        cancelSignup.setOnClickListener {
+            // 버튼을 누를 시 이전 페이지로 돌아갑니다.
+            onBackPressed()
+        }
     }
-
-
 }
