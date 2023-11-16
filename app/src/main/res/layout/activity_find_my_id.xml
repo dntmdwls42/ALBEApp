@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
-                android:text="AliveBeacon 아이디찾기"
+                android:text="AliveBeacon 비밀번호찾기"
                 android:textSize="30dp">
 
             </TextView>
@@ -31,9 +31,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="아이디를 잊으셨나요?">
+            android:text="비밀번호를 잊으셨나요?">
 
         </CheckBox>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="아이디를 입력해주세요">
+
+        </TextView>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="아이디입력">
+        </EditText>
+        <Button
+            android:id="@+id/btnfind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="찾기">
+
+        </Button>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="취소"
+            ></Button>
+
+
+
 
     </LinearLayout>
 </layout>
