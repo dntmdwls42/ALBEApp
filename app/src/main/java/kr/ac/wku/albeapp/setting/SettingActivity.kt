@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -116,10 +117,24 @@ class SettingActivity : AppCompatActivity() {
         }
 
         //백그라운드버튼 -> 앱 종료
-        backgroundrunoff.setOnClickListener {
+        binding.backgroundoff.setOnClickListener {
             Toast.makeText(this, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
             finish()
         }
+
+        // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용
+        binding.sensorsetting.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
+                binding.sensorvalue.text = progress.toString() // 값
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
 
 
     }

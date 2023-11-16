@@ -3,6 +3,7 @@ package kr.ac.wku.albeapp.logins
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DatabaseReference
@@ -61,8 +62,12 @@ class UserSignUp : AppCompatActivity() {
             startActivity(myIntent)
         }
 
+        val cancelSignup: Button = findViewById(R.id.cancelSignup)
 
+        cancelSignup.setOnClickListener {
+            // 버튼을 누를 시 이전 페이지로 돌아갑니다.
+            Toast.makeText(this, "회원가입을 취소합니다..", Toast.LENGTH_SHORT).show()
+            onBackPressed()
+        }
     }
-
-
 }
