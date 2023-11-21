@@ -44,8 +44,14 @@ class UserSignUp : AppCompatActivity() {
         // 이미지 업로드 하기 버튼을 눌렀을때 동작할 이벤트
         // 이미지를 업로드 하는 별도의 레이아웃으로 이동함.
         addPhotoBtn.setOnClickListener {
-            var intent = Intent(this, AddPhotoActivity::class.java)
-            startActivity(intent)
+            val userID = binding.newPhoneID.text.toString()  // 사용자의 전화번호를 가져옵니다.
+            if (userID.isEmpty()) {
+                Toast.makeText(this, "전화번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, AddPhotoActivity::class.java)
+                intent.putExtra("phoneNumber", userID)  // 전화번호를 Intent에 추가
+                startActivity(intent)
+            }
         }
 
         binding.completeSignup.setOnClickListener {

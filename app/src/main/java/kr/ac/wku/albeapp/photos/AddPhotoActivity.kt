@@ -31,6 +31,9 @@ class AddPhotoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_photo)
 
+        // 회원가입 액티비티로부터 전화번호 값 넘어옴
+        val userPhoneNumber = intent.getStringExtra("phoneNumber")
+
         storage = FirebaseStorage.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -47,8 +50,8 @@ class AddPhotoActivity : AppCompatActivity() {
             if (selectImage != null) {
                 var fileName =
                     SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
-                storage.getReference().child("image").child(fileName)
-                    .putFile(selectImage!!)//어디에 업로드할지 지정
+                storage.getReference().child("image").child(userPhoneNumber!!)
+                    .putFile(selectImage!!)  // 어디에 업로드할지 지정
                     .addOnSuccessListener { taskSnapshot -> // 업로드 정보를 담는다
                         taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { it ->
                             var imageUrl = it.toString()

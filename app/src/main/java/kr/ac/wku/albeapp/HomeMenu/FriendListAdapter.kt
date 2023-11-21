@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kr.ac.wku.albeapp.R
 
 class FriendListAdapter(private val friendList: List<Friendlist.Friend>) : RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
@@ -26,7 +27,10 @@ class FriendListAdapter(private val friendList: List<Friendlist.Friend>) : Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val friend = friendList[position]
 
-        holder.profileImage.setImageResource(friend.profileImage)
+        Glide.with(holder.itemView)  // Context
+            .load(friend.imageUrl)  // 로드할 이미지 URL
+            .into(holder.profileImage)  // 이미지를 표시할 ImageView
+
         holder.userName.text = friend.userName
         holder.userPhoneNumber.text = friend.userPhoneNumber
         when (friend.userStatus) {
