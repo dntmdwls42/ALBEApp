@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sensor_list">
-        <item>동작 센서</item>
         <item>가속도 센서</item>
+        <item>동작 센서</item>
         <item>위치 센서</item>
     </string-array>
 </resources>

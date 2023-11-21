@@ -116,11 +116,21 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
     override fun onResume() {    //센서 등록 메서드
         super.onResume()
-        acceletorSensor.registerListener(
-            this,
-            acceletorSensor.getDefaultSensor(Sensor.TYPE_GYROSCOPE),    //가속도 혹은 자이로 중에 하나를 선택할텐데, 우선 설계하기 쉬운것부터 해보고
-            SensorManager.SENSOR_DELAY_NORMAL
-        )
+
+        // SharedPreferences에서 센서 사용 설정 값을 불러옵니다.
+        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val isSensorOff = sharedPreferences.getBoolean("sensor_off", false)
+
+        // if - else로 설정 화면에서 센서 비활성화 하면 센서 동작 안함
+        if (!isSensorOff) {
+            acceletorSensor.registerListener(
+                this,
+                acceletorSensor.getDefaultSensor(Sensor.TYPE_GYROSCOPE),    //가속도 혹은 자이로 중에 하나를 선택할텐데, 우선 설계하기 쉬운것부터 해보고
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+        } else { // 이게 비활성화 했을때
+            acceletorSensor.unregisterListener(this)
+        }
 
     }
 

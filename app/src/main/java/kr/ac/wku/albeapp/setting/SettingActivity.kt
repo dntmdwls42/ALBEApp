@@ -25,7 +25,6 @@ class SettingActivity : AppCompatActivity() {
     // 실시간 데이터베이스에서 인스턴스 가져옴
     val database = FirebaseDatabase.getInstance()
 
-
     // 데이터바인딩 설정
     private lateinit var binding: ActivitySettingBinding
 
@@ -122,11 +121,23 @@ class SettingActivity : AppCompatActivity() {
             finish()
         }
 
+        // 센서별 비활성화 라디오 버튼 이벤트
+        binding.sensoroff.setOnCheckedChangeListener { _, isChecked ->
+            // SharedPreferences에 센서 사용 설정 값을 저장합니다.
+            val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("sensor_off", isChecked)
+            editor.apply()
+        }
+
         // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용
         binding.sensorsetting.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
                 binding.sensorvalue.text = progress.toString() // 값
+
+                // Toast 메시지로 SeekBar의 값을 표시
+                Toast.makeText(this@SettingActivity, "현재 센서 값: $progress", Toast.LENGTH_SHORT).show()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
