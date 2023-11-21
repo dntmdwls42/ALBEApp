@@ -50,6 +50,14 @@
 
         </Button>
 
+        <Button
+            android:id="@+id/fromsensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="센서 테스트하러 가기">
+
+        </Button>
+
 
 
 

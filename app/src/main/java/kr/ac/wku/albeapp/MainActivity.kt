@@ -20,6 +20,7 @@ import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
 import kr.ac.wku.albeapp.photos.PhotoActivity
 import kr.ac.wku.albeapp.photos.PhotoAdapter
+import kr.ac.wku.albeapp.sensor.SensorActvitiy
 
 // 초기 로그인 화면 액티비티
 class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
@@ -124,6 +125,14 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             var myIntent = Intent(this, HomeMenu::class.java)
 
             // 메인 화면 레이아웃으로 이동
+            startActivity(myIntent)
+        }
+
+        binding.fromsensor.setOnClickListener {
+            // 센서 화면으로 이동하는 이벤트
+            var myIntent = Intent(this, SensorActvitiy::class.java)
+
+            // 센서 화면 레이아웃으로 이동
             startActivity(myIntent)
         }
 

@@ -5,7 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SENDTO"/>
+    <uses-permission android:name="android.permission.SENDTO" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
+        <activity
+            android:name=".sensor.SensorActvitiy"
+            android:exported="false" />
         <activity
             android:name=".logins.FindMyId"
             android:exported="false" />
@@ -38,7 +41,6 @@
         <activity
             android:name=".photos.AddPhotoActivity"
             android:exported="false" />
-
         <activity
             android:name=".setting.SettingActivity"
             android:exported="true" />
