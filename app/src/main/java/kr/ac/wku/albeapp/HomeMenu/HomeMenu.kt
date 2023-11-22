@@ -18,6 +18,11 @@ class HomeMenu : AppCompatActivity() {
     // 파이어베이스 스토리지 관련 세팅
     private lateinit var storage: FirebaseStorage
 
+    // 상태 표시
+    private val ACTIVE = 1 // 활성 = 센서 작동중
+    private val INACTIVE = 0 // 비활성 = 센서 없음 감지
+    private val TEMP_INACTIVE = 2 // 센서 환경설정에서 비활성화 = 일부러 끔
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_menu)
@@ -57,8 +62,17 @@ class HomeMenu : AppCompatActivity() {
                 // 화면에 사용자 정보를 표시합니다.
                 findViewById<TextView>(R.id.home_username).text = userName
                 findViewById<TextView>(R.id.home_userphonenumber).text = userPhoneNumber
-                findViewById<TextView>(R.id.home_userstatus_text).text =
-                    if (userStatus == 1) "활성 상태" else "비활성 상태"
+                when (userStatus) {
+                    ACTIVE -> {
+                        findViewById<TextView>(R.id.home_userstatus_text).text = "활성 상태"
+                    }
+                    INACTIVE -> {
+                        findViewById<TextView>(R.id.home_userstatus_text).text = "비활성 상태"
+                    }
+                    TEMP_INACTIVE -> {
+                        findViewById<TextView>(R.id.home_userstatus_text).text = "일시적 비활성 상태"
+                    }
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

@@ -23,6 +23,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     //퍼미션 (권한요청)
     val MY_PERMISSION_SENSOR = 100
 
+
     /*센서동작할 속성들*/
     //가속도 센서
     //각 센서가 움직임을 감지받는 축
@@ -54,9 +55,19 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     private var nowHour: Int = 0
     private var nowDay: Int = 0
 
+    private val ACTIVE = 1 // 센서 감지 = 활성 상태
+    private val INACTIVE = 0 // 센서 감지 없음 = 비활성 상태
+    private val TEMP_INACTIVE = 2 // 설정에서 비활성화 = 일시적 비활성 상태
+
+    private var userStatus = ACTIVE
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sensor_actvitiy)
+
+        // SharedPreferences에서 센서 사용 설정 값을 불러옵니다.
+        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val isSensorOff = sharedPreferences.getBoolean("sensor_off", false)
 
         //가속도 센서
         sensorX = findViewById(R.id.sensorX)
@@ -128,8 +139,10 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                 acceletorSensor.getDefaultSensor(Sensor.TYPE_GYROSCOPE),    //가속도 혹은 자이로 중에 하나를 선택할텐데, 우선 설계하기 쉬운것부터 해보고
                 SensorManager.SENSOR_DELAY_NORMAL
             )
+            userStatus = ACTIVE
         } else { // 이게 비활성화 했을때
             acceletorSensor.unregisterListener(this)
+            userStatus = TEMP_INACTIVE
         }
 
     }
@@ -183,7 +196,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     override fun onPause() {
         super.onPause()
         acceletorSensor.unregisterListener(this)
-        sensorState.text = "센서 미동작"
+        userStatus = INACTIVE
     }
 
     //퍼미션 동작
