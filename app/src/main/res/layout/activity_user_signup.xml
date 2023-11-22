@@ -28,12 +28,9 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-        </TextView>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="70dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -152,21 +149,59 @@
             </RadioButton>
         </RadioGroup>
 
-        <CheckBox
-            android:id="@+id/access1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="이용 약관에 동의합니다.">
+            android:orientation="horizontal">
 
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/access1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이용 약관에 동의합니다.">
+            </CheckBox>
 
-        <CheckBox
-            android:id="@+id/access2"
-            android:layout_width="wrap_content"
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/> <!-- 체크박스와 버튼 사이의 빈 공간 -->
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="약관 보기"
+                android:backgroundTint="#E3BBEA"
+                android:textColor="@color/black"
+                android:fontFamily="@font/soyo_maple_bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="개인정보 이용 방안에 동의합니다.">
+            android:orientation="horizontal">
 
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/access2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="개인정보 이용 방안에 동의합니다.">
+            </CheckBox>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="약관 보기"
+                android:backgroundTint="#E3BBEA"
+                android:textColor="@color/black"
+                android:fontFamily="@font/soyo_maple_bold"/>
+
+        </LinearLayout>
 
 
         <TextView
