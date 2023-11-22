@@ -25,6 +25,7 @@ class HomeMenu : AppCompatActivity() {
         val userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
         storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
+        // 의심 구간 1
         val imageRef = storageRef.child("image/$userPhoneNumber")
 
         imageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -78,38 +79,39 @@ class HomeMenu : AppCompatActivity() {
                     val userName = userSnapshot.child("userName").value as? String
                     val userID = userSnapshot.child("userID").value as? String
                     val userStatus = userSnapshot.child("userState").value as? Int
-                    if (phoneNumber != userID) {
-                        // Firebase 스토리지에서 이미지 URL을 가져옵니다.
-                        val imageRef = storage.getReference().child("image/01011111111")
-                        imageRef.downloadUrl.addOnSuccessListener { uri ->
-                            val imageUrl = uri.toString()
 
-                            val friend =
-                                Friendlist.Friend(imageUrl, userName, userID, userStatus)
-                            friendList.add(friend)
+                    // Firebase 스토리지에서 이미지 URL을 가져옵니다.
+                    // 가져오는건 userPhoneNumber가 맞음
+                    val imageRef = storage.getReference().child("image/$userPhoneNumber")
+                    imageRef.downloadUrl.addOnSuccessListener { uri ->
+                        val imageUrl = uri.toString()
 
-                            loadedUsers++
+                        val friend =
+                            Friendlist.Friend(imageUrl, userName, userID, userStatus)
+                        friendList.add(friend)
 
-                            // RecyclerView에 어댑터를 설정합니다.
-                            if (loadedUsers == totalUsers.toInt()) {
-                                val adapter = FriendListAdapter(friendList)
-                                recyclerView.adapter = adapter
-                            }
+                        loadedUsers++
 
-                        }.addOnFailureListener {
-                            // 이미지 URL을 가져오는 데 실패했습니다. 대체 이미지를 사용합니다.
-                            val imageUrl =
-                                "https://via.placeholder.com/150"  // 대체 이미지 URL을 여기에 입력하세요.
-                            val friend = Friendlist.Friend(imageUrl, userName, userID, userStatus)
-                            friendList.add(friend)
+                        // RecyclerView에 어댑터를 설정합니다.
+                        if (loadedUsers == totalUsers.toInt()) {
+                            val adapter = FriendListAdapter(friendList)
+                            recyclerView.adapter = adapter
+                        }
 
-                            loadedUsers++
-                            if (loadedUsers == totalUsers.toInt()) {
-                                val adapter = FriendListAdapter(friendList)
-                                recyclerView.adapter = adapter
-                            }
+                    }.addOnFailureListener {
+                        // 이미지 URL을 가져오는 데 실패했습니다. 대체 이미지를 사용합니다.
+                        val imageUrl =
+                            "https://via.placeholder.com/150"  // 대체 이미지 URL을 여기에 입력하세요.
+                        val friend = Friendlist.Friend(imageUrl, userName, userID, userStatus)
+                        friendList.add(friend)
+
+                        loadedUsers++
+                        if (loadedUsers == totalUsers.toInt()) {
+                            val adapter = FriendListAdapter(friendList)
+                            recyclerView.adapter = adapter
                         }
                     }
+
                 }
             }
 
