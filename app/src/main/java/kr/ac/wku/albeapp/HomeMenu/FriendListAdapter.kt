@@ -26,15 +26,16 @@ class FriendListAdapter(private val friendList: List<Friendlist.Friend>) : Recyc
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val storage: FirebaseStorage = FirebaseStorage.getInstance()
         val friend = friendList[position]
+        val phoneNumber = friend.userID
         println("바인딩 데이타: $friend")
 
-        val imageUrl = friend.imageUrl ?: "https://via.placeholder.com/150"  // 기본 이미지 URL
-        val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
+        val imageRef = storage.getReference().child("image/$phoneNumber")
 
-        storageReference.downloadUrl.addOnSuccessListener { uri ->
+        imageRef.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(holder.itemView.context)
-                .load(friend.imageUrl) // 친구의 이미지 URL을 사용합니다.
+                .load(uri) // 친구의 이미지 URL을 사용합니다.
                 .into(holder.profileImage)
         }.addOnFailureListener {
             // 이미지 로드에 실패했을 때 기본 이미지를 설정합니다.

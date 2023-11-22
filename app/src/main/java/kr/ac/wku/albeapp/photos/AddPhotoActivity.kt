@@ -4,9 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -19,6 +22,8 @@ class AddPhotoActivity : AppCompatActivity() {
     lateinit var imageIv: ImageView
     lateinit var textEt: EditText
     lateinit var uploadBtn: Button
+
+    lateinit var progressBar: ProgressBar    // ProgressBar 선언
 
     val IMAGE_PICK = 1111
 
@@ -48,6 +53,9 @@ class AddPhotoActivity : AppCompatActivity() {
         }
         uploadBtn.setOnClickListener {
             if (selectImage != null) {
+                // 이미지 업로드 할때 프로그레스 바(진행도) 보이게 하기
+                progressBar.visibility = View.VISIBLE
+
                 var fileName =
                     SimpleDateFormat("yyyyMMddHHmmss").format(Date()) // 파일명이 겹치면 안되기 떄문에 시년월일분초 지정
                 storage.getReference().child("image").child(userPhoneNumber!!)
@@ -59,6 +67,9 @@ class AddPhotoActivity : AppCompatActivity() {
                             firestore.collection("photo")
                                 .document().set(photo)
                                 .addOnSuccessListener {
+                                    // 업로드 '완료' 하면 프로그레스 바를 다시 숨김
+                                    progressBar.visibility = View.GONE
+                                    Toast.makeText(this@AddPhotoActivity, "프로필 사진이 업로드 되었습니다.", Toast.LENGTH_SHORT).show()
                                     finish()
                                 }
                         }

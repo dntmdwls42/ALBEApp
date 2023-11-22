@@ -81,7 +81,6 @@ class HomeMenu : AppCompatActivity() {
                     val userStatus = userSnapshot.child("userState").value as? Int
 
                     // Firebase 스토리지에서 이미지 URL을 가져옵니다.
-                    // 가져오는건 userPhoneNumber가 맞음
                     val imageRef = storage.getReference().child("image/$userPhoneNumber")
                     imageRef.downloadUrl.addOnSuccessListener { uri ->
                         val imageUrl = uri.toString()
