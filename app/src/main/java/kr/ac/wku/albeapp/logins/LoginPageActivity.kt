@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.MainActivity
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityLoginPageBinding
@@ -75,37 +76,6 @@ class LoginPageActivity : AppCompatActivity() {
 
             val userRef = database.getReference("users").child(inputPhoneNumber)
 
-
-//            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-//                override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                    // 비밀번호를 가져와서 저장
-//                    val savedPassword = dataSnapshot.child("userPW").getValue(String::class.java)
-//                    // 사용자 이름을 가져와서 저장
-//                    val userName = dataSnapshot.child("userName").getValue(String::class.java)
-//                    if (savedPassword == inputPassword) {
-//                        Toast.makeText(this@LoginPageActivity, "${userName}님 환영합니다.", Toast.LENGTH_SHORT).show()
-//                        // 로그인 성공
-//                        val intent = Intent(this@LoginPageActivity, MainActivity::class.java)
-//                        intent.putExtra("phoneNumber", inputPhoneNumber) // 전화번호를 Intent에 추가
-//                        startActivity(intent)
-//                    } else {
-//                        // 로그인 실패
-//                        Toast.makeText(
-//                            this@LoginPageActivity,
-//                            "전화번호나 비밀번호를 확인해보세요",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                    // 로그인 버튼 누른 후 , EditText 내용 비우는 코드
-//                    binding.loginpagePhonenumber.text.clear()
-//                    binding.loginpagePassword.text.clear()
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//                    Log.w("로그인 버튼후", "값을 읽는데 실패했습니다.", error.toException())
-//                }
-//            })
-
             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val userData = dataSnapshot.getValue(UserData::class.java)
@@ -121,8 +91,9 @@ class LoginPageActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            val intent = Intent(this@LoginPageActivity, MainActivity::class.java)
-                            intent.putExtra("phoneNumber", inputPhoneNumber)
+                            // 이제 홈메뉴(진짜 메인)에 전화번호 정보를 intent로 넘기게 함
+                            val intent = Intent(this@LoginPageActivity, HomeMenu::class.java)
+                            intent.putExtra("phoneNumber", inputPhoneNumber)  // 전화번호를 Intent에 추가
                             startActivity(intent)
                         } else {
                             Toast.makeText(
@@ -148,7 +119,7 @@ class LoginPageActivity : AppCompatActivity() {
                 }
             })
         }
-        
+
         // 아이디 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
         binding.loginpageSearchIdButton.setOnClickListener {
             // 아이디찾기 화면으로 이동하는 이벤트

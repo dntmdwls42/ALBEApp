@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
 
 class FriendListAdapter(private val friendList: List<Friendlist.Friend>) : RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
@@ -24,12 +26,26 @@ class FriendListAdapter(private val friendList: List<Friendlist.Friend>) : Recyc
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val storage: FirebaseStorage = FirebaseStorage.getInstance()
         val friend = friendList[position]
+        val phoneNumber = friend.userID
+        println("바인딩 데이타: $friend")
 
-        holder.profileImage.setImageResource(friend.profileImage)
+        val imageRef = storage.getReference().child("image/$phoneNumber")
+
+        imageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(holder.itemView.context)
+                .load(uri) // 친구의 이미지 URL을 사용합니다.
+                .into(holder.profileImage)
+        }.addOnFailureListener {
+            // 이미지 로드에 실패했을 때 기본 이미지를 설정합니다.
+            holder.profileImage.setImageResource(R.drawable.base_profile_image)
+        }
+
         holder.userName.text = friend.userName
-        holder.userPhoneNumber.text = friend.userPhoneNumber
-        when (friend.userStatus) {
+        // 번호가 없어도 일단 나오게 수정
+        holder.userPhoneNumber.text = friend.userID ?: "번호 없음"
+        when (friend.userState) {
             0 -> {
                 holder.userStatus.setImageResource(R.drawable.check)  // 활성 상태일 때의 이미지
                 holder.userStatusText.text = "활성"

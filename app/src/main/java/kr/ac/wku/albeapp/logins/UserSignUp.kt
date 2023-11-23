@@ -3,6 +3,8 @@ package kr.ac.wku.albeapp.logins
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -44,15 +46,38 @@ class UserSignUp : AppCompatActivity() {
         // 이미지 업로드 하기 버튼을 눌렀을때 동작할 이벤트
         // 이미지를 업로드 하는 별도의 레이아웃으로 이동함.
         addPhotoBtn.setOnClickListener {
-            var intent = Intent(this, AddPhotoActivity::class.java)
-            startActivity(intent)
+            val userID = binding.newPhoneID.text.toString()  // 사용자의 전화번호를 가져옵니다.
+            if (userID.isEmpty()) {
+                Toast.makeText(this, "전화번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, AddPhotoActivity::class.java)
+                intent.putExtra("phoneNumber", userID)  // 전화번호를 Intent에 추가
+                startActivity(intent)
+            }
         }
+
+        //약관동의 작동 로직
+        val checkBox1: CheckBox = findViewById(R.id.access1)
+        val checkBox2: CheckBox = findViewById(R.id.access2)
+        val completeSignupButton: Button = findViewById(R.id.completeSignup)
+
+//        기본적으로 회원가입 버튼은 비활성 상태로 둠
+        completeSignupButton.isEnabled = false
+
+//        약관동의 체크박스 1과 2 모두 체크해야 회원가입 버튼 활성화 로직
+        val checkListener = CompoundButton.OnCheckedChangeListener { _, _ ->
+            completeSignupButton.isEnabled = checkBox1.isChecked && checkBox2.isChecked
+        }
+        checkBox1.setOnCheckedChangeListener(checkListener)
+        checkBox2.setOnCheckedChangeListener(checkListener)
+
 
         binding.completeSignup.setOnClickListener {
             var userName = binding.newName.text.toString()
             var userID = binding.newPhoneID.text.toString()
             var userPW = binding.newPW.text.toString()
             // 이 밑에 하단에 성별 , 이용약관 등 데이터 추가하라. 일단은 3개만
+
 
             // 파이어베이스 실시간 데이터베이스에 저장
             var user = UserData(userName, userID, userPW, userState = 1) // 유저 상태 기본값 1
