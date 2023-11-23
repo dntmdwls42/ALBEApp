@@ -16,7 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.FirebaseDatabase // 추가
 import kr.ac.wku.albeapp.R
 
 class SensorActvitiy : AppCompatActivity(), SensorEventListener {
