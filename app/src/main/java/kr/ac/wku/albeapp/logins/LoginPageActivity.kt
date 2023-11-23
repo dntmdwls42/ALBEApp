@@ -92,7 +92,7 @@ class LoginPageActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            // SharedPreferences(세션)에 전화번호 저장
+                            // SharedPreferences(세션)에 전화번호 저장함
                             val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
                             val editor = sharedPreferences.edit()
                             editor.putString("phoneNumber", inputPhoneNumber)
