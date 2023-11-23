@@ -46,6 +46,8 @@ class AddPhotoActivity : AppCompatActivity() {
         textEt = findViewById(R.id.text_et)
         uploadBtn = findViewById(R.id.upload_btn)
 
+        progressBar = findViewById(R.id.progress_bar)
+
         imageIv.setOnClickListener {
             var intent = Intent(Intent.ACTION_PICK) //선택하면 무언가를 띄움. 묵시적 호출
             intent.type = "image/*"
