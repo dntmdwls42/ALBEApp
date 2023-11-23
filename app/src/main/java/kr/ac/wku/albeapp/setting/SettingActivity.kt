@@ -35,6 +35,14 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_setting)
 
+        // MainActivity에서 넘어왔는지 확인
+        val isFromMainActivity = intent.getBooleanExtra("isFromMainActivity", false)
+
+        // MainActivity에서 넘어온 경우 회원 탈퇴 버튼을 비활성화
+        if (isFromMainActivity) {
+            binding.userdelete.isEnabled = false
+        }
+
 
         // 전화번호를 가져옴
         phoneNumber = intent.getStringExtra("phoneNumber") ?: ""
@@ -46,6 +54,8 @@ class SettingActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.contains("phoneNumber") // phoneNumber 키가 존재하는지 확인
 
+        // 로그아웃 버튼의 가시성 설정
+        binding.userdelete.visibility = if (isLoggedIn) View.VISIBLE else View.GONE
 
         // 로그아웃 버튼을 눌렀을때 로그아웃을 하는 내용
         binding.logout.setOnClickListener {

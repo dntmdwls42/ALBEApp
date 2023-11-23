@@ -22,7 +22,7 @@ class FindMyId : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= DataBindingUtil.setContentView(this, R.layout.activity_find_my_id)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_find_my_id)
 
         // 레이아웃을 초기 상태에서는 안보이게 설정합니다.
         binding.findpwbar.visibility = View.GONE // 여기서 yourLayoutId는 실제 XML에서 레이아웃의 id입니다.
