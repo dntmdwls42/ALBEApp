@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DatabaseReference
@@ -94,5 +95,18 @@ class UserSignUp : AppCompatActivity() {
             Toast.makeText(this, "회원가입을 취소합니다..", Toast.LENGTH_SHORT).show()
             onBackPressed()
         }
+
+        val btnTerms = findViewById<Button>(R.id.btn_terms)
+        btnTerms.setOnClickListener {
+            showTermsDialog()
+        }
+    }
+
+    private fun showTermsDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("AliveBeacon 이용 약관").setMessage(resources.getString(R.string.user_agree))
+        builder.setPositiveButton("확인했습니다", null)
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }

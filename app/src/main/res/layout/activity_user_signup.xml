@@ -171,6 +171,7 @@
                 android:layout_weight="1"/> <!-- 체크박스와 버튼 사이의 빈 공간 -->
 
             <Button
+                android:id="@+id/btn_terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="약관 보기"
