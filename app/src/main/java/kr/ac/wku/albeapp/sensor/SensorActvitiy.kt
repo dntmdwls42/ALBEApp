@@ -52,8 +52,8 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
     var setState: Int = 0
 
-    val database = FirebaseDatabase.getInstance()
-    val myState = database.getReference("users").child("userState")
+    //val database = FirebaseDatabase.getInstance()
+    //val myState = database.getReference("users").child("userState")
 
     private val ACTIVE = 1 // 센서 감지 = 활성 상태
     private val INACTIVE = 0 // 센서 감지 없음 = 비활성 상태
@@ -177,7 +177,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                     stateTimer.stop()
                     setState = 1
                 }
-                Log.d("SensorActvitiy","State : ${myState}")
+                //Log.d("SensorActvitiy","State : ${myState}")
 
                 // [0] x축값, [1] y축값, [2] z축값
             }
