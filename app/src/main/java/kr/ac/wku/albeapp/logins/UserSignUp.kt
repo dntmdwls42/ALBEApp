@@ -100,12 +100,25 @@ class UserSignUp : AppCompatActivity() {
         btnTerms.setOnClickListener {
             showTermsDialog()
         }
+
+        val btnTermspolicy = findViewById<Button>(R.id.btn_terms_policy)
+        btnTermspolicy.setOnClickListener {
+            showTermsDialogpolicy()
+        }
     }
 
     private fun showTermsDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("AliveBeacon 이용 약관").setMessage(resources.getString(R.string.user_agree))
-        builder.setPositiveButton("확인했습니다", null)
+        builder.setPositiveButton("이해했습니다", null)
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
+
+    private fun showTermsDialogpolicy() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("AliveBeacon 개인정보 이용 동의").setMessage(resources.getString(R.string.user_agree_policy))
+        builder.setPositiveButton("이해했습니다", null)
         val alertDialog = builder.create()
         alertDialog.show()
     }
