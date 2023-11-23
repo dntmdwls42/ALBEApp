@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SENDTO" />
 
-    <uses-permission android:name="android.permission.BODY_SENSORS"/>
-    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
 
     <application
         android:allowBackup="true"
@@ -35,17 +35,23 @@
         <activity
             android:name=".photos.PhotoActivity"
             android:exported="false" />
+        <!--        첫 화면을 login 화면으로 설정해야해서 중복 지움-->
+        <!--        <activity-->
+        <!--            android:name=".logins.LoginPageActivity"-->
+        <!--            android:exported="true" />-->
         <activity
-            android:name=".logins.LoginPageActivity"
-            android:exported="true" />
+            android:name=".MainActivity"
+            android:exported="true">
+        </activity>
         <activity
             android:name=".photos.AddPhotoActivity"
             android:exported="false" />
         <activity
             android:name=".setting.SettingActivity"
             android:exported="true" />
+        <!--        첫 화면을 login 화면으로 설정-->
         <activity
-            android:name=".MainActivity"
+            android:name=".logins.LoginPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

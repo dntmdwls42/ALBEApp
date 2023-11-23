@@ -27,6 +27,7 @@ class LoginPageActivity : AppCompatActivity() {
 
     // 특정 위치(userID)에서 데이터 참조
     val myRef = database.getReference("users").child("userID")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
@@ -127,13 +128,20 @@ class LoginPageActivity : AppCompatActivity() {
             })
         }
 
-        // 아이디 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
+
+        // 비밀번호 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
         binding.loginpageSearchIdButton.setOnClickListener {
-            // 아이디찾기 화면으로 이동하는 이벤트
+            // 비밀번호 찾기 화면으로 이동하는 이벤트
             var myIntent = Intent(this, FindMyId::class.java)
 
-            // 아이디찾기 화면 레이아웃으로 이동
+            // 비밀번호 찾기 화면 레이아웃으로 이동
             startActivity(myIntent)
+        }
+
+        // 비밀번호 찾기 버튼을 "길게" 눌렀을때 개발자 모드(MainActivity) 진입
+        binding.loginpageSearchIdButton.setOnLongClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            true
         }
     }
 }
