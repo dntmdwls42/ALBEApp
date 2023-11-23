@@ -1,5 +1,6 @@
 package kr.ac.wku.albeapp.logins
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -90,6 +91,12 @@ class LoginPageActivity : AppCompatActivity() {
                                 "${userName}님 환영합니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            // SharedPreferences(세션)에 전화번호 저장함
+                            val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+                            val editor = sharedPreferences.edit()
+                            editor.putString("phoneNumber", inputPhoneNumber)
+                            editor.apply()
 
                             // 이제 홈메뉴(진짜 메인)에 전화번호 정보를 intent로 넘기게 함
                             val intent = Intent(this@LoginPageActivity, HomeMenu::class.java)

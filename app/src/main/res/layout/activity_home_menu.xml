@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,36 +17,41 @@
                 android:layout_height="wrap_content"
                 android:text="홈"
                 android:textSize="30sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-            <Space
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/fromSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="환경설정">
+
+            </Button>
+
 
             <ImageButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:scaleType="centerInside"
-                android:src="@drawable/friendaddreverse"/>
+                android:src="@drawable/friendaddreverse" />
         </LinearLayout>
 
         <Space
             android:layout_width="0dp"
-            android:layout_height="20dp"/>
+            android:layout_height="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:background="#EAE4E4"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <ImageView
                 android:id="@+id/home_profileimage"
                 android:layout_width="100dp"
-                android:layout_height="100dp"
-                />
+                android:layout_height="100dp" />
 
             <LinearLayout
                 android:layout_width="246dp"
@@ -102,21 +108,20 @@
 
         <Space
             android:layout_width="0dp"
-            android:layout_height="13dp"/>
+            android:layout_height="13dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="#BFBFBF"/>
+            android:background="#BFBFBF" />
 
         <Space
             android:layout_width="0dp"
-            android:layout_height="13dp"/>
+            android:layout_height="13dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/home_friendlist_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </layout>
