@@ -77,6 +77,7 @@ class FindMyId : AppCompatActivity() {
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     // 에러 처리
+
                 }
             })
         }
