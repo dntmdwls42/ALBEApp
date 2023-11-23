@@ -1,15 +1,24 @@
 package kr.ac.wku.albeapp.HomeMenu
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
+import kr.ac.wku.albeapp.databinding.ActivityHomeMenuBinding
+import kr.ac.wku.albeapp.databinding.ActivitySettingBinding
+import kr.ac.wku.albeapp.setting.SettingActivity
 
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -18,6 +27,9 @@ class HomeMenu : AppCompatActivity() {
     // 파이어베이스 스토리지 관련 세팅
     private lateinit var storage: FirebaseStorage
 
+    // 데이터바인딩 설정
+    private lateinit var binding: ActivityHomeMenuBinding
+
     // 상태 표시
     private val ACTIVE = 1 // 활성 = 센서 작동중
     private val INACTIVE = 0 // 비활성 = 센서 없음 감지
@@ -25,7 +37,8 @@ class HomeMenu : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_menu)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home_menu)
+
 
         val userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
         storage = FirebaseStorage.getInstance()
@@ -50,6 +63,21 @@ class HomeMenu : AppCompatActivity() {
         database = FirebaseDatabase.getInstance().reference
         // 파이어베이스 스토리지에서 참조
         storage = FirebaseStorage.getInstance()
+
+        // 설정 화면 이벤트 이동
+        binding.fromSetting.setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            intent.putExtra("phoneNumber", userPhoneNumber)  // 전화번호를 Intent에 추가
+            Toast.makeText(this, "설정화면으로 이동합니다.", Toast.LENGTH_SHORT).show()
+
+            // 환경 설정 레이아웃으로 이동
+            startActivity(intent)
+        }
+
+        // 로그인 세션 확인
+        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.contains("phoneNumber") // phoneNumber 키가 존재하는지 확인
+        Log.d("로그인 세션 확인", "로그인 세션 상태: $isLoggedIn")
 
 
         val userRef = database.child("users").child(userPhoneNumber!!)

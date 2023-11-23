@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DataSnapshot
@@ -41,9 +42,10 @@ class SettingActivity : AppCompatActivity() {
         // 특정 사용자(로그인한 사용자를 말함)을 참조
         val myRef = database.getReference("users").child(phoneNumber)
 
-        val moreSettingSwitch = findViewById<Switch>(R.id.moresetting)
-        val userDeleteButton = findViewById<Button>(R.id.userdelete)
-        val backgroundrunoff = findViewById<Button>(R.id.backgroundoff)
+        // 로그인 세션 확인
+        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.contains("phoneNumber") // phoneNumber 키가 존재하는지 확인
+
 
         // 로그아웃 버튼을 눌렀을때 로그아웃을 하는 내용
         binding.logout.setOnClickListener {
@@ -67,9 +69,9 @@ class SettingActivity : AppCompatActivity() {
         binding.userdelete.visibility = View.GONE //회원 탈퇴 버튼은 숨겨져 있음(공간차지 x)
 
         binding.moresetting.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) { //버튼이 켜지면
+            if (isChecked && isLoggedIn) { //스위치 버튼이 눌리면 and 로그인 세션이 있는 경우
                 binding.userdelete.visibility = View.VISIBLE // 탈퇴버튼 표시
-            } else { //버튼이 꺼져 있다면
+            } else { //스위치 버튼이 안눌리면
                 binding.userdelete.visibility = View.GONE // 탈퇴버튼 숨김상태
             }
         }
@@ -88,65 +90,79 @@ class SettingActivity : AppCompatActivity() {
 
         // 회원 탈퇴를 눌렀을때 실시간 데이터베이스에서 삭제 하는 내용
         binding.userdelete.setOnClickListener {
-            val inputPhoneNumber = phoneNumber.toString()
+            AlertDialog.Builder(this)
+                .setTitle("회원 탈퇴")
+                .setMessage("정말 탈퇴하시겠습니까?")
+                .setPositiveButton("예") { _, _ ->
+                    val inputPhoneNumber = phoneNumber.toString()
 
-            val userRef = database.getReference("users").child(inputPhoneNumber)  // 특정 사용자 참조
+                    val userRef =
+                        database.getReference("users").child(inputPhoneNumber)  // 특정 사용자 참조
 
-            userRef.removeValue().addOnSuccessListener {
-                Toast.makeText(
-                    this@SettingActivity,
-                    "회원 탈퇴가 완료되었습니다, 로그인 페이지로 돌아갑니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                    userRef.removeValue().addOnSuccessListener {
+                        Toast.makeText(
+                            this@SettingActivity,
+                            "회원 탈퇴가 완료되었습니다, 로그인 페이지로 돌아갑니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                // 로그인 액티비티로 이동하는 인텐트 생성
-                val intent = Intent(this, LoginPageActivity::class.java)
-                // 액티비티 시작
-                startActivity(intent)
-                // SettingActivity 종료
+                        // 로그인 액티비티로 이동하는 인텐트 생성
+                        val intent = Intent(this, LoginPageActivity::class.java)
+                        // 액티비티 시작
+                        startActivity(intent)
+                        // SettingActivity 종료
+                        finish()
+
+                    }.addOnFailureListener {
+                        Toast.makeText(
+                            this@SettingActivity,
+                            "다시 시도해주세요.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                .setNegativeButton("아니오", null)
+                .show()
+
+            //백그라운드버튼 -> 앱 종료
+            binding.backgroundoff.setOnClickListener {
+                Toast.makeText(this, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
                 finish()
-
-            }.addOnFailureListener {
-                Toast.makeText(
-                    this@SettingActivity,
-                    "다시 시도해주세요.",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
+
+            // 센서별 비활성화 라디오 버튼 이벤트
+            binding.sensoroff.setOnCheckedChangeListener { _, isChecked ->
+                // SharedPreferences에 센서 사용 설정 값을 저장합니다.
+                val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean("sensor_off", isChecked)
+                editor.apply()
+            }
+
+            // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용
+            binding.sensorsetting.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
+                    binding.sensorvalue.text = progress.toString() // 값
+
+                    // Toast 메시지로 SeekBar의 값을 표시
+                    Toast.makeText(this@SettingActivity, "현재 센서 값: $progress", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                }
+            })
+
+
         }
-
-        //백그라운드버튼 -> 앱 종료
-        binding.backgroundoff.setOnClickListener {
-            Toast.makeText(this, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
-            finish()
-        }
-
-        // 센서별 비활성화 라디오 버튼 이벤트
-        binding.sensoroff.setOnCheckedChangeListener { _, isChecked ->
-            // SharedPreferences에 센서 사용 설정 값을 저장합니다.
-            val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putBoolean("sensor_off", isChecked)
-            editor.apply()
-        }
-
-        // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용
-        binding.sensorsetting.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
-                binding.sensorvalue.text = progress.toString() // 값
-
-                // Toast 메시지로 SeekBar의 값을 표시
-                Toast.makeText(this@SettingActivity, "현재 센서 값: $progress", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
-
     }
 }
