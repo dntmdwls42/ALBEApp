@@ -16,8 +16,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.values
 import kr.ac.wku.albeapp.R
-
+import kr.ac.wku.albeapp.logins.UserData
 class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
     //퍼미션 (권한요청)
@@ -34,10 +37,6 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     private var activityPermission: Boolean = false
 
     //추가할 속성
-    /*
-    센서 동작에 따른 타이머
-    타이머 일정 시간 초과시 상태 설정
-     */
     lateinit var stateTimer: Chronometer
 
     // 알람을 울리기 위한 타이머  (우선 0으로 초기)
@@ -54,10 +53,14 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     private var nowHour: Int = 0
     private var nowDay: Int = 0
 
+    var setState: Int = 0
+
+    val database = FirebaseDatabase.getInstance()
+    val myState = database.getReference("users").child("userState")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sensor_actvitiy)
-
         //가속도 센서
         sensorX = findViewById(R.id.sensorX)
         sensorY = findViewById(R.id.sensorY)
@@ -138,6 +141,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
         //이 메서드는 onSensorChanged를 사용하기 위해 필요한 함수이다 그리고 메인 클래스에서 SensorEventListener를 상속받아야 한다 (interface 상속)
     }
 
+
     override fun onSensorChanged(event: SensorEvent?) {               // 센서 값 변경시
         //타이머 리셋 (동작시 상태 활성)
         if (activityPermission) {
@@ -147,16 +151,24 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                 sensorY.text = event.values[1].toString()
                 sensorZ.text = event.values[2].toString()
 
-                if (event.values[0] == 0f && event.values[1] == 0f && event.values[2] == 0f) {
+                val fixSensorVar : Float = 1.0f
+                if ((event.values[0] <= fixSensorVar && event.values[0] >= -fixSensorVar)
+                    && (event.values[1] <= fixSensorVar && event.values[1] >= -fixSensorVar)
+                    && (event.values[2] <= fixSensorVar && event.values[2] >= -fixSensorVar))
+                {
                     sensorState.text = "센서 미동작"//타이머 실행
                     isTimer = true
                     stateTimer.start()
-                } else {
+                    setState = 0    //setState를 firebase의 userState로 전송
+                    } else {
                     sensorState.text = "센서 동작" //타이머 리셋
                     isTimer = false
                     stateTimer.base = SystemClock.elapsedRealtime()
                     stateTimer.stop()
+                    setState = 1
                 }
+                Log.d("SensorActvitiy","State : ${myState}")
+
                 // [0] x축값, [1] y축값, [2] z축값
             }
 
