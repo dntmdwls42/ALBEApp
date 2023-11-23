@@ -111,13 +111,15 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
         stateTimer.start()
 
         //알람 타이머 지정
-        setAlarmTimer(0, 5)
+        setAlarmTimer(0, 0,0,10)
     }
 
-    public fun setAlarmTimer(d: Int, h: Int) // 설정할 알람 타이머
+    public fun setAlarmTimer(d: Int, h: Int, m: Int = 1, s: Int = 10) // 설정할 알람 타이머
     {
         dayAlarm = d
         hourAlarm = h
+        minuteAlarm = m
+        secondAlarm = s
     }
 
     private val acceletorSensor by lazy {           // 지연된 초기화는 딱 한 번 실행됨
@@ -191,7 +193,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
             nowDay = (nowHour * 24).toInt()
 
             if (nowDay >= dayAlarm) {
-                if (nowHour >= hourAlarm) {
+                if (nowHour >= hourAlarm && nowMinute >= minuteAlarm && nowSecond >= secondAlarm) {
                     sensorState.text = "상태 위험!!"    //알람발생
                 }
             }
