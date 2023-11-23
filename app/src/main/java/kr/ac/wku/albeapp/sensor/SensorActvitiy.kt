@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.database.FirebaseDatabase
 import kr.ac.wku.albeapp.R
 
 class SensorActvitiy : AppCompatActivity(), SensorEventListener {
@@ -161,23 +162,23 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                 sensorY.text = event.values[1].toString()
                 sensorZ.text = event.values[2].toString()
 
-                val fixSensorVar : Float = 1.0f
+                val fixSensorVar: Float = 1.0f
                 if ((event.values[0] <= fixSensorVar && event.values[0] >= -fixSensorVar)
                     && (event.values[1] <= fixSensorVar && event.values[1] >= -fixSensorVar)
-                    && (event.values[2] <= fixSensorVar && event.values[2] >= -fixSensorVar))
-                {
+                    && (event.values[2] <= fixSensorVar && event.values[2] >= -fixSensorVar)
+                ) {
                     sensorState.text = "센서 미동작"//타이머 실행
                     isTimer = true
                     stateTimer.start()
                     setState = 0    //setState를 firebase의 userState로 전송
-                    } else {
+                } else {
                     sensorState.text = "센서 동작" //타이머 리셋
                     isTimer = false
                     stateTimer.base = SystemClock.elapsedRealtime()
                     stateTimer.stop()
                     setState = 1
                 }
-                Log.d("SensorActvitiy","State : ${myState}")
+                Log.d("SensorActvitiy", "State : ${myState}")
 
                 // [0] x축값, [1] y축값, [2] z축값
             }
