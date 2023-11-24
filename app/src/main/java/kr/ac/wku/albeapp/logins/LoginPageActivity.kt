@@ -140,6 +140,7 @@ class LoginPageActivity : AppCompatActivity() {
 
         // 비밀번호 찾기 버튼을 "길게" 눌렀을때 개발자 모드(MainActivity) 진입
         binding.loginpageSearchIdButton.setOnLongClickListener {
+            Toast.makeText(this, "디버깅 메뉴로 진입합니다.", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, MainActivity::class.java))
             true
         }
