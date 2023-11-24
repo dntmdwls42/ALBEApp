@@ -19,22 +19,26 @@
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1">
+            </View>
 
             <Button
                 android:id="@+id/fromSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="환경설정">
-
             </Button>
 
-
             <ImageButton
-                android:layout_width="match_parent"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:scaleType="centerInside"
-                android:src="@drawable/friendaddreverse" />
+                android:src="@drawable/friendaddreverse">
+            </ImageButton>
         </LinearLayout>
 
         <Space
