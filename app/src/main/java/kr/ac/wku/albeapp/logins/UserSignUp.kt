@@ -21,7 +21,8 @@ data class UserData(
     var userID: String? = null,
     var userPW: String? = null,
     // 필요한 정보가 더 있다면 추가하세요.
-    var userState: Int? = null // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
+    var userState: Int? = null, // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
+    var Friends: Map<String, Any>? = null // 새로운 노드 추가, Map 타입으로 변경
 )
 
 // 회원 가입 페이지 레이아웃의 액티비티
@@ -81,7 +82,7 @@ class UserSignUp : AppCompatActivity() {
 
 
             // 파이어베이스 실시간 데이터베이스에 저장
-            var user = UserData(userName, userID, userPW, userState = 1) // 유저 상태 기본값 1
+            var user = UserData(userName, userID, userPW, userState = 1, Friends = null) // 유저 상태 기본값 1
             database.child(userID).setValue(user)
 
             var myIntent = Intent(this, LoginPageActivity::class.java)

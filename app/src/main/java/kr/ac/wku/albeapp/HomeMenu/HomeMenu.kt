@@ -21,7 +21,12 @@ import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityHomeMenuBinding
 import kr.ac.wku.albeapp.databinding.ActivitySettingBinding
+import kr.ac.wku.albeapp.logins.LoginPageActivity
 import kr.ac.wku.albeapp.setting.SettingActivity
+import kr.ac.wku.albeapp.HomeMenu.Friendlist.Friend
+import kr.ac.wku.albeapp.HomeMenu.FriendListAdapter
+import kr.ac.wku.albeapp.HomeMenu.Friendlist
+import kr.ac.wku.albeapp.HomeMenu.AddFriend
 
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -33,14 +38,43 @@ class HomeMenu : AppCompatActivity() {
     // 데이터바인딩 설정
     private lateinit var binding: ActivityHomeMenuBinding
 
+    // 사용자 전화번호와 검색 전화번호 변수 추가 ( 친구 추가 관련 )
+    private var userPhoneNumber: String? = null
+    private var searchPhoneNumber: String? = null
+
     // 상태 표시
-    private val ACTIVE = 1 // 활성 = 센서 작동중
-    private val INACTIVE = 0 // 비활성 = 센서 없음 감지
-    private val TEMP_INACTIVE = 2 // 센서 환경설정에서 비활성화 = 일부러 끔
+    companion object {
+        const val ACTIVE = 1 // 활성 = 센서 작동중
+        const val INACTIVE = 0 // 비활성 = 센서 없음 감지
+        const val TEMP_INACTIVE = 2 // 센서 환경설정에서 비활성화 = 일부러 끔
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_menu)
+
+        // 로그인 세션 확인
+        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val phoneNumber = sharedPreferences.getString("phoneNumber", null)
+        val userName = sharedPreferences.getString("userName", null)
+        val isLoggedIn = sharedPreferences.contains("phoneNumber") // phoneNumber 키가 존재하는지 확인
+        Log.d("로그인 세션 확인", "로그인 세션 상태: $isLoggedIn")
+        Log.d("정보확인 1", "로그인 한 사용자 이름: $userName")
+        Log.d("정보확인 2", "로그인 한 ID 확인 : $phoneNumber")
+
+        if (phoneNumber != null && userName != null) {
+            // 로그인한 사용자가 있는 경우
+            // phoneNumber와 userName을 사용하는 코드
+            // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
+            userPhoneNumber = phoneNumber
+        } else {
+            // 로그인한 사용자가 없는 경우
+            // 로그인 페이지로 이동하거나 사용자에게 로그인하라는 메시지를 보여주는 등의 처리를 수행
+            // 예를 들어, 다음과 같이 로그인 페이지로 이동할 수 있습니다.
+            startActivity(Intent(this, LoginPageActivity::class.java))
+            finish()
+            return
+        }
 
 
         val userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
@@ -77,10 +111,61 @@ class HomeMenu : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 로그인 세션 확인
-        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.contains("phoneNumber") // phoneNumber 키가 존재하는지 확인
-        Log.d("로그인 세션 확인", "로그인 세션 상태: $isLoggedIn")
+        // 친구 추가 버튼인 이미지 버튼을 눌렀을때 생기는 이벤트
+        binding.addFriend.setOnClickListener {
+            // 다이얼로그 생성
+            val builder = AlertDialog.Builder(this@HomeMenu)
+            builder.setTitle("친구 추가")
+
+            // 입력 필드 설정
+            val input = EditText(this@HomeMenu)
+            input.inputType = InputType.TYPE_CLASS_PHONE  // 입력 타입을 전화번호로 설정
+            builder.setView(input)
+
+            // 검색 버튼을 눌렀을 때의 동작 설정
+            builder.setPositiveButton("검색") { dialog, _ ->
+                searchPhoneNumber = input.text.toString()
+
+                // 검색한 전화번호를 가진 사용자의 데이터를 파이어베이스에서 가져옴
+                database.child("users").child(searchPhoneNumber!!)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                val userName = dataSnapshot.child("userName").value as? String
+                                val userStatus = dataSnapshot.child("userState").value as? Int
+
+                                // 파이어베이스 스토리지에서 사용자의 프로필 이미지를 가져옵니다.
+                                storage.getReference()
+                                    .child("image/$searchPhoneNumber").downloadUrl.addOnSuccessListener { uri ->
+                                        // 검색 결과를 다이얼로그로 보여줌
+                                        showSearchResultDialog(uri.toString(), userName, userStatus)
+                                    }.addOnFailureListener {
+                                        // 이미지를 가져오는 데 실패한 경우, 기본 이미지를 사용합니다.
+                                        showSearchResultDialog(null, userName, userStatus)
+                                    }
+
+                            } else {
+                                Toast.makeText(
+                                    this@HomeMenu,
+                                    "해당 번호를 가진 사용자를 찾을 수 없습니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            Toast.makeText(this@HomeMenu, "데이터 검색에 실패했습니다.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    })
+                dialog.dismiss()
+            }
+
+            // 취소 버튼을 눌렀을 때의 동작 설정
+            builder.setNegativeButton("취소") { dialog, _ -> dialog.cancel() }
+
+            builder.show()
+        }
 
 
         val userRef = database.child("users").child(userPhoneNumber!!)
@@ -168,52 +253,14 @@ class HomeMenu : AppCompatActivity() {
 
         })
 
-        // 친구 추가 버튼인 이미지 버튼을 눌렀을때 생기는 이벤트
-        binding.addFriend.setOnClickListener {
-            // 다이얼로그 생성
-            val builder = AlertDialog.Builder(this@HomeMenu)
-            builder.setTitle("친구 추가")
 
-            // 입력 필드 설정
-            val input = EditText(this@HomeMenu)
-            input.inputType = InputType.TYPE_CLASS_PHONE  // 입력 타입을 전화번호로 설정
-            builder.setView(input)
-
-            // 검색 버튼을 눌렀을 때의 동작 설정
-            builder.setPositiveButton("검색") { dialog, _ ->
-                val searchPhoneNumber = input.text.toString()
-
-                database.child("users").child(searchPhoneNumber).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            val userName = dataSnapshot.child("userName").value as? String
-                            val userStatus = dataSnapshot.child("userState").value as? Int
-
-                            // 검색 결과를 다이얼로그로 보여줌
-                            showSearchResultDialog(userName, userStatus)
-                        } else {
-                            Toast.makeText(this@HomeMenu, "해당 번호를 가진 사용자를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        Toast.makeText(this@HomeMenu, "데이터 검색에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                dialog.dismiss()
-            }
-
-            // 취소 버튼을 눌렀을 때의 동작 설정
-            builder.setNegativeButton("취소") { dialog, _ -> dialog.cancel() }
-
-            builder.show()
-        }
     }
 
     // 사용자 검색 결과를 보여주는 함수
+    // imageUrl: 검색한 사용자의 프로필 이미지 URL
     // userName: 검색한 사용자의 이름
     // userStatus: 검색한 사용자의 상태
-    private fun showSearchResultDialog(userName: String?, userStatus: Int?) {
+    private fun showSearchResultDialog(imageUrl: String?, userName: String?, userStatus: Int?) {
         // AlertDialog.Builder를 사용하여 다이얼로그를 만듬
         val builder = AlertDialog.Builder(this@HomeMenu)
         // 다이얼로그의 제목을 설정
@@ -222,21 +269,42 @@ class HomeMenu : AppCompatActivity() {
         // 검색한 사용자의 이름과 상태를 문자열로 만들어 메시지로 설정
         // 사용자의 상태는 ACTIVE, INACTIVE, TEMP_INACTIVE 중 하나밖에 없잖아
         // when을 사용하여 각 상태에 해당하는 문자열을 만듬
-        val message = "이름: $userName\n상태: ${when (userStatus) {
-            ACTIVE -> "활성"
-            INACTIVE -> "비활성"
-            TEMP_INACTIVE -> "일시적 비활성"
-            else -> "알 수 없음"
-        }}"
+        val message = "이름: $userName\n상태: ${
+            when (userStatus) {
+                ACTIVE -> "활성"
+                INACTIVE -> "비활성"
+                TEMP_INACTIVE -> "일시적 비활성"
+                else -> "알 수 없음"
+            }
+        }\n이미지 URL: ${imageUrl ?: "이미지 없음"}"
 
         // 만든 메시지를 다이얼로그에 설정함.
         builder.setMessage(message)
-        // 다이얼로그에 '확인' 버튼을 추가하고, 이 버튼을 누르면 다이얼로그가 닫히도록 설정함
-        builder.setPositiveButton("확인") { dialog, _ -> dialog.dismiss() }
+
+        // 다이얼로그에 '친구추가' 버튼을 추가하고, 이 버튼을 누르면 추가 기능을 수행하도록 설정함
+        builder.setPositiveButton("친구추가") { dialog, _ ->
+            // 친구 추가 기능 구현
+            val addFriend = AddFriend()
+
+            if (userPhoneNumber != null && searchPhoneNumber != null) {
+                addFriend.addNewFriend(userPhoneNumber!!, searchPhoneNumber!!)
+                Toast.makeText(this@HomeMenu, "친구가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@HomeMenu, "전화번호 정보가 없어 친구를 추가할 수 없습니다.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            dialog.dismiss()
+        }
+
+        // 다이얼로그에 '취소' 버튼을 추가하고, 이 버튼을 누르면 다이얼로그가 닫히도록 설정함
+        builder.setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
 
         // 설정이 완료된 다이얼로그를 보여준다
         builder.show()
+
+
     }
+
 
     private fun getFriendList(imageUrl: String): List<Friendlist.Friend> {
         // 여기에서는 실제 친구 목록을 가져와야 합니다.
