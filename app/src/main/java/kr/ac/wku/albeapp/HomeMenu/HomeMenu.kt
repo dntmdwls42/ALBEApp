@@ -42,6 +42,10 @@ class HomeMenu : AppCompatActivity() {
     private var userPhoneNumber: String? = null
     private var searchPhoneNumber: String? = null
 
+    //뒤로 가기 토스트 앱종료 기능 측정 변수
+    private var backPressedTime: Long = 0
+    private val FINISH_INTERVAL_TIME: Long = 2000 //(2초)
+
     // 상태 표시
     companion object {
         const val ACTIVE = 1 // 활성 = 센서 작동중
@@ -311,4 +315,21 @@ class HomeMenu : AppCompatActivity() {
         // 일단 임시로 빈 목록을 반환하도록 설정했습니다.
         return emptyList()
     }
+
+//    여기는 홈메뉴 뒤로가기 토스트와 종료 기능입니다.
+    override fun onBackPressed() { //빨간줄이 있다면 정상입니다. 건너뛰세요.
+//        super.onBackPressed() <- IDE에서 추가를 권장하지만 이걸 추가하면 뒤로가기가 되어버림 사용 x
+        val tempTime = System.currentTimeMillis()
+        val intervalTime = tempTime - backPressedTime
+
+        if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
+            finishAffinity()  // 앱의 모든 액티비티를 종료
+            System.exit(0)  // 시스템 종료 (선택적)
+        } else {
+            backPressedTime = tempTime
+            Toast.makeText(applicationContext, "한 번 더 뒤로가기 하면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 }
