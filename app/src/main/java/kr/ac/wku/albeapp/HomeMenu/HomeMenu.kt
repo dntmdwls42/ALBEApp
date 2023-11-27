@@ -203,59 +203,83 @@ class HomeMenu : AppCompatActivity() {
         })
 
         // database.child("users") 부분 추가
-        database.child("users").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val friendList = mutableListOf<Friendlist.Friend>()
-                val totalUsers = dataSnapshot.childrenCount
-                var loadedUsers = 0
+        database.child("users").child(userPhoneNumber!!).child("Friends")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val friendList = mutableListOf<Friendlist.Friend>()
+                    val totalFriends = dataSnapshot.childrenCount
+                    var loadedFriends = 0
 
-                // Firebase에서 가져온 데이터를 사용해 Friend 객체 리스트를 만듭니다.
-                for (userSnapshot in dataSnapshot.children) {
-                    val phoneNumber = userSnapshot.key
-                    val userName = userSnapshot.child("userName").value as? String
-                    val userID = userSnapshot.child("userID").value as? String
-                    val userStatus = userSnapshot.child("userState").value as? Int
+                    // Firebase에서 가져온 데이터를 사용해 Friend 객체 리스트를 만듭니다.
+                    for (friendSnapshot in dataSnapshot.children) {
+                        val friendPhoneNumber = friendSnapshot.key
+                        val isFriend = friendSnapshot.value as? Boolean
 
-                    // Firebase 스토리지에서 이미지 URL을 가져옵니다.
-                    val imageRef = storage.getReference().child("image/$userPhoneNumber")
-                    imageRef.downloadUrl.addOnSuccessListener { uri ->
-                        val imageUrl = uri.toString()
+                        if (isFriend == true) {
+                            database.child("users").child(friendPhoneNumber!!)
+                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val userName = snapshot.child("userName").value as? String
+                                        val userID = snapshot.child("userID").value as? String
+                                        val userStatus = snapshot.child("userState").value as? Int
 
-                        val friend =
-                            Friendlist.Friend(imageUrl, userName, userID, userStatus)
-                        friendList.add(friend)
+                                        // Firebase 스토리지에서 이미지 URL을 가져옵니다.
+                                        val imageRef =
+                                            storage.getReference().child("image/$friendPhoneNumber")
+                                        imageRef.downloadUrl.addOnSuccessListener { uri ->
+                                            val imageUrl = uri.toString()
 
-                        loadedUsers++
+                                            val friend =
+                                                Friendlist.Friend(
+                                                    imageUrl,
+                                                    userName,
+                                                    userID,
+                                                    userStatus
+                                                )
+                                            friendList.add(friend)
 
-                        // RecyclerView에 어댑터를 설정합니다.
-                        if (loadedUsers == totalUsers.toInt()) {
-                            val adapter = FriendListAdapter(friendList)
-                            recyclerView.adapter = adapter
-                        }
+                                            loadedFriends++
 
-                    }.addOnFailureListener {
-                        // 이미지 URL을 가져오는 데 실패했습니다. 대체 이미지를 사용합니다.
-                        val imageUrl =
-                            "https://via.placeholder.com/150"  // 대체 이미지 URL을 여기에 입력하세요.
-                        val friend = Friendlist.Friend(imageUrl, userName, userID, userStatus)
-                        friendList.add(friend)
+                                            // RecyclerView에 어댑터를 설정합니다.
+                                            if (loadedFriends == totalFriends.toInt()) {
+                                                val adapter = FriendListAdapter(friendList)
+                                                recyclerView.adapter = adapter
+                                            }
 
-                        loadedUsers++
-                        if (loadedUsers == totalUsers.toInt()) {
-                            val adapter = FriendListAdapter(friendList)
-                            recyclerView.adapter = adapter
+                                        }.addOnFailureListener {
+                                            // 이미지 URL을 가져오는 데 실패했습니다. 대체 이미지를 사용합니다.
+                                            val imageUrl =
+                                                "https://via.placeholder.com/150"  // 대체 이미지 URL을 여기에 입력하세요.
+                                            val friend = Friendlist.Friend(
+                                                imageUrl,
+                                                userName,
+                                                userID,
+                                                userStatus
+                                            )
+                                            friendList.add(friend)
+
+                                            loadedFriends++
+                                            if (loadedFriends == totalFriends.toInt()) {
+                                                val adapter = FriendListAdapter(friendList)
+                                                recyclerView.adapter = adapter
+                                            }
+                                        }
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        println("Friend 정보 받기 실패..: ${error.toException()}")
+                                    }
+                                })
                         }
                     }
-
                 }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Firebase에서 데이터를 가져오는 데 실패했습니다.
-                println("다른 사용자 정보 받기 실패..: ${databaseError.toException()}")
-            }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Firebase에서 데이터를 가져오는 데 실패했습니다.
+                    println("다른 사용자 정보 받기 실패..: ${databaseError.toException()}")
+                }
 
-        })
+            })
 
 
     }
@@ -316,7 +340,7 @@ class HomeMenu : AppCompatActivity() {
         return emptyList()
     }
 
-//    여기는 홈메뉴 뒤로가기 토스트와 종료 기능입니다.
+    //    여기는 홈메뉴 뒤로가기 토스트와 종료 기능입니다.
     override fun onBackPressed() { //빨간줄이 있다면 정상입니다. 건너뛰세요.
 //        super.onBackPressed() <- IDE에서 추가를 권장하지만 이걸 추가하면 뒤로가기가 되어버림 사용 x
         val tempTime = System.currentTimeMillis()
