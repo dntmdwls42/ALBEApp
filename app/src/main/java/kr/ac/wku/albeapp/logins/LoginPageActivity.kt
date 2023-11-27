@@ -1,5 +1,6 @@
 package kr.ac.wku.albeapp.logins
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ class LoginPageActivity : AppCompatActivity() {
 
     // 특정 위치(userID)에서 데이터 참조
     val myRef = database.getReference("users").child("userID")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
@@ -85,16 +87,25 @@ class LoginPageActivity : AppCompatActivity() {
                         val userName = userData.userName
 
                         if (savedPassword == inputPassword) {
+
                             Toast.makeText(
                                 this@LoginPageActivity,
                                 "${userName}님 환영합니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
 
+                            // SharedPreferences(세션)에 전화번호와 사용자 이름 저장함
+                            val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+                            val editor = sharedPreferences.edit()
+                            editor.putString("phoneNumber", inputPhoneNumber)
+                            editor.putString("userName", userName)
+                            editor.apply()
+
                             // 이제 홈메뉴(진짜 메인)에 전화번호 정보를 intent로 넘기게 함
                             val intent = Intent(this@LoginPageActivity, HomeMenu::class.java)
                             intent.putExtra("phoneNumber", inputPhoneNumber)  // 전화번호를 Intent에 추가
                             startActivity(intent)
+
                         } else {
                             Toast.makeText(
                                 this@LoginPageActivity,
@@ -120,13 +131,21 @@ class LoginPageActivity : AppCompatActivity() {
             })
         }
 
-        // 아이디 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
+
+        // 비밀번호 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
         binding.loginpageSearchIdButton.setOnClickListener {
-            // 아이디찾기 화면으로 이동하는 이벤트
+            // 비밀번호 찾기 화면으로 이동하는 이벤트
             var myIntent = Intent(this, FindMyId::class.java)
 
-            // 아이디찾기 화면 레이아웃으로 이동
+            // 비밀번호 찾기 화면 레이아웃으로 이동
             startActivity(myIntent)
+        }
+
+        // 비밀번호 찾기 버튼을 "길게" 눌렀을때 개발자 모드(MainActivity) 진입
+        binding.loginpageSearchIdButton.setOnLongClickListener {
+            Toast.makeText(this, "디버깅 메뉴로 진입합니다.", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, MainActivity::class.java))
+            true
         }
     }
 }

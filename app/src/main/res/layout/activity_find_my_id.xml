@@ -20,8 +20,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
-                android:text="AlBe  회원 비밀번호찾기"
-                android:textSize="30dp">
+                android:text="AlBe 회원 비밀번호변경"
+                android:textSize="30dp"
+                >
             </TextView>
 
             <Space
@@ -33,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
                 android:text="비밀번호를 잊으셨나요?"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:id="@+id/findpwcheck">
             </CheckBox>
         </LinearLayout>
 
@@ -44,7 +46,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/findpwbar">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,12 +66,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint=" 전화번호 입력 (-)없이"
-                android:fontFamily="@font/soyo_maple_bold">
+                android:fontFamily="@font/soyo_maple_bold"
+                android:id="@+id/findphonenum">
+
             </EditText>
             <Space
                 android:layout_width="0dp"
                 android:layout_height="5dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:textSize="25sp"
+                android:text="변경할 비밀번호를 입력해주세요">
+            </TextView>
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="15dp" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint=" 변경할 비밀번호"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:id="@+id/updatepwnum">
+            </EditText>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="5dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -78,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="찾기">
+                    android:text="변경">
 
                 </Button>
 
@@ -96,32 +122,5 @@
             android:layout_width="0dp"
             android:layout_height="90dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/soyo_maple_bold"
-                android:textSize="25sp"
-                android:text="검색 결과">
-            </TextView>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="25dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/soyo_maple_bold"
-                android:textSize="25sp"
-                android:text="(데이터)">
-            </TextView>
-
-        </LinearLayout>
     </LinearLayout>
 </layout>

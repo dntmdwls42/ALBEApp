@@ -9,6 +9,15 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="테스트모드">
+
+        </TextView>
+
 
         <Button
             android:id="@+id/fromSetting"

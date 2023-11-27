@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DatabaseReference
@@ -20,7 +21,8 @@ data class UserData(
     var userID: String? = null,
     var userPW: String? = null,
     // 필요한 정보가 더 있다면 추가하세요.
-    var userState: Int? = null // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
+    var userState: Int? = null, // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
+    var Friends: Map<String, Any>? = null // 새로운 노드 추가, Map 타입으로 변경
 )
 
 // 회원 가입 페이지 레이아웃의 액티비티
@@ -80,7 +82,7 @@ class UserSignUp : AppCompatActivity() {
 
 
             // 파이어베이스 실시간 데이터베이스에 저장
-            var user = UserData(userName, userID, userPW, userState = 1) // 유저 상태 기본값 1
+            var user = UserData(userName, userID, userPW, userState = 1, Friends = null) // 유저 상태 기본값 1
             database.child(userID).setValue(user)
 
             var myIntent = Intent(this, LoginPageActivity::class.java)
@@ -94,5 +96,31 @@ class UserSignUp : AppCompatActivity() {
             Toast.makeText(this, "회원가입을 취소합니다..", Toast.LENGTH_SHORT).show()
             onBackPressed()
         }
+
+        val btnTerms = findViewById<Button>(R.id.btn_terms)
+        btnTerms.setOnClickListener {
+            showTermsDialog()
+        }
+
+        val btnTermspolicy = findViewById<Button>(R.id.btn_terms_policy)
+        btnTermspolicy.setOnClickListener {
+            showTermsDialogpolicy()
+        }
+    }
+
+    private fun showTermsDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("AliveBeacon 이용 약관").setMessage(resources.getString(R.string.user_agree))
+        builder.setPositiveButton("이해했습니다", null)
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
+
+    private fun showTermsDialogpolicy() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("AliveBeacon 개인정보 이용 동의").setMessage(resources.getString(R.string.user_agree_policy))
+        builder.setPositiveButton("이해했습니다", null)
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }

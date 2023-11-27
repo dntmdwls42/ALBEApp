@@ -171,6 +171,7 @@
                 android:layout_weight="1"/> <!-- 체크박스와 버튼 사이의 빈 공간 -->
 
             <Button
+                android:id="@+id/btn_terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="약관 보기"
@@ -189,7 +190,7 @@
                 android:id="@+id/access2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="개인정보 이용 방안에 동의합니다.">
+                android:text="개인정보 이용 약관에 동의합니다.">
             </CheckBox>
 
             <View
@@ -198,6 +199,7 @@
                 android:layout_weight="1"/>
 
             <Button
+                android:id="@+id/btn_terms_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="약관 보기"

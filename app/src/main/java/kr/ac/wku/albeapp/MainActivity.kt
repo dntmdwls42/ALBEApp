@@ -1,8 +1,10 @@
 package kr.ac.wku.albeapp
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -12,10 +14,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.logins.LoginPageActivity
+import kr.ac.wku.albeapp.logins.UserData
 import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
 import kr.ac.wku.albeapp.photos.PhotoActivity
@@ -81,6 +88,31 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
                 }
             }
 
+        // 로그인 세션 확인
+        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val phoneNumbers = sharedPreferences.getString("phoneNumber", "") // phoneNumber 키의 값을 가져옴
+        val isLoggedIn = phoneNumbers != null && phoneNumbers != "" // phoneNumber 값이 있는지 확인
+        Log.d("로그인 세션 확인", "로그인 세션 상태: $isLoggedIn")
+
+        if (isLoggedIn) { // 로그인 세션이 있는 경우
+            // 파이어베이스 데이터베이스에서 사용자 정보 가져오기
+            val database = FirebaseDatabase.getInstance()
+            val userRef = database.getReference("users").child(phoneNumbers!!)
+
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val userData = dataSnapshot.getValue(UserData::class.java)
+                    val userName = userData?.userName ?: "알 수 없음" // 사용자 이름 가져오기, 없는 경우 "알 수 없음"으로 설정
+
+                    Log.d("로그인 사용자 확인", "로그인 사용자 이름: $userName")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("로그인 사용자 확인", "값을 읽는데 실패했습니다.", error.toException())
+                }
+            })
+        }
+
         
 
         binding.fromSetting.setOnClickListener {
@@ -91,6 +123,7 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
 
             val intent = Intent(this, SettingActivity::class.java)
             intent.putExtra("phoneNumber", phoneNumber) // 전화번호를 Intent에 추가
+            intent.putExtra("isFromMainActivity", true) // MainActivity에서 넘어갔음을 나타내는 플래그 추가
 
             // 환경 설정 레이아웃으로 이동
             startActivity(intent)
