@@ -34,6 +34,11 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     lateinit var sensorState: TextView
     private var activityPermission: Boolean = false
 
+    //이동동작을 위한 중력속성값
+    lateinit var gravityX: TextView
+    lateinit var gravityY: TextView
+    lateinit var gravityZ: TextView
+
     //추가할 속성
     lateinit var stateTimer: Chronometer
 
@@ -77,6 +82,9 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
         sensorState = findViewById(R.id.sensorState)
 
+        gravityX = findViewById(R.id.gravityX)
+        gravityY = findViewById(R.id.gravityY)
+        gravityZ = findViewById(R.id.gravityZ)
 
         // 퍼미션 확인해주는 데이터
         val sensorPermission = ContextCompat.checkSelfPermission(
@@ -122,10 +130,13 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
         secondAlarm = s
     }
 
-    private val acceletorSensor by lazy {           // 지연된 초기화는 딱 한 번 실행됨
+    private val gyroscopeSensor by lazy {           // 지연된 초기화는 딱 한 번 실행됨
 
         getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
+    }
+    private val gravitySensor by lazy{
+        getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
     override fun onResume() {    //센서 등록 메서드
@@ -137,14 +148,20 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
         // if - else로 설정 화면에서 센서 비활성화 하면 센서 동작 안함
         if (!isSensorOff) {
-            acceletorSensor.registerListener(
+            gyroscopeSensor.registerListener(
                 this,
-                acceletorSensor.getDefaultSensor(Sensor.TYPE_GYROSCOPE),    //가속도 혹은 자이로 중에 하나를 선택할텐데, 우선 설계하기 쉬운것부터 해보고
+                gyroscopeSensor.getDefaultSensor(Sensor.TYPE_GYROSCOPE),    //가속도 혹은 자이로 중에 하나를 선택할텐데, 우선 설계하기 쉬운것부터 해보고
                 SensorManager.SENSOR_DELAY_NORMAL
             )
+            gravitySensor.registerListener(
+                this,
+                gravitySensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI
+                )
             userStatus = ACTIVE
         } else { // 이게 비활성화 했을때
-            acceletorSensor.unregisterListener(this)
+            gyroscopeSensor.unregisterListener(this)
+            gravitySensor.unregisterListener(this)
             userStatus = TEMP_INACTIVE
         }
 
@@ -155,32 +172,63 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     }
 
 
+    var getSensorValue = Array(3,{0.0f})
+    var getGravityValue = Array(3,{0.0f})
+    var fixGravityValue = Array(3,{0.0f})
     override fun onSensorChanged(event: SensorEvent?) {               // 센서 값 변경시
         //타이머 리셋 (동작시 상태 활성)
         if (activityPermission) {
-            event.let {
-                //가속도 센서 받아오는 값
-                sensorX.text = event!!.values[0].toString()
-                sensorY.text = event.values[1].toString()
-                sensorZ.text = event.values[2].toString()
+            event?.let {
+                when(event.sensor.type){
+                    Sensor.TYPE_GYROSCOPE -> {
+                        //회전 센서 받아오는 값
+                        getSensorValue[0] = event!!.values[0]
+                        getSensorValue[1] = event.values[1]
+                        getSensorValue[2] = event.values[2]
+                    }
+                    Sensor.TYPE_ACCELEROMETER -> {
+                        getGravityValue[0] = event.values[0]
+                        getGravityValue[1] = event.values[1]
+                        getGravityValue[2] = event.values[2]
+                    }
+                }
+                sensorX.text = getSensorValue[0].toString()
+                sensorY.text = getSensorValue[1].toString()
+                sensorZ.text = getSensorValue[2].toString()
 
-                val fixSensorVar : Float = 1.0f
-                if ((event.values[0] <= fixSensorVar && event.values[0] >= -fixSensorVar)
-                    && (event.values[1] <= fixSensorVar && event.values[1] >= -fixSensorVar)
-                    && (event.values[2] <= fixSensorVar && event.values[2] >= -fixSensorVar))
+                gravityX.text = getGravityValue[0].toString()
+                gravityY.text = getGravityValue[1].toString()
+                gravityZ.text = getGravityValue[2].toString()
+
+                val fixSensorVar : Float = 1.0f //오차 범위
+                val checkSensor: Boolean = (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
+                        || (getSensorValue[1] >= fixSensorVar || getSensorValue[1] <= -fixSensorVar)
+                        || (getSensorValue[2] >= fixSensorVar || getSensorValue[2] <= -fixSensorVar) //자이로센서값이 동작할 때
+                val fixGravityVar : Float = 0.1f
+                val checkGravity: Boolean = (getGravityValue[0] <= fixGravityValue[0] - fixGravityVar || getGravityValue[0] >= fixGravityValue[0] + fixGravityVar)
+                        && (getGravityValue[1] <= fixGravityValue[1] - fixGravityVar || getGravityValue[1] >= fixGravityValue[1] + fixGravityVar)
+                        && (getGravityValue[2] <= fixGravityValue[2] - fixGravityVar || getGravityValue[2] >= fixGravityValue[2] + fixGravityVar)
+                if (checkSensor || checkGravity)
                 {
-                    sensorState.text = "센서 미동작"//타이머 실행
-                    isTimer = true
-                    stateTimer.start()
-                    setState = 0    //setState를 firebase의 userState로 전송
-                    } else {
                     sensorState.text = "센서 동작" //타이머 리셋
                     isTimer = false
                     stateTimer.base = SystemClock.elapsedRealtime()
                     stateTimer.stop()
                     setState = 1
                 }
-                Log.d("SensorActvitiy","State : ${myState}")
+                else
+                {
+                    sensorState.text = "센서 미동작"//타이머 실행
+                    isTimer = true
+                    stateTimer.start()
+                    setState = 0    //setState를 firebase의 userState로 전송
+                    //가속도 센서값 고정 (이유 : 가속도센서가 동작하지 않으면 0으로 초기되지 않아서)
+                    fixGravityValue[0] = getGravityValue[0]
+                    fixGravityValue[1] = getGravityValue[1]
+                    fixGravityValue[2] = getGravityValue[2]
+                }
+
+                //Log.d("SensorActvitiy","State : ${myState}")
 
                 // [0] x축값, [1] y축값, [2] z축값
             }
@@ -192,22 +240,18 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
             nowSecond = (elapsedMillis - nowHour * 3600000 - nowMinute * 60000).toInt() / 1000
             nowDay = (nowHour * 24).toInt()
 
-            if (nowDay >= dayAlarm) {
-                if (nowHour >= hourAlarm && nowMinute >= minuteAlarm && nowSecond >= secondAlarm) {
-                    sensorState.text = "상태 위험!!"    //알람발생
-                }
-            }
-
+            //if (nowDay >= dayAlarm && nowHour >= hourAlarm && nowMinute >= minuteAlarm && nowSecond >= secondAlarm)
+            //    sensorState.text = "상태 위험!!"    //알람발생
             //Log.d("MainActivity", " x:${nowHour}, y:${nowMinute}, z:${nowSecond} ")
             //Log.d("MainActivity", " x:${event!! .values[0]}, y:${event.values[1]}, z:${event.values[2]} ")
-
         }
     }
 
     // ⑤ 리스너 해제
     override fun onPause() {
         super.onPause()
-        acceletorSensor.unregisterListener(this)
+        gyroscopeSensor.unregisterListener(this)
+        gravitySensor.unregisterListener(this)
         userStatus = INACTIVE
     }
 
