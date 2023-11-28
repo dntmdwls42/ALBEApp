@@ -96,5 +96,55 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="이동값"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="X값 : "/>
+            <TextView
+                android:id="@+id/gravityX"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="0.0"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Y값 : "/>
+            <TextView
+                android:id="@+id/gravityY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="0.0"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Z값 : "/>
+            <TextView
+                android:id="@+id/gravityZ"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="0.0"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
