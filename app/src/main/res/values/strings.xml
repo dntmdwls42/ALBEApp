@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ALBEApp</string>
+    <string name="app_name">ALBE</string>
     <string name="user_agree">"제1조 (목적)\n\n"
                 "본 약관은 이용자가 [AliveBeacon]을 이용함에 있어 [AliveBeacon]과 이용자의 권리, 의무, 책임사항을 규정함을 목적으로 합니다.\n\n"
                 "제2조 (용어의 정의)\n\n"
