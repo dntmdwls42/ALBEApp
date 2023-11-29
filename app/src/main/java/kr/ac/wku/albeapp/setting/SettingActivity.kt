@@ -98,6 +98,44 @@ class SettingActivity : AppCompatActivity() {
             }
         })
 
+        //백그라운드버튼 -> 앱 종료
+        binding.backgroundoff.setOnClickListener {
+            Toast.makeText(this, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+
+        // 센서별 비활성화 라디오 버튼 이벤트
+        binding.sensoroff.setOnCheckedChangeListener { _, isChecked ->
+            // SharedPreferences에 센서 사용 설정 값을 저장합니다.
+            val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("sensor_off", isChecked)
+            editor.apply()
+        }
+
+        // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용
+        binding.sensorsetting.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+                // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
+                binding.sensorvalue.text = progress.toString() // 값
+
+                // Toast 메시지로 SeekBar의 값을 표시
+                Toast.makeText(this@SettingActivity, "현재 센서 값: $progress", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
         // 회원 탈퇴를 눌렀을때 실시간 데이터베이스에서 삭제 하는 내용
         binding.userdelete.setOnClickListener {
             AlertDialog.Builder(this)
@@ -133,44 +171,6 @@ class SettingActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("아니오", null)
                 .show()
-
-            //백그라운드버튼 -> 앱 종료
-            binding.backgroundoff.setOnClickListener {
-                Toast.makeText(this, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-
-            // 센서별 비활성화 라디오 버튼 이벤트
-            binding.sensoroff.setOnCheckedChangeListener { _, isChecked ->
-                // SharedPreferences에 센서 사용 설정 값을 저장합니다.
-                val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putBoolean("sensor_off", isChecked)
-                editor.apply()
-            }
-
-            // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용
-            binding.sensorsetting.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
-                    binding.sensorvalue.text = progress.toString() // 값
-
-                    // Toast 메시지로 SeekBar의 값을 표시
-                    Toast.makeText(this@SettingActivity, "현재 센서 값: $progress", Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                }
-            })
 
 
         }
