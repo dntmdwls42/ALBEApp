@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
@@ -53,12 +54,6 @@ class HomeMenu : AppCompatActivity() {
     private var backPressedTime: Long = 0
     private val FINISH_INTERVAL_TIME: Long = 2000 //(2초)
 
-    // 상태 표시
-    companion object {
-        const val ACTIVE = 1 // 활성 = 센서 작동중
-        const val INACTIVE = 0 // 비활성 = 센서 없음 감지
-        const val TEMP_INACTIVE = 2 // 센서 환경설정에서 비활성화 = 일부러 끔
-    }
 
     // 세션 정보 받아오기(클래스를 통해 받아옴)
     private lateinit var loginSession: LoginSession
@@ -74,7 +69,7 @@ class HomeMenu : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
 
         // RecyclerView를 찾습니다.
-        val recyclerView: RecyclerView = findViewById(R.id.home_friendlist_recyclerview)
+        recyclerView = binding.homeFriendlistRecyclerview
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // 로그인 세션 확인
@@ -84,7 +79,7 @@ class HomeMenu : AppCompatActivity() {
         Log.d("정보확인 2", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
 
 
-        if (loginSession.phoneNumber != null && loginSession.userName != null) {
+        if (FirebaseAuth.getInstance().currentUser == null) {
             // 로그인한 사용자가 있는 경우
             // phoneNumber와 userName을 사용하는 코드
             // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
@@ -119,15 +114,14 @@ class HomeMenu : AppCompatActivity() {
 
         imageRef.downloadUrl.addOnSuccessListener { uri ->
             val imageUrl = uri.toString()
-            val profileImage: ImageView = findViewById(R.id.home_profileimage)
+            val profileImage: ImageView = binding.homeProfileimage
             Glide.with(this)
                 .load(imageUrl)
                 .into(profileImage)
         }.addOnFailureListener {
-            val profileImage: ImageView = findViewById(R.id.home_profileimage)
             Glide.with(this)
-                .load("drawable/base_profile_image.png")
-                .into(profileImage)
+                .load(R.drawable.base_profile_image)
+                .into(binding.homeProfileimage)
         }
 
 
@@ -207,9 +201,9 @@ class HomeMenu : AppCompatActivity() {
                 val userStatus = UserStatus.fromStatus(userState)
 
                 // 화면에 사용자 정보를 표시합니다.
-                findViewById<TextView>(R.id.home_username).text = userName
-                findViewById<TextView>(R.id.home_userphonenumber).text = userPhoneNumber
-                findViewById<TextView>(R.id.home_userstatus_text).text = userStatus.description
+                binding.homeUsername.text = userName
+                binding.homeUserphonenumber.text = userPhoneNumber
+                binding.homeUserstatusText.text = userStatus.description
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -303,17 +297,12 @@ class HomeMenu : AppCompatActivity() {
         // 다이얼로그의 제목을 설정
         builder.setTitle("검색 결과")
 
+        val status = UserStatus.fromStatus(userStatus ?: 1).description
         // 검색한 사용자의 이름과 상태를 문자열로 만들어 메시지로 설정
-        // 사용자의 상태는 ACTIVE, INACTIVE, TEMP_INACTIVE 중 하나밖에 없잖아
-        // when을 사용하여 각 상태에 해당하는 문자열을 만듬
-        val message = "이름: $userName\n상태: ${
-            when (userStatus) {
-                ACTIVE -> "활성"
-                INACTIVE -> "비활성"
-                TEMP_INACTIVE -> "일시적 비활성"
-                else -> "알 수 없음"
-            }
-        }\n이미지 URL: ${imageUrl ?: "이미지 없음"}"
+        val message =
+            "이름: $userName\n" +
+                    "상태: $status\n" +
+                    "이미지 URL: ${imageUrl ?: "이미지 없음"}"
 
         // 만든 메시지를 다이얼로그에 설정함.
         builder.setMessage(message)
