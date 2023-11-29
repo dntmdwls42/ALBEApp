@@ -6,14 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
+import kr.ac.wku.albeapp.logins.LoginSession
 import kr.ac.wku.albeapp.logins.UserStatus
+
+
+
 
 class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
     RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
+
+    interface OnFriendLongClickListener {
+        fun onFriendLongClick(friend: Friendlist.Friend)
+    }
+
+    private var onFriendLongClickListener: OnFriendLongClickListener? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImage: ImageView = itemView.findViewById(R.id.home_profileimage)
@@ -50,6 +62,36 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
         // 번호가 없어도 일단 나오게 수정
         holder.userPhoneNumber.text = friend.userID ?: "번호 없음"
 
+        holder.itemView.setOnLongClickListener {
+            // 롱 클릭 시 친구 삭제 다이얼로그 표시
+            AlertDialog.Builder(holder.itemView.context)
+                .setTitle("친구 삭제")
+                .setMessage("${friend.userName}을(를) 친구 목록에서 삭제하시겠습니까?")
+                .setPositiveButton("삭제") { dialog, _ ->
+                    val userPhoneNumber = LoginSession(holder.itemView.context).phoneNumber
+                    val friendPhoneNumber = friend.userID
+                    if (friendPhoneNumber != null) {
+                        if (userPhoneNumber != null) {
+                            DeleteFriend(holder.itemView.context).deleteFriend(
+                                userPhoneNumber,
+                                friendPhoneNumber
+                            )
+                        }
+                    }
+
+                    dialog.dismiss()
+
+                    // 친구 삭제 후 콜백 호출
+                    onFriendLongClickListener?.onFriendLongClick(friend)
+
+                }
+                .setNegativeButton("취소") { dialog, _ -> dialog.cancel() }
+                .show()
+
+
+            true
+        }
+
         Log.d("FriendListAdapter", "userState: ${friend.userState}")
 
         val userStatus = UserStatus.fromStatus(friend.userState ?: 0)
@@ -66,5 +108,9 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
 
     override fun getItemCount(): Int {
         return friendList.size
+    }
+
+    fun setOnFriendLongClickListener(listener: OnFriendLongClickListener) {
+        onFriendLongClickListener = listener
     }
 }

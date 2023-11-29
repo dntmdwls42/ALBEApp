@@ -86,5 +86,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database:20.3.0")
 
     // 파이어베이스 전화 인증 설정
-    implementation ("com.google.firebase:firebase-auth:21.0.1")
+    implementation("com.google.firebase:firebase-auth:21.0.1")
+
+    // 화면 잡아당기는 라이브러리 추가
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

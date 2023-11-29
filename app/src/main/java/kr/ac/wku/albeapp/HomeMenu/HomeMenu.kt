@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -17,6 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -72,6 +74,9 @@ class HomeMenu : AppCompatActivity() {
         recyclerView = binding.homeFriendlistRecyclerview
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+
+
+
         // 로그인 세션 확인
         loginSession = LoginSession(this)
         Log.d("로그인 세션 확인", "로그인 세션 상태: ${loginSession.isLoggedIn}")
@@ -97,8 +102,20 @@ class HomeMenu : AppCompatActivity() {
         userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
 
         // 어댑터를 먼저 생성하고 설정합니다.
-        val adapter = FriendListAdapter(mutableListOf())
+        val adapter = FriendListAdapter(mutableListOf()).apply {
+            setOnFriendLongClickListener(object : FriendListAdapter.OnFriendLongClickListener {
+                override fun onFriendLongClick(friend: Friendlist.Friend) {
+                    val friendListData = loadFriendsData()
+                    friendListData.observe(this@HomeMenu, Observer { updatedFriendList ->
+                        this@apply.friendList = updatedFriendList
+                        this@apply.notifyDataSetChanged()
+                    })
+                }
+            })
+        }
         recyclerView.adapter = adapter
+
+
 
         // 친구 목록 데이터를 불러옵니다.
         val friendListData = loadFriendsData()
@@ -111,7 +128,7 @@ class HomeMenu : AppCompatActivity() {
 
         storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
-        // 의심 구간 1
+        // 이미지 경로 받음
         val imageRef = storageRef.child("image/$userPhoneNumber")
 
         imageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -126,6 +143,17 @@ class HomeMenu : AppCompatActivity() {
                 .into(binding.homeProfileimage)
         }
 
+        // 라이브러리 : 화면 아래로 잡아댕겼을때 새로고침
+        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            val friendListData = loadFriendsData()
+            friendListData.observe(this@HomeMenu, Observer { updatedFriendList ->
+                adapter.friendList = updatedFriendList
+                adapter.notifyDataSetChanged()
+                swipeRefreshLayout.isRefreshing = false
+            })
+        }
 
         // 설정 화면 이벤트 이동
         binding.fromSetting.setOnClickListener {
@@ -222,6 +250,9 @@ class HomeMenu : AppCompatActivity() {
         val liveData = MutableLiveData<List<Friendlist.Friend>>()
         val friendList = mutableListOf<Friendlist.Friend>()
 
+        // 프로그레스 바를 보이게 합니다.
+        binding.progressBar.visibility = View.VISIBLE
+
         database.child("users").child(userPhoneNumber!!).child("Friends")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -236,6 +267,10 @@ class HomeMenu : AppCompatActivity() {
                             database.child("users").child(friendPhoneNumber!!)
                                 .addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onDataChange(snapshot: DataSnapshot) {
+
+                                        // 친구 목록 로딩이 끝나면 프로그레스 바를 숨깁니다.
+                                        binding.progressBar.visibility = View.GONE
+
                                         val userName = snapshot.child("userName").value as? String
                                         val userID = snapshot.child("userID").value as? String
 
@@ -283,6 +318,9 @@ class HomeMenu : AppCompatActivity() {
                                     }
 
                                     override fun onCancelled(error: DatabaseError) {
+                                        // 친구 목록 로딩이 실패하면 프로그레스 바를 숨깁니다.
+                                        binding.progressBar.visibility = View.GONE
+
                                         println("Friend 정보 받기 실패..: ${error.toException()}")
                                     }
                                 })

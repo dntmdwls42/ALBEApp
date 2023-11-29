@@ -22,15 +22,13 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_weight="1">
-            </View>
+                android:layout_weight="1"></View>
 
             <Button
                 android:id="@+id/fromSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="환경설정">
-            </Button>
+                android:text="환경설정"></Button>
 
             <ImageButton
                 android:id="@+id/addFriend"
@@ -38,8 +36,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:scaleType="centerInside"
-                android:src="@drawable/friendaddreverse">
-            </ImageButton>
+                android:src="@drawable/friendaddreverse"></ImageButton>
         </LinearLayout>
 
         <Space
@@ -124,9 +121,23 @@
             android:layout_width="0dp"
             android:layout_height="13dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/home_friendlist_recyclerview"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home_friendlist_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
     </LinearLayout>
 </layout>
