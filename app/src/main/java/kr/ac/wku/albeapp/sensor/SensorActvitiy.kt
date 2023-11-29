@@ -119,7 +119,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
         stateTimer.start()
 
         //알람 타이머 지정
-        setAlarmTimer(0, 0,0,10)
+        setAlarmTimer(0, 0, 0, 10)
     }
 
     public fun setAlarmTimer(d: Int, h: Int, m: Int = 1, s: Int = 10) // 설정할 알람 타이머
@@ -135,7 +135,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
         getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
     }
-    private val gravitySensor by lazy{
+    private val gravitySensor by lazy {
         getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
@@ -157,7 +157,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                 this,
                 gravitySensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_UI
-                )
+            )
             userStatus = ACTIVE
         } else { // 이게 비활성화 했을때
             gyroscopeSensor.unregisterListener(this)
@@ -172,20 +172,21 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     }
 
 
-    var getSensorValue = Array(3,{0.0f})
-    var getGravityValue = Array(3,{0.0f})
-    var fixGravityValue = Array(3,{0.0f})
+    var getSensorValue = Array(3, { 0.0f })
+    var getGravityValue = Array(3, { 0.0f })
+    var fixGravityValue = Array(3, { 0.0f })
     override fun onSensorChanged(event: SensorEvent?) {               // 센서 값 변경시
         //타이머 리셋 (동작시 상태 활성)
         if (activityPermission) {
             event?.let {
-                when(event.sensor.type){
+                when (event.sensor.type) {
                     Sensor.TYPE_GYROSCOPE -> {
                         //회전 센서 받아오는 값
                         getSensorValue[0] = event!!.values[0]
                         getSensorValue[1] = event.values[1]
                         getSensorValue[2] = event.values[2]
                     }
+
                     Sensor.TYPE_ACCELEROMETER -> {
                         getGravityValue[0] = event.values[0]
                         getGravityValue[1] = event.values[1]
@@ -200,24 +201,23 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                 gravityY.text = getGravityValue[1].toString()
                 gravityZ.text = getGravityValue[2].toString()
 
-                val fixSensorVar : Float = 1.0f //오차 범위
-                val checkSensor: Boolean = (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
-                        || (getSensorValue[1] >= fixSensorVar || getSensorValue[1] <= -fixSensorVar)
-                        || (getSensorValue[2] >= fixSensorVar || getSensorValue[2] <= -fixSensorVar) //자이로센서값이 동작할 때
-                val fixGravityVar : Float = 0.1f
-                val checkGravity: Boolean = (getGravityValue[0] <= fixGravityValue[0] - fixGravityVar || getGravityValue[0] >= fixGravityValue[0] + fixGravityVar)
-                        && (getGravityValue[1] <= fixGravityValue[1] - fixGravityVar || getGravityValue[1] >= fixGravityValue[1] + fixGravityVar)
-                        && (getGravityValue[2] <= fixGravityValue[2] - fixGravityVar || getGravityValue[2] >= fixGravityValue[2] + fixGravityVar)
-                if (checkSensor || checkGravity)
-                {
+                val fixSensorVar: Float = 1.0f //오차 범위
+                val checkSensor: Boolean =
+                    (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
+                            || (getSensorValue[1] >= fixSensorVar || getSensorValue[1] <= -fixSensorVar)
+                            || (getSensorValue[2] >= fixSensorVar || getSensorValue[2] <= -fixSensorVar) //자이로센서값이 동작할 때
+                val fixGravityVar: Float = 0.1f
+                val checkGravity: Boolean =
+                    (getGravityValue[0] <= fixGravityValue[0] - fixGravityVar || getGravityValue[0] >= fixGravityValue[0] + fixGravityVar)
+                            && (getGravityValue[1] <= fixGravityValue[1] - fixGravityVar || getGravityValue[1] >= fixGravityValue[1] + fixGravityVar)
+                            && (getGravityValue[2] <= fixGravityValue[2] - fixGravityVar || getGravityValue[2] >= fixGravityValue[2] + fixGravityVar)
+                if (checkSensor || checkGravity) {
                     sensorState.text = "센서 동작" //타이머 리셋
                     isTimer = false
                     stateTimer.base = SystemClock.elapsedRealtime()
                     stateTimer.stop()
                     setState = 1
-                }
-                else
-                {
+                } else {
                     sensorState.text = "센서 미동작"//타이머 실행
                     isTimer = true
                     stateTimer.start()

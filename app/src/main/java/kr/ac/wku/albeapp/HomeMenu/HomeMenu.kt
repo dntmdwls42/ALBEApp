@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -27,6 +29,8 @@ import kr.ac.wku.albeapp.HomeMenu.Friendlist.Friend
 import kr.ac.wku.albeapp.HomeMenu.FriendListAdapter
 import kr.ac.wku.albeapp.HomeMenu.Friendlist
 import kr.ac.wku.albeapp.HomeMenu.AddFriend
+import kr.ac.wku.albeapp.logins.LoginSession
+import kr.ac.wku.albeapp.logins.UserStatus
 
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -37,6 +41,9 @@ class HomeMenu : AppCompatActivity() {
 
     // 데이터바인딩 설정
     private lateinit var binding: ActivityHomeMenuBinding
+
+    // 리사이클러 뷰 설정
+    lateinit var recyclerView: RecyclerView
 
     // 사용자 전화번호와 검색 전화번호 변수 추가 ( 친구 추가 관련 )
     private var userPhoneNumber: String? = null
@@ -53,24 +60,35 @@ class HomeMenu : AppCompatActivity() {
         const val TEMP_INACTIVE = 2 // 센서 환경설정에서 비활성화 = 일부러 끔
     }
 
+    // 세션 정보 받아오기(클래스를 통해 받아옴)
+    private lateinit var loginSession: LoginSession
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_menu)
 
-        // 로그인 세션 확인
-        val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
-        val phoneNumber = sharedPreferences.getString("phoneNumber", null)
-        val userName = sharedPreferences.getString("userName", null)
-        val isLoggedIn = sharedPreferences.contains("phoneNumber") // phoneNumber 키가 존재하는지 확인
-        Log.d("로그인 세션 확인", "로그인 세션 상태: $isLoggedIn")
-        Log.d("정보확인 1", "로그인 한 사용자 이름: $userName")
-        Log.d("정보확인 2", "로그인 한 ID 확인 : $phoneNumber")
+        // Firebase에서 데이터를 가져옵니다.
+        database = FirebaseDatabase.getInstance().reference
 
-        if (phoneNumber != null && userName != null) {
+        // 파이어베이스 스토리지에서 참조
+        storage = FirebaseStorage.getInstance()
+
+        // RecyclerView를 찾습니다.
+        val recyclerView: RecyclerView = findViewById(R.id.home_friendlist_recyclerview)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        // 로그인 세션 확인
+        loginSession = LoginSession(this)
+        Log.d("로그인 세션 확인", "로그인 세션 상태: ${loginSession.isLoggedIn}")
+        Log.d("정보확인 1", "로그인 한 사용자 이름: ${loginSession.userName}")
+        Log.d("정보확인 2", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
+
+
+        if (loginSession.phoneNumber != null && loginSession.userName != null) {
             // 로그인한 사용자가 있는 경우
             // phoneNumber와 userName을 사용하는 코드
             // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
-            userPhoneNumber = phoneNumber
+            userPhoneNumber = loginSession.phoneNumber
         } else {
             // 로그인한 사용자가 없는 경우
             // 로그인 페이지로 이동하거나 사용자에게 로그인하라는 메시지를 보여주는 등의 처리를 수행
@@ -81,7 +99,19 @@ class HomeMenu : AppCompatActivity() {
         }
 
 
-        val userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
+        userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
+
+        // 친구 목록 데이터를 불러옵니다.
+        val friendListData = loadFriendsData()
+        friendListData.observe(this, Observer { friendList ->
+            // friendList에는 Firebase에서 가져온 친구 데이터 리스트가 들어있습니다.
+            // 이 데이터를 이용해서 화면을 그리는 함수를 호출합니다.
+            val adapter = FriendListAdapter(friendList)
+            recyclerView.adapter = adapter
+            adapter.notifyDataSetChanged()
+        })
+
+
         storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
         // 의심 구간 1
@@ -94,16 +124,12 @@ class HomeMenu : AppCompatActivity() {
                 .load(imageUrl)
                 .into(profileImage)
         }.addOnFailureListener {
-            // 이미지를 가져오지 못한 경우에 대한 처리
+            val profileImage: ImageView = findViewById(R.id.home_profileimage)
+            Glide.with(this)
+                .load("drawable/base_profile_image.png")
+                .into(profileImage)
         }
 
-        val recyclerView: RecyclerView = findViewById(R.id.home_friendlist_recyclerview)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Firebase에서 데이터를 가져옵니다.
-        database = FirebaseDatabase.getInstance().reference
-        // 파이어베이스 스토리지에서 참조
-        storage = FirebaseStorage.getInstance()
 
         // 설정 화면 이벤트 이동
         binding.fromSetting.setOnClickListener {
@@ -177,24 +203,13 @@ class HomeMenu : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 println("데이타 스냅샷: $dataSnapshot") // 제대로 나오는지 로그 찍는거
                 val userName = dataSnapshot.child("userName").value as? String
-                val userStatus = dataSnapshot.child("userState").value as? Int
+                val userState = dataSnapshot.child("userState").value as? Int ?: 1
+                val userStatus = UserStatus.fromStatus(userState)
 
                 // 화면에 사용자 정보를 표시합니다.
                 findViewById<TextView>(R.id.home_username).text = userName
                 findViewById<TextView>(R.id.home_userphonenumber).text = userPhoneNumber
-                when (userStatus) {
-                    ACTIVE -> {
-                        findViewById<TextView>(R.id.home_userstatus_text).text = "활성 상태"
-                    }
-
-                    INACTIVE -> {
-                        findViewById<TextView>(R.id.home_userstatus_text).text = "비활성 상태"
-                    }
-
-                    TEMP_INACTIVE -> {
-                        findViewById<TextView>(R.id.home_userstatus_text).text = "일시적 비활성 상태"
-                    }
-                }
+                findViewById<TextView>(R.id.home_userstatus_text).text = userStatus.description
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -202,15 +217,20 @@ class HomeMenu : AppCompatActivity() {
             }
         })
 
-        // database.child("users") 부분 추가
+
+    }
+
+
+    fun loadFriendsData(): MutableLiveData<List<Friend>> {
+        val liveData = MutableLiveData<List<Friendlist.Friend>>()
+        val friendList = mutableListOf<Friendlist.Friend>()
+
         database.child("users").child(userPhoneNumber!!).child("Friends")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val friendList = mutableListOf<Friendlist.Friend>()
                     val totalFriends = dataSnapshot.childrenCount
                     var loadedFriends = 0
 
-                    // Firebase에서 가져온 데이터를 사용해 Friend 객체 리스트를 만듭니다.
                     for (friendSnapshot in dataSnapshot.children) {
                         val friendPhoneNumber = friendSnapshot.key
                         val isFriend = friendSnapshot.value as? Boolean
@@ -221,35 +241,14 @@ class HomeMenu : AppCompatActivity() {
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         val userName = snapshot.child("userName").value as? String
                                         val userID = snapshot.child("userID").value as? String
-                                        val userStatus = snapshot.child("userState").value as? Int
+                                        var userStatus =
+                                            snapshot.child("userState").value as? Int ?: 1
 
-                                        // Firebase 스토리지에서 이미지 URL을 가져옵니다.
                                         val imageRef =
                                             storage.getReference().child("image/$friendPhoneNumber")
                                         imageRef.downloadUrl.addOnSuccessListener { uri ->
                                             val imageUrl = uri.toString()
 
-                                            val friend =
-                                                Friendlist.Friend(
-                                                    imageUrl,
-                                                    userName,
-                                                    userID,
-                                                    userStatus
-                                                )
-                                            friendList.add(friend)
-
-                                            loadedFriends++
-
-                                            // RecyclerView에 어댑터를 설정합니다.
-                                            if (loadedFriends == totalFriends.toInt()) {
-                                                val adapter = FriendListAdapter(friendList)
-                                                recyclerView.adapter = adapter
-                                            }
-
-                                        }.addOnFailureListener {
-                                            // 이미지 URL을 가져오는 데 실패했습니다. 대체 이미지를 사용합니다.
-                                            val imageUrl =
-                                                "https://via.placeholder.com/150"  // 대체 이미지 URL을 여기에 입력하세요.
                                             val friend = Friendlist.Friend(
                                                 imageUrl,
                                                 userName,
@@ -260,8 +259,21 @@ class HomeMenu : AppCompatActivity() {
 
                                             loadedFriends++
                                             if (loadedFriends == totalFriends.toInt()) {
-                                                val adapter = FriendListAdapter(friendList)
-                                                recyclerView.adapter = adapter
+                                                liveData.value = friendList
+                                            }
+                                        }.addOnFailureListener {
+                                            val imageUrl = "https://via.placeholder.com/150"
+                                            val friend = Friendlist.Friend(
+                                                imageUrl,
+                                                userName,
+                                                userID,
+                                                userStatus
+                                            )
+                                            friendList.add(friend)
+
+                                            loadedFriends++
+                                            if (loadedFriends == totalFriends.toInt()) {
+                                                liveData.value = friendList
                                             }
                                         }
                                     }
@@ -275,13 +287,10 @@ class HomeMenu : AppCompatActivity() {
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    // Firebase에서 데이터를 가져오는 데 실패했습니다.
                     println("다른 사용자 정보 받기 실패..: ${databaseError.toException()}")
                 }
-
             })
-
-
+        return liveData
     }
 
     // 사용자 검색 결과를 보여주는 함수

@@ -38,7 +38,7 @@ class SettingActivity : AppCompatActivity() {
         // MainActivity에서 넘어왔는지 확인
         val isFromMainActivity = intent.getBooleanExtra("isFromMainActivity", false)
 
-        // MainActivity에서 넘어온 경우 회원 탈퇴 버튼을 비활성화
+        // MainActivity(개발자 모드)에서 넘어온 경우 회원 탈퇴 버튼을 비활성화
         if (isFromMainActivity) {
             binding.userdelete.isEnabled = false
         }
@@ -111,6 +111,9 @@ class SettingActivity : AppCompatActivity() {
             val editor = sharedPreferences.edit()
             editor.putBoolean("sensor_off", isChecked)
             editor.apply()
+
+            // userState를 2로 설정합니다.
+            myRef.child("userState").setValue(if (isChecked) 2 else 1)
         }
 
         // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용

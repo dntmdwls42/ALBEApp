@@ -1,5 +1,6 @@
 package kr.ac.wku.albeapp.HomeMenu
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,18 +46,25 @@ class FriendListAdapter(private val friendList: List<Friendlist.Friend>) : Recyc
         holder.userName.text = friend.userName
         // 번호가 없어도 일단 나오게 수정
         holder.userPhoneNumber.text = friend.userID ?: "번호 없음"
+
+        Log.d("FriendListAdapter", "userState: ${friend.userState}")
+
         when (friend.userState) {
-            0 -> {
+            HomeMenu.ACTIVE -> {
                 holder.userStatus.setImageResource(R.drawable.check)  // 활성 상태일 때의 이미지
                 holder.userStatusText.text = "활성"
             }
-            1 -> {
+            HomeMenu.INACTIVE -> {
                 holder.userStatus.setImageResource(R.drawable.noinfo)  // 비활성 상태일 때의 이미지
                 holder.userStatusText.text = "비활성"
             }
-            else -> {
+            HomeMenu.TEMP_INACTIVE -> {
                 holder.userStatus.setImageResource(R.drawable.away)  // AWAY 상태일 때의 이미지
                 holder.userStatusText.text = "일시적 비활성"
+            }
+            else -> {
+                holder.userStatus.setImageResource(R.drawable.nothing)  // 알 수 없는 상태일 때의 이미지
+                holder.userStatusText.text = "알 수 없음"
             }
         }
     }
