@@ -12,7 +12,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.logins.UserStatus
 
-class FriendListAdapter(private val friendList: List<Friendlist.Friend>) :
+class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
     RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -96,13 +96,15 @@ class HomeMenu : AppCompatActivity() {
 
         userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
 
+        // 어댑터를 먼저 생성하고 설정합니다.
+        val adapter = FriendListAdapter(mutableListOf())
+        recyclerView.adapter = adapter
+
         // 친구 목록 데이터를 불러옵니다.
         val friendListData = loadFriendsData()
         friendListData.observe(this, Observer { friendList ->
-            // friendList에는 Firebase에서 가져온 친구 데이터 리스트가 들어있습니다.
-            // 이 데이터를 이용해서 화면을 그리는 함수를 호출합니다.
-            val adapter = FriendListAdapter(friendList)
-            recyclerView.adapter = adapter
+            // 데이터가 변경될 때마다 어댑터에 데이터를 업데이트합니다.
+            adapter.friendList = friendList
             adapter.notifyDataSetChanged()
         })
 
@@ -215,6 +217,7 @@ class HomeMenu : AppCompatActivity() {
     }
 
 
+    // 파이어베이스 실시간 데이터베이스에서 친구목록을 가져오는 역할
     fun loadFriendsData(): MutableLiveData<List<Friend>> {
         val liveData = MutableLiveData<List<Friendlist.Friend>>()
         val friendList = mutableListOf<Friendlist.Friend>()
@@ -235,6 +238,13 @@ class HomeMenu : AppCompatActivity() {
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         val userName = snapshot.child("userName").value as? String
                                         val userID = snapshot.child("userID").value as? String
+
+                                        // 유저상태(userState) 가 정상적으로 나오는지 테스트
+                                        val userStatusNode = snapshot.child("userState")
+                                        if (!userStatusNode.exists()) {
+                                            Log.d("홈메뉴", "유저 상태확인해보자 $friendPhoneNumber")
+                                        }
+
                                         var userStatus =
                                             snapshot.child("userState").value as? Int ?: 1
 

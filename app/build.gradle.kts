@@ -84,4 +84,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics:21.5.0")
     implementation("com.google.firebase:firebase-core:21.1.1")
     implementation("com.google.firebase:firebase-database:20.3.0")
+
+    // 파이어베이스 전화 인증 설정
+    implementation ("com.google.firebase:firebase-auth:21.0.1")
 }
