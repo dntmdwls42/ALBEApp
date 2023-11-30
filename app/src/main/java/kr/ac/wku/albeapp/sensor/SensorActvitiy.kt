@@ -253,8 +253,8 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
             nowSecond = (elapsedMillis - nowHour * 3600000 - nowMinute * 60000).toInt() / 1000
             nowDay = (nowHour * 24).toInt()
 
-            //if (nowDay >= dayAlarm && nowHour >= hourAlarm && nowMinute >= minuteAlarm && nowSecond >= secondAlarm)
-            //    sensorState.text = "상태 위험!!"    //알람발생
+            if (nowDay >= dayAlarm && nowHour >= hourAlarm && nowMinute >= minuteAlarm && nowSecond >= secondAlarm)
+                sensorState.text = "상태 위험!!"    //알람발생
             //Log.d("MainActivity", " x:${nowHour}, y:${nowMinute}, z:${nowSecond} ")
             //Log.d("MainActivity", " x:${event!! .values[0]}, y:${event.values[1]}, z:${event.values[2]} ")
         }
