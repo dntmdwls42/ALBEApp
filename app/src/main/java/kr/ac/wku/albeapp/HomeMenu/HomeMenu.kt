@@ -84,19 +84,19 @@ class HomeMenu : AppCompatActivity() {
         Log.d("정보확인 2", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
 
 
-        if (FirebaseAuth.getInstance().currentUser == null) {
-            // 로그인한 사용자가 있는 경우
-            // phoneNumber와 userName을 사용하는 코드
-            // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
-            userPhoneNumber = loginSession.phoneNumber
-        } else {
-            // 로그인한 사용자가 없는 경우
-            // 로그인 페이지로 이동하거나 사용자에게 로그인하라는 메시지를 보여주는 등의 처리를 수행
-            // 예를 들어, 다음과 같이 로그인 페이지로 이동할 수 있습니다.
-            startActivity(Intent(this, LoginPageActivity::class.java))
-            finish()
-            return
-        }
+//        if (FirebaseAuth.getInstance().currentUser == null) {
+//            // 로그인한 사용자가 있는 경우
+//            // phoneNumber와 userName을 사용하는 코드
+//            // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
+//            userPhoneNumber = loginSession.phoneNumber
+//        } else {
+//            // 로그인한 사용자가 없는 경우
+//            // 로그인 페이지로 이동하거나 사용자에게 로그인하라는 메시지를 보여주는 등의 처리를 수행
+//            // 예를 들어, 다음과 같이 로그인 페이지로 이동할 수 있습니다.
+//            startActivity(Intent(this, LoginPageActivity::class.java))
+//            finish()
+//            return
+//        }
 
 
         userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
