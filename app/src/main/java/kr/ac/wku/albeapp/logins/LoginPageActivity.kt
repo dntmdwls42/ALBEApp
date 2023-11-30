@@ -60,10 +60,10 @@ class LoginPageActivity : AppCompatActivity() {
         // Google 로그인 클라이언트 생성
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Google 로그인 버튼 클릭 리스너 설정
-        binding.loginpageGoogleButton.setOnClickListener {
-            signInWithGoogle()
-        }
+//        // Google 로그인 버튼 클릭 리스너 설정
+//        binding.loginpageGoogleButton.setOnClickListener {
+//            signInWithGoogle()
+//        }
 
         binding.loginpageJoinButton.setOnClickListener {
             // 회원 가입 화면으로 이동하는 이벤트
