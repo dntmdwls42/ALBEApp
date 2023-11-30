@@ -2,7 +2,6 @@ package kr.ac.wku.albeapp.HomeMenu
 
 import android.content.Context
 import android.content.Intent
-import android.hardware.Sensor
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -35,10 +34,7 @@ import kr.ac.wku.albeapp.HomeMenu.Friendlist
 import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
 import kr.ac.wku.albeapp.logins.UserStatus
-import kr.ac.wku.albeapp.sensor.SensorActvitiy
 
-
-//
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
     private lateinit var database: DatabaseReference
@@ -59,19 +55,14 @@ class HomeMenu : AppCompatActivity() {
     //뒤로 가기 토스트 앱종료 기능 측정 변수
     private var backPressedTime: Long = 0
     private val FINISH_INTERVAL_TIME: Long = 2000 //(2초)
-//
+
 
     // 세션 정보 받아오기(클래스를 통해 받아옴)
     private lateinit var loginSession: LoginSession
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_menu)
-
-
 
         // Firebase에서 데이터를 가져옵니다.
         database = FirebaseDatabase.getInstance().reference
@@ -93,19 +84,19 @@ class HomeMenu : AppCompatActivity() {
         Log.d("정보확인 2", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
 
 
-//        if (FirebaseAuth.getInstance().currentUser == null) {
-//            // 로그인한 사용자가 있는 경우
-//            // phoneNumber와 userName을 사용하는 코드
-//            // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
-//            userPhoneNumber = loginSession.phoneNumber
-//        } else {
-//            // 로그인한 사용자가 없는 경우
-//            // 로그인 페이지로 이동하거나 사용자에게 로그인하라는 메시지를 보여주는 등의 처리를 수행
-//            // 예를 들어, 다음과 같이 로그인 페이지로 이동할 수 있습니다.
-//            startActivity(Intent(this, LoginPageActivity::class.java))
-//            finish()
-//            return
-//        }
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            // 로그인한 사용자가 있는 경우
+            // phoneNumber와 userName을 사용하는 코드
+            // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
+            userPhoneNumber = loginSession.phoneNumber
+        } else {
+            // 로그인한 사용자가 없는 경우
+            // 로그인 페이지로 이동하거나 사용자에게 로그인하라는 메시지를 보여주는 등의 처리를 수행
+            // 예를 들어, 다음과 같이 로그인 페이지로 이동할 수 있습니다.
+            startActivity(Intent(this, LoginPageActivity::class.java))
+            finish()
+            return
+        }
 
 
         userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
@@ -249,14 +240,6 @@ class HomeMenu : AppCompatActivity() {
                 println("로그인 한 사용자 정보 받기 실패: ${databaseError.toException()}")
             }
         })
-
-        // 센서 탐지 시작 버튼 이벤트
-        binding.fromSensor.setOnClickListener {
-            val intent = Intent(this, SensorActvitiy::class.java)
-            // userID 아이디를 넣어서 전달
-            intent.putExtra("userID", loginSession.phoneNumber)
-            startActivity(intent)
-        }
 
 
     }
@@ -402,8 +385,6 @@ class HomeMenu : AppCompatActivity() {
         // 일단 임시로 빈 목록을 반환하도록 설정했습니다.
         return emptyList()
     }
-
-
 
     //    여기는 홈메뉴 뒤로가기 토스트와 종료 기능입니다.
     override fun onBackPressed() { //빨간줄이 있다면 정상입니다. 건너뛰세요.
