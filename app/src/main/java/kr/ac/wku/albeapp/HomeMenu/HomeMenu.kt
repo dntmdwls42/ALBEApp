@@ -34,7 +34,7 @@ import kr.ac.wku.albeapp.HomeMenu.Friendlist
 import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
 import kr.ac.wku.albeapp.logins.UserStatus
-
+//
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
     private lateinit var database: DatabaseReference
