@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase // 추가
 import kr.ac.wku.albeapp.R
 
@@ -56,10 +57,13 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     private var nowHour: Int = 0
     private var nowDay: Int = 0
 
-    public var setState: Int = 0
+    var setState: Int = 0
 
+    // 실시간 데이터베이스에서 인스턴스 가져옴
     val database = FirebaseDatabase.getInstance()
-    val myState = database.getReference("users").child("userState")
+    lateinit var myRef: DatabaseReference
+
+
 
     private val ACTIVE = 1 // 센서 감지 = 활성 상태
     private val INACTIVE = 0 // 센서 감지 없음 = 비활성 상태
@@ -70,6 +74,12 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sensor_actvitiy)
+
+        // 유저 ID 넘어옴
+        val receiveID = intent.getStringExtra("유저아이디")
+        Log.w("확인확인","${receiveID}")
+        myRef = database.getReference("users").child(receiveID!!)
+
 
         // SharedPreferences에서 센서 사용 설정 값을 불러옵니다.
         val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
@@ -229,7 +239,8 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                     fixGravityValue[1] = getGravityValue[1]
                     fixGravityValue[2] = getGravityValue[2]
                 }
-
+                // 코드 추가
+                myRef.child("userState").setValue(setState)
                 //Log.d("SensorActvitiy","State : ${myState}")
 
                 // [0] x축값, [1] y축값, [2] z축값

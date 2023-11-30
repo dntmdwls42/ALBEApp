@@ -244,8 +244,10 @@ class HomeMenu : AppCompatActivity() {
 
         binding.fromSensor.setOnClickListener {
             // 센서 화면으로 이동하는 이벤트
-            var myIntent = Intent(this, SensorActvitiy::class.java)
-
+            var myIntent = Intent(this@HomeMenu, SensorActvitiy::class.java)
+            val inputID = loginSession.phoneNumber
+            Log.w("ID 테스트","${loginSession.phoneNumber}")
+            myIntent.putExtra("유저아이디",loginSession.phoneNumber)
             // 센서 화면 레이아웃으로 이동
             startActivity(myIntent)
             Toast.makeText(this@HomeMenu, "센서 테스트 확인", Toast.LENGTH_SHORT).show()
