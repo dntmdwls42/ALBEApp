@@ -228,7 +228,7 @@ class HomeMenu : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 println("데이타 스냅샷: $dataSnapshot") // 제대로 나오는지 로그 찍는거
                 val userName = dataSnapshot.child("userName").value as? String
-                val userState = dataSnapshot.child("userState").value as? Int ?: 1
+                val userState = dataSnapshot.child("userState").value as? Int ?: 0
                 val userStatus = UserStatus.fromStatus(userState)
 
                 // 화면에 사용자 정보를 표시합니다.
