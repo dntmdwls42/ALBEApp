@@ -30,6 +30,12 @@
                 android:layout_height="wrap_content"
                 android:text="환경설정"></Button>
 
+            <Button
+                android:id="@+id/fromSensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="센서 탐지 시작"></Button>
+
             <ImageButton
                 android:id="@+id/addFriend"
                 android:layout_width="70dp"

@@ -2,6 +2,7 @@ package kr.ac.wku.albeapp.HomeMenu
 
 import android.content.Context
 import android.content.Intent
+import android.hardware.Sensor
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -35,6 +36,7 @@ import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
 import kr.ac.wku.albeapp.logins.UserStatus
 import kr.ac.wku.albeapp.sensor.SensorActvitiy
+
 
 //
 class HomeMenu : AppCompatActivity() {
@@ -248,6 +250,14 @@ class HomeMenu : AppCompatActivity() {
             }
         })
 
+        // 센서 탐지 시작 버튼 이벤트
+        binding.fromSensor.setOnClickListener {
+            val intent = Intent(this, SensorActvitiy::class.java)
+            // userID 아이디를 넣어서 전달
+            intent.putExtra("userID", loginSession.phoneNumber)
+            startActivity(intent)
+        }
+
 
     }
 
@@ -392,6 +402,8 @@ class HomeMenu : AppCompatActivity() {
         // 일단 임시로 빈 목록을 반환하도록 설정했습니다.
         return emptyList()
     }
+
+
 
     //    여기는 홈메뉴 뒤로가기 토스트와 종료 기능입니다.
     override fun onBackPressed() { //빨간줄이 있다면 정상입니다. 건너뛰세요.

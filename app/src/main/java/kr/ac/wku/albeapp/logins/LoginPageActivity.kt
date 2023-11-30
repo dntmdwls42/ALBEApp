@@ -95,7 +95,7 @@ class LoginPageActivity : AppCompatActivity() {
         // userID에서 가져온 정보와 관련된 이벤트리스너
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val value = dataSnapshot.getValue(String::class.java)
+                val value = dataSnapshot.getValue(UserData::class.java)
                 Log.w("로그인 테스트", "값은 바로: $value")
             }
 

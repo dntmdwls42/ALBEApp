@@ -63,8 +63,10 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     // 0 비활성 상태
     // 1 센서 움직이는 상태
 
+    var userID: String? = null
+
     val database = FirebaseDatabase.getInstance()
-    val myState = database.getReference("users").child("userState")
+    val myState = database.getReference("users").child(userID!!)
 
     private val ACTIVE = 1 // 센서 감지 = 활성 상태
     private val INACTIVE = 0 // 센서 감지 없음 = 비활성 상태
@@ -75,6 +77,10 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sensor_actvitiy)
+
+        // 홈 메뉴에서 받은 userID 값
+        userID = intent.getStringExtra("userID")
+        Log.d("로그인 한 유저 들어왔는지","${userID}")
 
         // SharedPreferences에서 센서 사용 설정 값을 불러옵니다.
         val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
@@ -222,13 +228,18 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                     stateTimer.base = SystemClock.elapsedRealtime()
                     stateTimer.stop()
                     setState = 1
+                    // 파이어베이스에 상태 쓰기
+
                 }
                 else
                 {
                     sensorState.text = "센서 미동작"//타이머 실행
                     isTimer = true
                     stateTimer.start()
-                    setState = 0    //setState를 firebase의 userState로 전송
+                    setState = 0
+
+                    //setState를 firebase의 userState로 전송
+
                     //가속도 센서값 고정 (이유 : 가속도센서가 동작하지 않으면 0으로 초기되지 않아서)
                     fixGravityValue[0] = getGravityValue[0]
                     fixGravityValue[1] = getGravityValue[1]

@@ -19,9 +19,6 @@
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
         <activity
-            android:name=".logins.PhoneAuth"
-            android:exported="false" />
-        <activity
             android:name=".sensor.SensorActvitiy"
             android:exported="false" />
         <activity
