@@ -56,7 +56,12 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     private var nowHour: Int = 0
     private var nowDay: Int = 0
 
-    public var setState: Int = 0
+    // 전역 변수 설정
+    companion object {
+        var setState: Int = 0
+    }
+    // 0 비활성 상태
+    // 1 센서 움직이는 상태
 
     val database = FirebaseDatabase.getInstance()
     val myState = database.getReference("users").child("userState")

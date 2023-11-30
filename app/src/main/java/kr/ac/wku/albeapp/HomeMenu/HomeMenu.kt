@@ -34,6 +34,8 @@ import kr.ac.wku.albeapp.HomeMenu.Friendlist
 import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
 import kr.ac.wku.albeapp.logins.UserStatus
+import kr.ac.wku.albeapp.sensor.SensorActvitiy
+
 //
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -60,9 +62,14 @@ class HomeMenu : AppCompatActivity() {
     // 세션 정보 받아오기(클래스를 통해 받아옴)
     private lateinit var loginSession: LoginSession
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_menu)
+
+
 
         // Firebase에서 데이터를 가져옵니다.
         database = FirebaseDatabase.getInstance().reference
