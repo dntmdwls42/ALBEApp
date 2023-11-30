@@ -271,69 +271,73 @@ class HomeMenu : AppCompatActivity() {
 
                     for (friendSnapshot in dataSnapshot.children) {
                         val friendPhoneNumber = friendSnapshot.key
-                        val isFriend = friendSnapshot.value as? Boolean
+                        val friendData = friendSnapshot.value as? Map<String, Any>
 
-                        if (isFriend == true) {
-                            database.child("users").child(friendPhoneNumber!!)
-                                .addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (friendData != null) {
+                            val friendPhoneNumber = friendData["phoneNumber"] as? String
+                            val friendUserState = friendData["userState"] as? Int
 
-                                        // 친구 목록 로딩이 끝나면 프로그레스 바를 숨깁니다.
-                                        binding.progressBar.visibility = View.GONE
 
-                                        val userName = snapshot.child("userName").value as? String
-                                        val userID = snapshot.child("userID").value as? String
+                                database.child("users").child(friendPhoneNumber!!)
+                                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onDataChange(snapshot: DataSnapshot) {
 
-                                        // 유저상태(userState) 가 정상적으로 나오는지 테스트
-                                        val userStatusNode = snapshot.child("userState")
-                                        if (!userStatusNode.exists()) {
-                                            Log.d("홈메뉴", "유저 상태확인해보자 $friendPhoneNumber")
+                                            // 친구 목록 로딩이 끝나면 프로그레스 바를 숨깁니다.
+                                            binding.progressBar.visibility = View.GONE
+
+                                            val userName = snapshot.child("userName").value as? String
+                                            val userID = snapshot.child("userID").value as? String
+
+                                            // 유저상태(userState) 가 정상적으로 나오는지 테스트
+                                            val userStatusNode = snapshot.child("userState")
+                                            if (!userStatusNode.exists()) {
+                                                Log.w("홈메뉴", "유저 상태확인해보자 $friendPhoneNumber")
+                                            }
+
+                                            var userStatus = friendUserState
+                                            Log.w("친구 상태 확인","${userStatus}")
+
+                                            val imageRef = storage.getReference().child("image/$friendPhoneNumber")
+                                            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                                                val imageUrl = uri.toString()
+
+                                                val friend = Friendlist.Friend(
+                                                    imageUrl,
+                                                    userName,
+                                                    userID,
+                                                    userStatus
+                                                )
+                                                friendList.add(friend)
+
+                                                loadedFriends++
+                                                if (loadedFriends == totalFriends.toInt()) {
+                                                    liveData.value = friendList
+                                                }
+                                            }.addOnFailureListener {
+                                                val imageUrl = "https://via.placeholder.com/150"
+                                                val friend = Friendlist.Friend(
+                                                    imageUrl,
+                                                    userName,
+                                                    userID,
+                                                    userStatus
+                                                )
+                                                friendList.add(friend)
+
+                                                loadedFriends++
+                                                if (loadedFriends == totalFriends.toInt()) {
+                                                    liveData.value = friendList
+                                                }
+                                            }
                                         }
 
-                                        var userStatus =
-                                            snapshot.child("userState").value as? Int ?: 1
+                                        override fun onCancelled(error: DatabaseError) {
+                                            // 친구 목록 로딩이 실패하면 프로그레스 바를 숨깁니다.
+                                            binding.progressBar.visibility = View.GONE
 
-                                        val imageRef =
-                                            storage.getReference().child("image/$friendPhoneNumber")
-                                        imageRef.downloadUrl.addOnSuccessListener { uri ->
-                                            val imageUrl = uri.toString()
-
-                                            val friend = Friendlist.Friend(
-                                                imageUrl,
-                                                userName,
-                                                userID,
-                                                userStatus
-                                            )
-                                            friendList.add(friend)
-
-                                            loadedFriends++
-                                            if (loadedFriends == totalFriends.toInt()) {
-                                                liveData.value = friendList
-                                            }
-                                        }.addOnFailureListener {
-                                            val imageUrl = "https://via.placeholder.com/150"
-                                            val friend = Friendlist.Friend(
-                                                imageUrl,
-                                                userName,
-                                                userID,
-                                                userStatus
-                                            )
-                                            friendList.add(friend)
-
-                                            loadedFriends++
-                                            if (loadedFriends == totalFriends.toInt()) {
-                                                liveData.value = friendList
-                                            }
+                                            println("Friend 정보 받기 실패..: ${error.toException()}")
                                         }
-                                    }
+                                    })
 
-                                    override fun onCancelled(error: DatabaseError) {
-                                        // 친구 목록 로딩이 실패하면 프로그레스 바를 숨깁니다.
-                                        binding.progressBar.visibility = View.GONE
-
-                                        println("Friend 정보 받기 실패..: ${error.toException()}")
-                                    }
-                                })
                         }
                     }
                 }
