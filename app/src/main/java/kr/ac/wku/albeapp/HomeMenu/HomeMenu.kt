@@ -34,6 +34,7 @@ import kr.ac.wku.albeapp.HomeMenu.Friendlist
 import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
 import kr.ac.wku.albeapp.logins.UserStatus
+import kr.ac.wku.albeapp.sensor.SensorActvitiy
 
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -241,9 +242,16 @@ class HomeMenu : AppCompatActivity() {
             }
         })
 
+        binding.fromSensor.setOnClickListener {
+            // 센서 화면으로 이동하는 이벤트
+            var myIntent = Intent(this, SensorActvitiy::class.java)
 
+            // 센서 화면 레이아웃으로 이동
+            startActivity(myIntent)
+            Toast.makeText(this@HomeMenu, "센서 테스트 확인", Toast.LENGTH_SHORT).show()
+        }
     }
-
+    //
 
     // 파이어베이스 실시간 데이터베이스에서 친구목록을 가져오는 역할
     fun loadFriendsData(): MutableLiveData<List<Friend>> {
