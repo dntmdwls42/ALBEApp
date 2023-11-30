@@ -55,7 +55,7 @@ class HomeMenu : AppCompatActivity() {
     //뒤로 가기 토스트 앱종료 기능 측정 변수
     private var backPressedTime: Long = 0
     private val FINISH_INTERVAL_TIME: Long = 2000 //(2초)
-
+//
 
     // 세션 정보 받아오기(클래스를 통해 받아옴)
     private lateinit var loginSession: LoginSession
