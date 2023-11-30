@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityHomeMenuBinding
@@ -33,6 +35,7 @@ import kr.ac.wku.albeapp.HomeMenu.FriendListAdapter
 import kr.ac.wku.albeapp.HomeMenu.Friendlist
 import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
+import kr.ac.wku.albeapp.logins.UserData
 import kr.ac.wku.albeapp.logins.UserStatus
 
 class HomeMenu : AppCompatActivity() {
@@ -60,6 +63,62 @@ class HomeMenu : AppCompatActivity() {
     // 세션 정보 받아오기(클래스를 통해 받아옴)
     private lateinit var loginSession: LoginSession
 
+    // 현재 로그인한 사용자의 ID를 가져옵니다.
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+    // 사용자 데이터를 로드하는 함수
+    fun loadUserData(userId: String? = null): LiveData<UserData> {
+        val liveData = MutableLiveData<UserData>()
+
+        // userId가 제공되면 해당 ID를 사용하고, 그렇지 않으면 userPhoneNumber를 사용합니다.
+        val userKey = userId ?: userPhoneNumber!!
+
+        database.child("users").child(userKey)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val userName = snapshot.child("userName").value as? String
+                    val userID = snapshot.child("userID").value as? String
+                    val userPW = snapshot.child("userPW").value as? String
+                    val userState = snapshot.child("userState").value as? Int ?: 1
+                    val friends = snapshot.child("Friends").value as? Map<String, Any>
+
+                    val userData = UserData(userName, userID, userPW, userState, friends)
+                    liveData.value = userData
+
+                    val imageRef = storage.getReference().child("image/$userKey")
+                    imageRef.downloadUrl.addOnSuccessListener { uri ->
+                        val imageUrl = uri.toString()
+
+                        val userData = UserData(
+                            userName,
+                            userID,
+                            null, // userPW는 보안상의 이유로 null로 설정합니다.
+                            userState,
+                            null // Friends는 이 함수에서 사용되지 않으므로 null로 설정합니다.
+                        )
+                        liveData.value = userData
+                    }.addOnFailureListener {
+                        val imageUrl = "https://via.placeholder.com/150"
+                        val userData = UserData(
+                            userName,
+                            userID,
+                            null, // userPW는 보안상의 이유로 null로 설정합니다.
+                            userState,
+                            null // Friends는 이 함수에서 사용되지 않으므로 null로 설정합니다.
+                        )
+                        liveData.value = userData
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    println("사용자 정보 받기 실패..: ${databaseError.toException()}")
+                }
+            })
+
+        return liveData
+    }
+
+    // onCreate 여기에 있음
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_menu)
@@ -75,29 +134,12 @@ class HomeMenu : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-
-
         // 로그인 세션 확인
         loginSession = LoginSession(this)
+
         Log.d("로그인 세션 확인", "로그인 세션 상태: ${loginSession.isLoggedIn}")
         Log.d("정보확인 1", "로그인 한 사용자 이름: ${loginSession.userName}")
         Log.d("정보확인 2", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
-
-
-        if (FirebaseAuth.getInstance().currentUser == null) {
-            // 로그인한 사용자가 있는 경우
-            // phoneNumber와 userName을 사용하는 코드
-            // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
-            userPhoneNumber = loginSession.phoneNumber
-        } else {
-            // 로그인한 사용자가 없는 경우
-            // 로그인 페이지로 이동하거나 사용자에게 로그인하라는 메시지를 보여주는 등의 처리를 수행
-            // 예를 들어, 다음과 같이 로그인 페이지로 이동할 수 있습니다.
-            startActivity(Intent(this, LoginPageActivity::class.java))
-            finish()
-            return
-        }
-
 
         userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
 
@@ -115,6 +157,16 @@ class HomeMenu : AppCompatActivity() {
         }
         recyclerView.adapter = adapter
 
+        // 사용자 데이터를 로드합니다.
+        loadUserData(userId).observe(this, Observer { user ->
+            // 사용자의 이름, 전화번호, 상태를 UI에 설정합니다.
+            binding.homeUsername.text = user.userName
+            binding.homeUserphonenumber.text = user.userID
+            binding.homeUserstatusText.text = when (user.userState) {
+                1 -> "활성 상태"
+                else -> "비활성 상태"
+            }
+        })
 
 
         // 친구 목록 데이터를 불러옵니다.
@@ -222,6 +274,7 @@ class HomeMenu : AppCompatActivity() {
         }
 
 
+        // 실시간 데이터베이스에서 로그인 한 사용자 받아오는 내용
         val userRef = database.child("users").child(userPhoneNumber!!)
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -241,19 +294,43 @@ class HomeMenu : AppCompatActivity() {
             }
         })
 
+//        // 로그인한 사용자의 정보를 가져옵니다.
+//        loadUserData(userId).observe(this, Observer { user ->
+//            // 사용자의 이름, 전화번호, 상태를 UI에 설정합니다.
+//            binding.homeUsername.text = user.userName
+//            binding.homeUserphonenumber.text = user.userPhoneNumber
+//            binding.homeUserstatusText.text = when (user.userStatus) {
+//                1 -> "활성 상태"
+//                else -> "비활성 상태"
+//            }
+//
+//            // 사용자의 프로필 이미지를 가져옵니다.
+//            Glide.with(this)
+//                .load(user.userImageUrl)
+//                .into(binding.homeProfileimage)
+//        })
+
+        // 로그인한 사용자의 친구 목록을 가져옵니다.
+        loadFriendsData(userId).observe(this, Observer { friends ->
+            // 친구 목록을 UI에 설정합니다.
+            // 여기에 친구 목록을 표시하는 코드를 추가하세요.
+        })
+
 
     }
 
 
     // 파이어베이스 실시간 데이터베이스에서 친구목록을 가져오는 역할
-    fun loadFriendsData(): MutableLiveData<List<Friend>> {
+    fun loadFriendsData(userId: String? = null): MutableLiveData<List<Friend>> {
         val liveData = MutableLiveData<List<Friendlist.Friend>>()
         val friendList = mutableListOf<Friendlist.Friend>()
 
         // 프로그레스 바를 보이게 합니다.
         binding.progressBar.visibility = View.VISIBLE
 
-        database.child("users").child(userPhoneNumber!!).child("Friends")
+        val userKey = userId ?: userPhoneNumber!!
+
+        database.child("users").child(userKey).child("Friends")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val totalFriends = dataSnapshot.childrenCount
@@ -336,9 +413,9 @@ class HomeMenu : AppCompatActivity() {
     }
 
     // 사용자 검색 결과를 보여주는 함수
-    // imageUrl: 검색한 사용자의 프로필 이미지 URL
-    // userName: 검색한 사용자의 이름
-    // userStatus: 검색한 사용자의 상태
+// imageUrl: 검색한 사용자의 프로필 이미지 URL
+// userName: 검색한 사용자의 이름
+// userStatus: 검색한 사용자의 상태
     private fun showSearchResultDialog(imageUrl: String?, userName: String?, userStatus: Int?) {
         // AlertDialog.Builder를 사용하여 다이얼로그를 만듬
         val builder = AlertDialog.Builder(this@HomeMenu)
