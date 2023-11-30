@@ -80,7 +80,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
         // 홈 메뉴에서 받은 userID 값
         userID = intent.getStringExtra("userID")
-        Log.d("로그인 한 유저 들어왔는지","${userID}")
+        Log.w("로그인 한 유저 들어왔는지","${userID}")
 
         // SharedPreferences에서 센서 사용 설정 값을 불러옵니다.
         val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
