@@ -175,16 +175,33 @@ class HomeMenu : AppCompatActivity() {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 val userName = dataSnapshot.child("userName").value as? String
-                                val userStatus = dataSnapshot.child("userState").value as? Int
+                                // 검색한 사용자의 userState 값을 가져옵니다.
+                                val userStateValue = dataSnapshot.child("userState").value as? Long
+                                Log.w("홈 메뉴 친구검색", "검색한 사용자 userState 필드의 원래 값: $userStateValue")
+
+                                // userState 필드의 값을 Int로 변환합니다.
+                                val userStateInt = userStateValue?.toInt()
+
+                                // userState 필드의 값을 UserState로 변환합니다.
+                                val userState =
+                                    UserState.fromStatus(userStateInt ?: UserState.NOTHING.status)
 
                                 // 파이어베이스 스토리지에서 사용자의 프로필 이미지를 가져옵니다.
                                 storage.getReference()
                                     .child("image/$searchPhoneNumber").downloadUrl.addOnSuccessListener { uri ->
                                         // 검색 결과를 다이얼로그로 보여줌
-                                        showSearchResultDialog(uri.toString(), userName, userStatus)
+                                        showSearchResultDialog(
+                                            uri.toString(),
+                                            userName,
+                                            userState.description
+                                        )
                                     }.addOnFailureListener {
                                         // 이미지를 가져오는 데 실패한 경우, 기본 이미지를 사용합니다.
-                                        showSearchResultDialog(null, userName, userStatus)
+                                        showSearchResultDialog(
+                                            null,
+                                            userName,
+                                            userState.description
+                                        )
                                     }
 
                             } else {
@@ -228,12 +245,24 @@ class HomeMenu : AppCompatActivity() {
                 // userState 필드의 값을 UserState로 변환합니다.
                 val userState = UserState.fromStatus(userStateInt ?: UserState.NOTHING.status)
 
-                Log.w("홈 메뉴 내정보","로그인 사용자 이름:${userName}")
-                Log.w("홈 메뉴 내정보","로그인 사용자 상태:${userState.description}")
+                Log.w("홈 메뉴 내정보", "로그인 사용자 이름:${userName}")
+                Log.w("홈 메뉴 내정보", "로그인 사용자 상태:${userState.description}")
+                Log.w("홈 메뉴 내정보", "로그인 사용자 상태:${userState}")
                 // 화면에 사용자 정보를 표시합니다.
                 binding.homeUsername.text = userName
                 binding.homeUserphonenumber.text = userPhoneNumber
-                binding.homeUserstatusText.text = userState.description
+                if(userState.description == "활성"){
+                    binding.homeUserstatusText.text = "활성 상태"
+                }
+                else if(userState.description == "비활성"){
+                    binding.homeUserstatusText.text = "비활성 상태"
+                }
+                else if(userState.description == "일시적 비활성"){
+                    binding.homeUserstatusText.text = "일시적 비활성 상태"
+                }
+                else{
+                    binding.homeUserstatusText.text = "알 수 없음"
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -249,13 +278,13 @@ class HomeMenu : AppCompatActivity() {
     // userName: 검색한 사용자의 이름
     // userState: 검색한 사용자의 상태
     // 검색한 사용자의 userState 값을 가져옵니다.
-    private fun showSearchResultDialog(imageUrl: String?, userName: String?, userStatus: Int?) {
+    private fun showSearchResultDialog(imageUrl: String?, userName: String?, userStatus: String?) {
         // AlertDialog.Builder를 사용하여 다이얼로그를 만듬
         val builder = AlertDialog.Builder(this@HomeMenu)
         // 다이얼로그의 제목을 설정
         builder.setTitle("검색 결과")
 
-        Log.w("홈 메뉴 서비스","친구 검색 결과 : ${userStatus}")
+        Log.w("홈 메뉴 서비스", "친구 검색 결과 : ${userStatus}")
         // 검색한 사용자의 이름과 상태를 문자열로 만들어 메시지로 설정
         val message =
             "이름: $userName\n" +
@@ -316,21 +345,28 @@ class HomeMenu : AppCompatActivity() {
 
                                         val userName = snapshot.child("userName").value as? String
                                         val userID = snapshot.child("userID").value as? String
+
                                         // 친구의 userState 값을 가져옵니다.
-                                        // userState 필드의 값을 가져옵니다.
-                                        // 값이 없거나, Int로 변환할 수 없는 경우 UserState.NOTHING의 status 값을 기본값으로 사용합니다.
-                                        val userStateValue = snapshot.child("userState").value as? Int ?: UserState.NOTHING.status
+                                        val userStateValue =
+                                            snapshot.child("userState").value as? Long
+                                        Log.w("홈 메뉴 내친구", "친구 userState 필드의 원래 값: $userStateValue")
+
+                                        // userState 필드의 값을 Int로 변환합니다.
+                                        val userStateInt = userStateValue?.toInt()
 
                                         // userState 필드의 값을 UserState로 변환합니다.
-                                        // 값이 UserState에 없는 경우 UserState.NOTHING을 기본값으로 사용합니다.
-                                        val userState = UserState.fromStatus(userStateValue)
+                                        val userState = UserState.fromStatus(
+                                            userStateInt ?: UserState.NOTHING.status
+                                        )
 
-                                        Log.w("홈 메뉴 서비스","아이디 : ${userID}")
-                                        Log.w("홈 메뉴 서비스","이름 : ${userName}")
-                                        Log.w("홈 메뉴 서비스","상태 확인 : ${userState.status}")
+                                        Log.w("홈 메뉴 친구목록", "내 친구들 먼저 확인 : ${userState.description}")
+                                        Log.w("홈 메뉴 친구목록", "내 친구들 아이디 : ${userID}")
+                                        Log.w("홈 메뉴 친구목록", "내 친구들 이름 : ${userName}")
+                                        Log.w("홈 메뉴 친구목록", "내 친구들 상태 확인 : ${userState.status}")
 
                                         val imageRef =
                                             storage.getReference().child("image/$friendPhoneNumber")
+
                                         imageRef.downloadUrl.addOnSuccessListener { uri ->
                                             val imageUrl = uri.toString()
 
@@ -338,7 +374,7 @@ class HomeMenu : AppCompatActivity() {
                                                 imageUrl,
                                                 userName,
                                                 userID,
-                                                userState.status
+                                                userState.description // 상태 설명으로 바꾸었습니다.
                                             )
                                             friendList.add(friend)
 
@@ -352,7 +388,7 @@ class HomeMenu : AppCompatActivity() {
                                                 imageUrl,
                                                 userName,
                                                 userID,
-                                                userState.status
+                                                userState.description
                                             )
                                             friendList.add(friend)
 

@@ -55,6 +55,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
     implementation("com.google.firebase:firebase-firestore:24.9.1")
     implementation("com.google.firebase:firebase-auth:22.2.0")
+    implementation("com.google.firebase:firebase-messaging:23.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -97,4 +98,8 @@ dependencies {
     // 알림 요청
     // TedPermission
     implementation ("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
+
+    // 파이어베이스 클라우드 메시징
+    implementation ("com.google.firebase:firebase-messaging-ktx")
+    implementation ("com.google.firebase:firebase-analytics-ktx")
 }

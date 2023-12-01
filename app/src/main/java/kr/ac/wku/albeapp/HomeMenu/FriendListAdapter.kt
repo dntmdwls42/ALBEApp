@@ -15,8 +15,6 @@ import kr.ac.wku.albeapp.logins.LoginSession
 import kr.ac.wku.albeapp.logins.UserState
 
 
-
-
 class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
     RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
 
@@ -44,7 +42,7 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
         val storage: FirebaseStorage = FirebaseStorage.getInstance()
         val friend = friendList[position]
         val phoneNumber = friend.userID
-        println("바인딩 데이타: $friend")
+        Log.w("친구 어댑터","바인딩 데이타: $friend")
 
         val imageRef = storage.getReference().child("image/$phoneNumber")
 
@@ -91,19 +89,38 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
             true
         }
 
-        Log.w("친구 어댑터", "userState: ${friend.userState}")
-
-        val userState = UserState.fromStatus(friend.userState ?: 3)
-        holder.userStateText.text = userState.description
+        Log.w("다시 어댑터","friend.userState 값 확인 : ${friend.userState}")
+        // userState 값을 Long에서 Int로 변환한 후 UserState로 변환
+        val userStateValue = friend.userState as? String
+//        val userStateInt = userStateValue?.toInt()
+//        val userState = UserState.fromStatus(userStateInt ?: UserState.NOTHING.status)
+//
+//        Log.w("다시 어댑터","상태 숫자 확인 : ${userStateInt}")
+//        Log.w("다시 어댑터","상태 내용 확인 : ${userState}")
+//
+//        holder.userStateText.text = userState.description
 
         // 유저 상태 보고 이미지 결정
-        when (userState) {
-            UserState.ACTIVE -> holder.userState.setImageResource(R.drawable.check)
-            UserState.INACTIVE -> holder.userState.setImageResource(R.drawable.noinfo)
-            UserState.TEMP_INACTIVE -> holder.userState.setImageResource(R.drawable.away)
-            else -> holder.userState.setImageResource(R.drawable.nothing)
+//        when (userStateValue) {
+//            UserState.ACTIVE -> holder.userState.setImageResource(R.drawable.check)
+//            UserState.INACTIVE -> holder.userState.setImageResource(R.drawable.noinfo)
+//            UserState.TEMP_INACTIVE -> holder.userState.setImageResource(R.drawable.away)
+//            else -> holder.userState.setImageResource(R.drawable.nothing)
+//        }
+        if(userStateValue.equals("활성")){
+            holder.userState.setImageResource(R.drawable.check)
+        }
+        else if(userStateValue.equals("비활성")){
+            holder.userState.setImageResource(R.drawable.noinfo)
+        }
+        else if(userStateValue.equals("일시적 비활성")){
+            holder.userState.setImageResource(R.drawable.away)
+        }
+        else{
+            holder.userState.setImageResource(R.drawable.nothing)
         }
     }
+
 
     override fun getItemCount(): Int {
         return friendList.size
