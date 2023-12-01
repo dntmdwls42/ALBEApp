@@ -2,12 +2,15 @@ package kr.ac.wku.albeapp.logins
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,8 +18,14 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.MainActivity
+import android.Manifest
+import android.os.Build
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityLoginPageBinding
+import kr.ac.wku.albeapp.permission.NotificationManagerHelper
+
 
 // 로그인 페이지 액티비티
 class LoginPageActivity : AppCompatActivity() {
@@ -31,6 +40,21 @@ class LoginPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
+
+
+        TedPermission.create()
+            .setPermissionListener(object:PermissionListener{
+                override fun onPermissionGranted() {
+                    Toast.makeText(this@LoginPageActivity, "알림 권한 허용됨.", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                    Toast.makeText(this@LoginPageActivity, "알림 권한 거부됨.", Toast.LENGTH_SHORT).show()
+                }
+            })
+            .setDeniedMessage("권한을 주시지 않으면 알림을 받을 수 없습니다.")
+            .setPermissions(Manifest.permission.POST_NOTIFICATIONS) // 알림 권한 = post~~~
+            .check()
 
         binding.loginpageJoinButton.setOnClickListener {
             // 회원 가입 화면으로 이동하는 이벤트
@@ -95,7 +119,7 @@ class LoginPageActivity : AppCompatActivity() {
                             ).show()
 
                             // SharedPreferences(세션)에 전화번호와 사용자 이름 저장함
-                            val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
+                            val sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE)
                             val editor = sharedPreferences.edit()
                             editor.putString("phoneNumber", inputPhoneNumber)
                             editor.putString("userName", userName)
@@ -148,4 +172,7 @@ class LoginPageActivity : AppCompatActivity() {
             true
         }
     }
+
+
+
 }

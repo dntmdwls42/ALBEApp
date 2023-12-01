@@ -93,4 +93,8 @@ dependencies {
 
     // 백그라운드 서비스 관련
     implementation("androidx.core:core:1.12.0")
+
+    // 알림 요청
+    // TedPermission
+    implementation ("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
 }
