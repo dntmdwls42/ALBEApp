@@ -1,12 +1,15 @@
 package kr.ac.wku.albeapp.HomeMenu
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,10 +25,15 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityHomeMenuBinding
+import kr.ac.wku.albeapp.databinding.ActivitySettingBinding
 import kr.ac.wku.albeapp.logins.LoginPageActivity
 import kr.ac.wku.albeapp.setting.SettingActivity
 import kr.ac.wku.albeapp.HomeMenu.Friendlist.Friend
+import kr.ac.wku.albeapp.HomeMenu.FriendListAdapter
+import kr.ac.wku.albeapp.HomeMenu.Friendlist
+import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
+import kr.ac.wku.albeapp.logins.UserStatus
 
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -67,6 +75,8 @@ class HomeMenu : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
+
+
         // 로그인 세션 확인
         loginSession = LoginSession(this)
         Log.d("로그인 세션 확인", "로그인 세션 상태: ${loginSession.isLoggedIn}")
@@ -104,6 +114,7 @@ class HomeMenu : AppCompatActivity() {
             })
         }
         recyclerView.adapter = adapter
+
 
 
         // 친구 목록 데이터를 불러옵니다.
@@ -175,16 +186,16 @@ class HomeMenu : AppCompatActivity() {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 val userName = dataSnapshot.child("userName").value as? String
-
+                                val userStatus = dataSnapshot.child("userState").value as? Int
 
                                 // 파이어베이스 스토리지에서 사용자의 프로필 이미지를 가져옵니다.
                                 storage.getReference()
                                     .child("image/$searchPhoneNumber").downloadUrl.addOnSuccessListener { uri ->
                                         // 검색 결과를 다이얼로그로 보여줌
-                                        showSearchResultDialog(uri.toString(), userName)
+                                        showSearchResultDialog(uri.toString(), userName, userStatus)
                                     }.addOnFailureListener {
                                         // 이미지를 가져오는 데 실패한 경우, 기본 이미지를 사용합니다.
-                                        showSearchResultDialog(null, userName)
+                                        showSearchResultDialog(null, userName, userStatus)
                                     }
 
                             } else {
@@ -216,17 +227,21 @@ class HomeMenu : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 println("데이타 스냅샷: $dataSnapshot") // 제대로 나오는지 로그 찍는거
                 val userName = dataSnapshot.child("userName").value as? String
-
+                val userState = dataSnapshot.child("userState").value as? Int ?: 1
+                val userStatus = UserStatus.fromStatus(userState)
 
                 // 화면에 사용자 정보를 표시합니다.
                 binding.homeUsername.text = userName
                 binding.homeUserphonenumber.text = userPhoneNumber
+                binding.homeUserstatusText.text = userStatus.description
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 println("로그인 한 사용자 정보 받기 실패: ${databaseError.toException()}")
             }
         })
+
+
     }
 
 
@@ -246,13 +261,9 @@ class HomeMenu : AppCompatActivity() {
 
                     for (friendSnapshot in dataSnapshot.children) {
                         val friendPhoneNumber = friendSnapshot.key
-                        val friendData = friendSnapshot.value as? Map<String, Any>
+                        val isFriend = friendSnapshot.value as? Boolean
 
-                        if (friendData != null) {
-                            val friendPhoneNumber = friendData["phoneNumber"] as? String
-
-
-
+                        if (isFriend == true) {
                             database.child("users").child(friendPhoneNumber!!)
                                 .addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -263,6 +274,14 @@ class HomeMenu : AppCompatActivity() {
                                         val userName = snapshot.child("userName").value as? String
                                         val userID = snapshot.child("userID").value as? String
 
+                                        // 유저상태(userState) 가 정상적으로 나오는지 테스트
+                                        val userStatusNode = snapshot.child("userState")
+                                        if (!userStatusNode.exists()) {
+                                            Log.d("홈메뉴", "유저 상태확인해보자 $friendPhoneNumber")
+                                        }
+
+                                        var userStatus =
+                                            snapshot.child("userState").value as? Int ?: 1
 
                                         val imageRef =
                                             storage.getReference().child("image/$friendPhoneNumber")
@@ -273,8 +292,8 @@ class HomeMenu : AppCompatActivity() {
                                                 imageUrl,
                                                 userName,
                                                 userID,
-
-                                                )
+                                                userStatus
+                                            )
                                             friendList.add(friend)
 
                                             loadedFriends++
@@ -287,8 +306,8 @@ class HomeMenu : AppCompatActivity() {
                                                 imageUrl,
                                                 userName,
                                                 userID,
-
-                                                )
+                                                userStatus
+                                            )
                                             friendList.add(friend)
 
                                             loadedFriends++
@@ -305,7 +324,6 @@ class HomeMenu : AppCompatActivity() {
                                         println("Friend 정보 받기 실패..: ${error.toException()}")
                                     }
                                 })
-
                         }
                     }
                 }
@@ -321,17 +339,17 @@ class HomeMenu : AppCompatActivity() {
     // imageUrl: 검색한 사용자의 프로필 이미지 URL
     // userName: 검색한 사용자의 이름
     // userStatus: 검색한 사용자의 상태
-    private fun showSearchResultDialog(imageUrl: String?, userName: String?) {
+    private fun showSearchResultDialog(imageUrl: String?, userName: String?, userStatus: Int?) {
         // AlertDialog.Builder를 사용하여 다이얼로그를 만듬
         val builder = AlertDialog.Builder(this@HomeMenu)
         // 다이얼로그의 제목을 설정
         builder.setTitle("검색 결과")
 
-
+        val status = UserStatus.fromStatus(userStatus ?: 1).description
         // 검색한 사용자의 이름과 상태를 문자열로 만들어 메시지로 설정
         val message =
             "이름: $userName\n" +
-                    "상태: 상테테스트\n" +
+                    "상태: $status\n" +
                     "이미지 URL: ${imageUrl ?: "이미지 없음"}"
 
         // 만든 메시지를 다이얼로그에 설정함.
@@ -375,7 +393,8 @@ class HomeMenu : AppCompatActivity() {
         val intervalTime = tempTime - backPressedTime
 
         if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
-            moveTaskToBack(true)  // 앱을 백그라운드로 이동
+            finishAffinity()  // 앱의 모든 액티비티를 종료
+            System.exit(0)  // 시스템 종료 (선택적)
         } else {
             backPressedTime = tempTime
             Toast.makeText(applicationContext, "한 번 더 뒤로가기 하면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
