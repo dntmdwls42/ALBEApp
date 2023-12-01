@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.logins.LoginSession
-import kr.ac.wku.albeapp.logins.UserStatus
+import kr.ac.wku.albeapp.logins.UserState
 
 
 
@@ -31,8 +30,8 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
         val profileImage: ImageView = itemView.findViewById(R.id.home_profileimage)
         val userName: TextView = itemView.findViewById(R.id.home_username)
         val userPhoneNumber: TextView = itemView.findViewById(R.id.home_userphonenumber)
-        val userStatus: ImageView = itemView.findViewById(R.id.home_userstatus)
-        val userStatusText: TextView = itemView.findViewById(R.id.home_userstatus_text)
+        val userState: ImageView = itemView.findViewById(R.id.home_userstatus)
+        val userStateText: TextView = itemView.findViewById(R.id.home_userstatus_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -92,17 +91,17 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
             true
         }
 
-        Log.d("FriendListAdapter", "userState: ${friend.userState}")
+        Log.w("친구 어댑터", "userState: ${friend.userState}")
 
-        val userStatus = UserStatus.fromStatus(friend.userState ?: 0)
-        holder.userStatusText.text = userStatus.description
+        val userState = UserState.fromStatus(friend.userState ?: 3)
+        holder.userStateText.text = userState.description
 
         // 유저 상태 보고 이미지 결정
-        when (userStatus) {
-            UserStatus.ACTIVE -> holder.userStatus.setImageResource(R.drawable.check)
-            UserStatus.INACTIVE -> holder.userStatus.setImageResource(R.drawable.noinfo)
-            UserStatus.TEMP_INACTIVE -> holder.userStatus.setImageResource(R.drawable.away)
-            else -> holder.userStatus.setImageResource(R.drawable.nothing)
+        when (userState) {
+            UserState.ACTIVE -> holder.userState.setImageResource(R.drawable.check)
+            UserState.INACTIVE -> holder.userState.setImageResource(R.drawable.noinfo)
+            UserState.TEMP_INACTIVE -> holder.userState.setImageResource(R.drawable.away)
+            else -> holder.userState.setImageResource(R.drawable.nothing)
         }
     }
 

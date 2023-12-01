@@ -1,15 +1,12 @@
 package kr.ac.wku.albeapp.HomeMenu
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,20 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityHomeMenuBinding
-import kr.ac.wku.albeapp.databinding.ActivitySettingBinding
 import kr.ac.wku.albeapp.logins.LoginPageActivity
 import kr.ac.wku.albeapp.setting.SettingActivity
 import kr.ac.wku.albeapp.HomeMenu.Friendlist.Friend
-import kr.ac.wku.albeapp.HomeMenu.FriendListAdapter
-import kr.ac.wku.albeapp.HomeMenu.Friendlist
-import kr.ac.wku.albeapp.HomeMenu.AddFriend
 import kr.ac.wku.albeapp.logins.LoginSession
-import kr.ac.wku.albeapp.logins.UserStatus
+import kr.ac.wku.albeapp.logins.UserState
 
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -75,16 +67,14 @@ class HomeMenu : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-
-
         // 로그인 세션 확인
         loginSession = LoginSession(this)
-        Log.d("로그인 세션 확인", "로그인 세션 상태: ${loginSession.isLoggedIn}")
-        Log.d("정보확인 1", "로그인 한 사용자 이름: ${loginSession.userName}")
-        Log.d("정보확인 2", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
+        Log.w("홈메뉴 서비스", "로그인 세션 상태: ${loginSession.isLoggedIn}")
+        Log.w("홈메뉴 서비스", "로그인 한 사용자 이름: ${loginSession.userName}")
+        Log.w("홈메뉴 서비스", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
 
 
-        if (FirebaseAuth.getInstance().currentUser == null) {
+        if (loginSession.isLoggedIn) {
             // 로그인한 사용자가 있는 경우
             // phoneNumber와 userName을 사용하는 코드
             // 예를 들어, userPhoneNumber에 phoneNumber를 할당할 수 있습니다.
@@ -114,7 +104,6 @@ class HomeMenu : AppCompatActivity() {
             })
         }
         recyclerView.adapter = adapter
-
 
 
         // 친구 목록 데이터를 불러옵니다.
@@ -222,18 +211,29 @@ class HomeMenu : AppCompatActivity() {
         }
 
 
+        // 로그인 한 사용자 정보를 보여주는 내용
         val userRef = database.child("users").child(userPhoneNumber!!)
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 println("데이타 스냅샷: $dataSnapshot") // 제대로 나오는지 로그 찍는거
                 val userName = dataSnapshot.child("userName").value as? String
-                val userState = dataSnapshot.child("userState").value as? Int ?: 1
-                val userStatus = UserStatus.fromStatus(userState)
+                // 로그인 사용자의 userState 값을 가져옵니다.
+                // userState 필드의 값을 Long으로 변환합니다.
+                val userStateData = dataSnapshot.child("userState").value as? Long
+                Log.w("홈 메뉴 내정보", "userState 필드의 원래 값: $userStateData")
 
+                // userState 필드의 값을 Int로 변환합니다.
+                val userStateInt = userStateData?.toInt()
+
+                // userState 필드의 값을 UserState로 변환합니다.
+                val userState = UserState.fromStatus(userStateInt ?: UserState.NOTHING.status)
+
+                Log.w("홈 메뉴 내정보","로그인 사용자 이름:${userName}")
+                Log.w("홈 메뉴 내정보","로그인 사용자 상태:${userState.description}")
                 // 화면에 사용자 정보를 표시합니다.
                 binding.homeUsername.text = userName
                 binding.homeUserphonenumber.text = userPhoneNumber
-                binding.homeUserstatusText.text = userStatus.description
+                binding.homeUserstatusText.text = userState.description
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -242,6 +242,49 @@ class HomeMenu : AppCompatActivity() {
         })
 
 
+    }
+
+    // 사용자 검색 결과를 보여주는 함수
+    // imageUrl: 검색한 사용자의 프로필 이미지 URL
+    // userName: 검색한 사용자의 이름
+    // userState: 검색한 사용자의 상태
+    // 검색한 사용자의 userState 값을 가져옵니다.
+    private fun showSearchResultDialog(imageUrl: String?, userName: String?, userStatus: Int?) {
+        // AlertDialog.Builder를 사용하여 다이얼로그를 만듬
+        val builder = AlertDialog.Builder(this@HomeMenu)
+        // 다이얼로그의 제목을 설정
+        builder.setTitle("검색 결과")
+
+        Log.w("홈 메뉴 서비스","친구 검색 결과 : ${userStatus}")
+        // 검색한 사용자의 이름과 상태를 문자열로 만들어 메시지로 설정
+        val message =
+            "이름: $userName\n" +
+                    "상태: $userStatus\n" +
+                    "이미지 URL: ${imageUrl ?: "이미지 없음"}"
+
+        // 만든 메시지를 다이얼로그에 설정함.
+        builder.setMessage(message)
+
+        // 다이얼로그에 '친구추가' 버튼을 추가하고, 이 버튼을 누르면 추가 기능을 수행하도록 설정함
+        builder.setPositiveButton("친구추가") { dialog, _ ->
+            // 친구 추가 기능 구현
+            val addFriend = AddFriend()
+
+            if (userPhoneNumber != null && searchPhoneNumber != null) {
+                addFriend.addNewFriend(userPhoneNumber!!, searchPhoneNumber!!)
+                Toast.makeText(this@HomeMenu, "친구가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@HomeMenu, "전화번호 정보가 없어 친구를 추가할 수 없습니다.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            dialog.dismiss()
+        }
+
+        // 다이얼로그에 '취소' 버튼을 추가하고, 이 버튼을 누르면 다이얼로그가 닫히도록 설정함
+        builder.setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
+
+        // 설정이 완료된 다이얼로그를 보여준다
+        builder.show()
     }
 
 
@@ -273,15 +316,18 @@ class HomeMenu : AppCompatActivity() {
 
                                         val userName = snapshot.child("userName").value as? String
                                         val userID = snapshot.child("userID").value as? String
+                                        // 친구의 userState 값을 가져옵니다.
+                                        // userState 필드의 값을 가져옵니다.
+                                        // 값이 없거나, Int로 변환할 수 없는 경우 UserState.NOTHING의 status 값을 기본값으로 사용합니다.
+                                        val userStateValue = snapshot.child("userState").value as? Int ?: UserState.NOTHING.status
 
-                                        // 유저상태(userState) 가 정상적으로 나오는지 테스트
-                                        val userStatusNode = snapshot.child("userState")
-                                        if (!userStatusNode.exists()) {
-                                            Log.d("홈메뉴", "유저 상태확인해보자 $friendPhoneNumber")
-                                        }
+                                        // userState 필드의 값을 UserState로 변환합니다.
+                                        // 값이 UserState에 없는 경우 UserState.NOTHING을 기본값으로 사용합니다.
+                                        val userState = UserState.fromStatus(userStateValue)
 
-                                        var userStatus =
-                                            snapshot.child("userState").value as? Int ?: 1
+                                        Log.w("홈 메뉴 서비스","아이디 : ${userID}")
+                                        Log.w("홈 메뉴 서비스","이름 : ${userName}")
+                                        Log.w("홈 메뉴 서비스","상태 확인 : ${userState.status}")
 
                                         val imageRef =
                                             storage.getReference().child("image/$friendPhoneNumber")
@@ -292,7 +338,7 @@ class HomeMenu : AppCompatActivity() {
                                                 imageUrl,
                                                 userName,
                                                 userID,
-                                                userStatus
+                                                userState.status
                                             )
                                             friendList.add(friend)
 
@@ -306,7 +352,7 @@ class HomeMenu : AppCompatActivity() {
                                                 imageUrl,
                                                 userName,
                                                 userID,
-                                                userStatus
+                                                userState.status
                                             )
                                             friendList.add(friend)
 
@@ -334,51 +380,6 @@ class HomeMenu : AppCompatActivity() {
             })
         return liveData
     }
-
-    // 사용자 검색 결과를 보여주는 함수
-    // imageUrl: 검색한 사용자의 프로필 이미지 URL
-    // userName: 검색한 사용자의 이름
-    // userStatus: 검색한 사용자의 상태
-    private fun showSearchResultDialog(imageUrl: String?, userName: String?, userStatus: Int?) {
-        // AlertDialog.Builder를 사용하여 다이얼로그를 만듬
-        val builder = AlertDialog.Builder(this@HomeMenu)
-        // 다이얼로그의 제목을 설정
-        builder.setTitle("검색 결과")
-
-        val status = UserStatus.fromStatus(userStatus ?: 1).description
-        // 검색한 사용자의 이름과 상태를 문자열로 만들어 메시지로 설정
-        val message =
-            "이름: $userName\n" +
-                    "상태: $status\n" +
-                    "이미지 URL: ${imageUrl ?: "이미지 없음"}"
-
-        // 만든 메시지를 다이얼로그에 설정함.
-        builder.setMessage(message)
-
-        // 다이얼로그에 '친구추가' 버튼을 추가하고, 이 버튼을 누르면 추가 기능을 수행하도록 설정함
-        builder.setPositiveButton("친구추가") { dialog, _ ->
-            // 친구 추가 기능 구현
-            val addFriend = AddFriend()
-
-            if (userPhoneNumber != null && searchPhoneNumber != null) {
-                addFriend.addNewFriend(userPhoneNumber!!, searchPhoneNumber!!)
-                Toast.makeText(this@HomeMenu, "친구가 추가되었습니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this@HomeMenu, "전화번호 정보가 없어 친구를 추가할 수 없습니다.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            dialog.dismiss()
-        }
-
-        // 다이얼로그에 '취소' 버튼을 추가하고, 이 버튼을 누르면 다이얼로그가 닫히도록 설정함
-        builder.setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
-
-        // 설정이 완료된 다이얼로그를 보여준다
-        builder.show()
-
-
-    }
-
 
     private fun getFriendList(imageUrl: String): List<Friendlist.Friend> {
         // 여기에서는 실제 친구 목록을 가져와야 합니다.
