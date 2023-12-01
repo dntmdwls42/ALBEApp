@@ -52,6 +52,9 @@ class HomeMenu : AppCompatActivity() {
     // 세션 정보 받아오기(클래스를 통해 받아옴)
     private lateinit var loginSession: LoginSession
 
+    // 내 정보 갱신
+    private lateinit var realtimeDataObserver: RealtimeDataObserver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home_menu)
@@ -90,6 +93,9 @@ class HomeMenu : AppCompatActivity() {
 
 
         userPhoneNumber = intent.getStringExtra("phoneNumber") ?: ""
+
+        realtimeDataObserver = RealtimeDataObserver(this)
+        realtimeDataObserver.observeUserInfo(userPhoneNumber!!)
 
         // 어댑터를 먼저 생성하고 설정합니다.
         val adapter = FriendListAdapter(mutableListOf()).apply {
@@ -134,14 +140,9 @@ class HomeMenu : AppCompatActivity() {
 
         // 라이브러리 : 화면 아래로 잡아댕겼을때 새로고침
         val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
-
         swipeRefreshLayout.setOnRefreshListener {
-            val friendListData = loadFriendsData()
-            friendListData.observe(this@HomeMenu, Observer { updatedFriendList ->
-                adapter.friendList = updatedFriendList
-                adapter.notifyDataSetChanged()
-                swipeRefreshLayout.isRefreshing = false
-            })
+            loadFriendsData()
+            swipeRefreshLayout.isRefreshing = false
         }
 
         // 설정 화면 이벤트 이동
@@ -271,6 +272,18 @@ class HomeMenu : AppCompatActivity() {
         })
 
 
+    }
+
+    // 로그인 한 사용자 정보 갱신
+    fun updateUserInfo(snapshot: DataSnapshot) {
+        val userName = snapshot.child("userName").value as? String
+        val userStateData = snapshot.child("userState").value as? Long
+        val userStateInt = userStateData?.toInt()
+        val userState = UserState.fromStatus(userStateInt ?: UserState.NOTHING.status)
+
+        binding.homeUsername.text = userName
+        binding.homeUserphonenumber.text = userPhoneNumber
+        binding.homeUserstatusText.text = userState.description
     }
 
     // 사용자 검색 결과를 보여주는 함수
