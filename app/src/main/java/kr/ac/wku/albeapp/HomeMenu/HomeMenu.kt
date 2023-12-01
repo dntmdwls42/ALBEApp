@@ -26,8 +26,6 @@ import kr.ac.wku.albeapp.logins.LoginPageActivity
 import kr.ac.wku.albeapp.setting.SettingActivity
 import kr.ac.wku.albeapp.HomeMenu.Friendlist.Friend
 import kr.ac.wku.albeapp.logins.LoginSession
-import kr.ac.wku.albeapp.sensor.ALBEService
-import kr.ac.wku.albeapp.sensor.SensorActvitiy
 
 class HomeMenu : AppCompatActivity() {
     // 실시간 파이어베이스 관련 세팅
@@ -229,24 +227,8 @@ class HomeMenu : AppCompatActivity() {
                 println("로그인 한 사용자 정보 받기 실패: ${databaseError.toException()}")
             }
         })
-
-        binding.fromSensor.setOnClickListener {
-            // 센서 화면으로 이동하는 이벤트
-            var myIntent = Intent(this@HomeMenu, SensorActvitiy::class.java)
-            val inputID = loginSession.phoneNumber
-            Log.w("ID 테스트", "${loginSession.phoneNumber}")
-            myIntent.putExtra("유저아이디", loginSession.phoneNumber)
-            // 센서 화면 레이아웃으로 이동
-            startActivity(myIntent)
-
-            // ALBEService를 시작
-            val serviceIntent = Intent(this, ALBEService::class.java)
-            startService(serviceIntent)
-
-            Toast.makeText(this@HomeMenu, "센서 테스트 확인", Toast.LENGTH_SHORT).show()
-        }
     }
-    //
+
 
     // 파이어베이스 실시간 데이터베이스에서 친구목록을 가져오는 역할
     fun loadFriendsData(): MutableLiveData<List<Friend>> {

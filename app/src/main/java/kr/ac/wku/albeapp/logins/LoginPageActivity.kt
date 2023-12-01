@@ -19,12 +19,12 @@ import com.google.firebase.database.ValueEventListener
 import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.MainActivity
 import android.Manifest
-import android.os.Build
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityLoginPageBinding
-import kr.ac.wku.albeapp.permission.NotificationManagerHelper
+import kr.ac.wku.albeapp.sensor.ALBEService
+import kr.ac.wku.albeapp.sensor.SensorService
 
 
 // 로그인 페이지 액티비티
@@ -41,7 +41,7 @@ class LoginPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
 
-
+        // 알림 권한 받는것
         TedPermission.create()
             .setPermissionListener(object:PermissionListener{
                 override fun onPermissionGranted() {
@@ -54,6 +54,21 @@ class LoginPageActivity : AppCompatActivity() {
             })
             .setDeniedMessage("권한을 주시지 않으면 알림을 받을 수 없습니다.")
             .setPermissions(Manifest.permission.POST_NOTIFICATIONS) // 알림 권한 = post~~~
+            .check()
+
+        // 생체 신호 센서 권한 받는것
+        TedPermission.create()
+            .setPermissionListener(object:PermissionListener{
+                override fun onPermissionGranted() {
+                    Toast.makeText(this@LoginPageActivity, "생체 신호 센서 권한 허용됨.", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                    Toast.makeText(this@LoginPageActivity, "생체 신호 센서 권한 거부됨.", Toast.LENGTH_SHORT).show()
+                }
+            })
+            .setDeniedMessage("권한을 주시지 않으면 생체 신호 센서를 사용할 수 없습니다.")
+            .setPermissions(Manifest.permission.BODY_SENSORS) // 생체 신호 센서 권한
             .check()
 
         binding.loginpageJoinButton.setOnClickListener {
@@ -111,6 +126,15 @@ class LoginPageActivity : AppCompatActivity() {
                         val userName = userData.userName
 
                         if (savedPassword == inputPassword) {
+
+                            // 센서 동작 시작
+                            val SensorIntent = Intent(this@LoginPageActivity, SensorService::class.java)
+                            startService(SensorIntent)
+
+                            // ALBEService를 시작
+                            val serviceIntent = Intent(this@LoginPageActivity, ALBEService::class.java)
+                            startService(serviceIntent)
+                            Log.w("ALBEService","센서값을 전달하는 서비스가 동작하고 있음.")
 
                             Toast.makeText(
                                 this@LoginPageActivity,

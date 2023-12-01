@@ -17,11 +17,10 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -33,14 +32,14 @@
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
         <service
+            android:name=".sensor.SensorService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
             android:name=".sensor.ALBEService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="dataSync|mediaPlayback" />
-
-        <activity
-            android:name=".sensor.SensorActvitiy"
-            android:exported="false" />
         <activity
             android:name=".logins.FindMyId"
             android:exported="false" />
@@ -74,6 +73,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name=".sensor.MyBroadcastReceiver"
             android:exported="false">
@@ -81,7 +81,6 @@
                 <action android:name="kr.ac.wku.albeapp.sensor.SENSOR_STATE" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

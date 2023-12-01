@@ -3,7 +3,6 @@ package kr.ac.wku.albeapp.sensor
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,15 +10,52 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.SensorManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.google.firebase.database.FirebaseDatabase
 import kr.ac.wku.albeapp.R
+import kr.ac.wku.albeapp.logins.LoginSession
+
+// Handler 선언
+private val handler = Handler(Looper.getMainLooper())
+
+
 
 // 센서 액티비티 백그라운드 동작을 담당하는곳
 class ALBEService : Service() {
     private lateinit var sensorManager: SensorManager
     private val CHANNEL_ID = "ForegroundServiceChannel"
+
+
+    // Runnable 선언
+    private val runnable = object : Runnable {
+        override fun run() {
+            // 1분마다 실행할 작업을 작성합니다.
+
+            // 현재 로그인한 사용자의 전화번호를 가져옵니다.
+            val loginSession = LoginSession(this@ALBEService)
+            val phoneNumber = loginSession.phoneNumber
+
+            // 전화번호가 null이 아닌 경우에만 데이터베이스에 값을 저장합니다.
+            if (phoneNumber != null) {
+                // SharedPreferences에서 setState 값을 가져옵니다.
+                val sharedPref = getSharedPreferences("shared_pref", Context.MODE_PRIVATE)
+                val setState = sharedPref.getInt("setState", 0)
+
+                val database = FirebaseDatabase.getInstance()
+                val myRef = database.getReference("users").child(phoneNumber)
+
+                // setState 값을 데이터베이스에 저장합니다.
+                myRef.child("userState").setValue(setState)
+            }
+
+            // 다음 실행을 위해 자신을 다시 호출합니다.
+            handler.postDelayed(this, 60 * 1000L) // 1분마다 실행
+        }
+    }
 
     private val sensorStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -49,25 +85,29 @@ class ALBEService : Service() {
 
         createNotificationChannel()
 
-        Log.w("ALBEService", "Service Created")
+        Log.w("ALBEService", "서비스 생성됨.")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val intentFilter = IntentFilter("kr.ac.wku.albeapp.sensor.SENSOR_STATE")
-        registerReceiver(sensorStateReceiver, intentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(sensorStateReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        } // 수정된 부분
         val notification = createNotification("센서 서비스가 실행 중입니다.")
         startForeground(1, notification)
 
-        Log.w("ALBEService", "Service Started")
+        handler.post(runnable)
+
+        Log.w("ALBEService", "센서 동작중")
         return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(sensorStateReceiver)
-        Log.w("ALBEService", "Service Destroyed")
+        handler.removeCallbacks(runnable)
+        Log.w("ALBEService", "센서 멈춤")
     }
-
 
 
     private fun createNotificationChannel() {
@@ -84,16 +124,11 @@ class ALBEService : Service() {
     }
 
     private fun createNotification(contentText: String): Notification {
-        val notificationIntent = Intent(this, SensorActvitiy::class.java)
-        val pendingIntent =
-            PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
-
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("센서동작")
+            .setContentTitle("ALBE")
             .setContentText(contentText)
             .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
             .setSmallIcon(R.drawable.albe)
-            .setContentIntent(pendingIntent)
 
         if (contentText.contains("상태 위험!!") && contentText.contains("초 경과")) {
             builder.setDefaults(Notification.DEFAULT_SOUND) // 소리 추가

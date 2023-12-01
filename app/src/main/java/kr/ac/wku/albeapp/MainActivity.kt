@@ -11,6 +11,7 @@ import com.google.firebase.ktx.Firebase
 import kr.ac.wku.albeapp.databinding.ActivityMainBinding
 import kr.ac.wku.albeapp.setting.SettingActivity
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -27,7 +28,7 @@ import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
 import kr.ac.wku.albeapp.photos.PhotoActivity
 import kr.ac.wku.albeapp.photos.PhotoAdapter
-import kr.ac.wku.albeapp.sensor.SensorActvitiy
+import kr.ac.wku.albeapp.sensor.SensorService
 
 // 초기 로그인 화면 액티비티
 class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
@@ -162,11 +163,7 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         }
 
         binding.fromsensor.setOnClickListener {
-            // 센서 화면으로 이동하는 이벤트
-            var myIntent = Intent(this, SensorActvitiy::class.java)
-
-            // 센서 화면 레이아웃으로 이동
-            startActivity(myIntent)
+            Toast.makeText(this@MainActivity, "더이상 동작하지 않음.", Toast.LENGTH_SHORT).show()
         }
 
     }
