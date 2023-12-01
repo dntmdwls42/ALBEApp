@@ -270,8 +270,10 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
     // 센서 상태가 변경될때 ALBE 서비스로 알림
     private fun sendSensorState(state: String) {
+        val timerInfo = "${nowHour}h ${nowMinute}m ${nowSecond}s"
         val intent = Intent("kr.ac.wku.albeapp.sensor.SENSOR_STATE")
-        intent.putExtra("sensor_state", state)
+        intent.putExtra("sensor_state", state) // 센서 상태 알림창으로 전송
+        intent.putExtra("timer_info", timerInfo) // 타이머도
         sendBroadcast(intent)
     }
 

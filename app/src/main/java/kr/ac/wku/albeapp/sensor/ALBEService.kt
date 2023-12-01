@@ -26,9 +26,21 @@ class ALBEService : Service() {
             val sensorState = intent?.getStringExtra("sensor_state")
             val timerInfo = intent?.getStringExtra("timer_info")
 
-            val notificationContent = """$sensorState"""
+            if (sensorState == "상태 위험!!" && timerInfo != null) {
+                // 상태가 "상태 위험!!"이고, 타이머가 10초를 넘었을 때
+                val timeParts = timerInfo.split("h", "m", "s").map { it.trim() }
+                val hours = timeParts[0].toInt()
+                val minutes = timeParts[1].toInt()
+                val seconds = timeParts[2].toInt()
 
-            updateNotification(notificationContent)
+                val totalSeconds = hours * 3600 + minutes * 60 + seconds
+
+                if (totalSeconds > 10) {
+                    // 상태가 "상태 위험!!"이고, 타이머가 10초를 넘었을 때
+                    val notificationContent = "$sensorState$timerInfo 초 경과"
+                    updateNotification(notificationContent)
+                }
+            }
         }
     }
 
@@ -41,6 +53,8 @@ class ALBEService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val intentFilter = IntentFilter("kr.ac.wku.albeapp.sensor.SENSOR_STATE")
+        registerReceiver(sensorStateReceiver, intentFilter)
         val notification = createNotification("센서 서비스가 실행 중입니다.")
         startForeground(1, notification)
 
@@ -50,7 +64,7 @@ class ALBEService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        unregisterReceiver(sensorStateReceiver)
         Log.w("ALBEService", "Service Destroyed")
     }
 
@@ -74,13 +88,18 @@ class ALBEService : Service() {
         val pendingIntent =
             PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
 
-        return NotificationCompat.Builder(this, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("센서동작")
             .setContentText(contentText)
             .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
             .setSmallIcon(R.drawable.albe)
             .setContentIntent(pendingIntent)
-            .build()
+
+        if (contentText.contains("상태 위험!!") && contentText.contains("초 경과")) {
+            builder.setDefaults(Notification.DEFAULT_SOUND) // 소리 추가
+        }
+
+        return builder.build()
     }
 
     private fun updateNotification(sensorState: String) {
