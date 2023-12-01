@@ -90,4 +90,7 @@ dependencies {
 
     // 화면 잡아당기는 라이브러리 추가
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // 백그라운드 서비스 관련
+    implementation("androidx.core:core:1.12.0")
 }

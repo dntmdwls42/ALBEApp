@@ -2,6 +2,7 @@ package kr.ac.wku.albeapp.sensor
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -21,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase // 추가
 import kr.ac.wku.albeapp.R
 
 class SensorActvitiy : AppCompatActivity(), SensorEventListener {
+
+
 
     //퍼미션 (권한요청)
     val MY_PERMISSION_SENSOR = 100
@@ -153,6 +156,8 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
     override fun onResume() {    //센서 등록 메서드
         super.onResume()
 
+        Log.w("센서액티비티", "액티비티 실행중")
+
         // SharedPreferences에서 센서 사용 설정 값을 불러옵니다.
         val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
         val isSensorOff = sharedPreferences.getBoolean("sensor_off", false)
@@ -223,6 +228,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                 if (checkSensor)
                 {
                     sensorState.text = "센서 동작" //타이머 리셋
+                    sendSensorState("센서 동작")
                     isTimer = false
                     stateTimer.base = SystemClock.elapsedRealtime()
                     stateTimer.stop()
@@ -231,6 +237,7 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
                 else
                 {
                     sensorState.text = "센서 미동작"//타이머 실행
+                    sendSensorState("센서 미동작")
                     isTimer = true
                     stateTimer.start()
                     setState = 0    //setState를 firebase의 userState로 전송
@@ -255,9 +262,17 @@ class SensorActvitiy : AppCompatActivity(), SensorEventListener {
 
             if (nowDay >= dayAlarm && nowHour >= hourAlarm && nowMinute >= minuteAlarm && nowSecond >= secondAlarm)
                 sensorState.text = "상태 위험!!"    //알람발생
+                sendSensorState("상태 위험!!")
             //Log.d("MainActivity", " x:${nowHour}, y:${nowMinute}, z:${nowSecond} ")
             //Log.d("MainActivity", " x:${event!! .values[0]}, y:${event.values[1]}, z:${event.values[2]} ")
         }
+    }
+
+    // 센서 상태가 변경될때 ALBE 서비스로 알림
+    private fun sendSensorState(state: String) {
+        val intent = Intent("kr.ac.wku.albeapp.sensor.SENSOR_STATE")
+        intent.putExtra("sensor_state", state)
+        sendBroadcast(intent)
     }
 
     // ⑤ 리스너 해제
