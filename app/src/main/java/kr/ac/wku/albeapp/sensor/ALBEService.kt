@@ -34,25 +34,28 @@ class ALBEService : Service() {
     private val runnable = object : Runnable {
         override fun run() {
             // 1분마다 실행할 작업을 작성합니다.
-
-            // 현재 로그인한 사용자의 전화번호를 가져옵니다.
-            val loginSession = LoginSession(this@ALBEService)
-            val phoneNumber = loginSession.phoneNumber
-
-            // 전화번호가 null이 아닌 경우에만 데이터베이스에 값을 저장합니다.
-            if (phoneNumber != null) {
-                // SharedPreferences에서 setState 값을 가져옵니다.
-                val sharedPref = getSharedPreferences("shared_pref", Context.MODE_PRIVATE)
-                val setState = sharedPref.getInt("setState", 0)
-
-                val database = FirebaseDatabase.getInstance()
-                val myRef = database.getReference("users").child(phoneNumber)
-
-                // setState 값을 데이터베이스에 저장합니다.
-                myRef.child("userState").setValue(setState)
-            }
+            Log.w("알비 서비스", "runnable 시작")
+//            // 현재 로그인한 사용자의 전화번호를 가져옵니다.
+//            val loginSession = LoginSession(this@ALBEService)
+//            val phoneNumber = loginSession.phoneNumber
+//
+//            // 전화번호가 null이 아닌 경우에만 데이터베이스에 값을 저장합니다.
+//            if (phoneNumber != null) {
+//                // SharedPreferences에서 setState 값을 가져옵니다.
+//                val sharedPref = getSharedPreferences("shared_pref", Context.MODE_PRIVATE)
+//                val setState = sharedPref.getInt("setState", 0)
+//
+//                val database = FirebaseDatabase.getInstance()
+//                val myRef = database.getReference("users").child(phoneNumber)
+//
+//                // setState 값을 데이터베이스에 저장합니다.
+//                Log.w("알비 서비스", "전화번호: $phoneNumber, setState: $setState")
+//                myRef.child("userState").setValue(setState)
+//                Log.w("알비 서비스", "userState 값 DB에 저장 완료")
+//            }
 
             // 다음 실행을 위해 자신을 다시 호출합니다.
+            Log.w("알비 서비스", "runnable 종료")
             handler.postDelayed(this, 60 * 1000L) // 1분마다 실행
         }
     }
@@ -60,22 +63,9 @@ class ALBEService : Service() {
     private val sensorStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val sensorState = intent?.getStringExtra("sensor_state")
-            val timerInfo = intent?.getStringExtra("timer_info")
-
-            if (sensorState == "상태 위험!!" && timerInfo != null) {
+            Log.w("알비 서비스", "onReceive 호출: $sensorState")
+            if (sensorState == "상태 위험!!") {
                 // 상태가 "상태 위험!!"이고, 타이머가 10초를 넘었을 때
-                val timeParts = timerInfo.split("h", "m", "s").map { it.trim() }
-                val hours = timeParts[0].toInt()
-                val minutes = timeParts[1].toInt()
-                val seconds = timeParts[2].toInt()
-
-                val totalSeconds = hours * 3600 + minutes * 60 + seconds
-
-                if (totalSeconds > 10) {
-                    // 상태가 "상태 위험!!"이고, 타이머가 10초를 넘었을 때
-                    val notificationContent = "$sensorState$timerInfo 초 경과"
-                    updateNotification(notificationContent)
-                }
             }
         }
     }
@@ -90,9 +80,7 @@ class ALBEService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val intentFilter = IntentFilter("kr.ac.wku.albeapp.sensor.SENSOR_STATE")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(sensorStateReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
-        } // 수정된 부분
+        registerReceiver(sensorStateReceiver, intentFilter , Context.RECEIVER_NOT_EXPORTED)
         val notification = createNotification("센서 서비스가 실행 중입니다.")
         startForeground(1, notification)
 

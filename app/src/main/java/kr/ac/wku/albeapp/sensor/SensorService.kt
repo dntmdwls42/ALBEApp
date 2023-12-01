@@ -13,8 +13,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
-import android.widget.Chronometer
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.database.DatabaseReference
@@ -41,10 +39,6 @@ class SensorService : Service(), SensorEventListener {
     private var gravityZ: Float = 0.0f
 
     private var isTimer: Boolean = false   // 타이머 실행 상태
-
-    private var nowSecond: Int = 0
-    private var nowMinute: Int = 0
-    private var nowHour: Int = 0
 
     var setState: Int = 0
 
@@ -74,18 +68,22 @@ class SensorService : Service(), SensorEventListener {
     // Runnable 선언
     private val runnable = object : Runnable {
         override fun run() {
+            Log.w("센서 서비스", "runnable 시작")
             // 10초마다 실행할 작업을 작성합니다.
             if (isTimer) { // 센서 미동작 시
                 sensorState = "상태 위험!!"    //알람발생
+                Log.w("센서 서비스", "센서 상태: $sensorState")
                 sendSensorState("상태 위험!!")
                 setState = 0
             } else { // 센서 동작 시
                 sensorState = "센서 동작"
+                Log.w("센서 서비스", "센서 상태: $sensorState")
                 sendSensorState("센서 동작")
                 setState = 1
             }
 
             // 다음 실행을 위해 자신을 다시 호출합니다.
+            Log.w("센서 서비스", "runnable 종료")
             handler.postDelayed(this, 10 * 1000L) // 10초마다 실행
         }
     }
@@ -244,10 +242,27 @@ class SensorService : Service(), SensorEventListener {
 
     // 센서 상태가 변경될때 ALBE 서비스로 알림
     private fun sendSensorState(state: String) {
+        Log.w("센서 서비스", "sendSensorState 호출: $state")
         val intent = Intent("kr.ac.wku.albeapp.sensor.SENSOR_STATE")
         intent.putExtra("sensor_state", state) // 센서 상태 알림창으로 전송
-        intent.putExtra("timer_info", isTimer) // 타이머도
         sendBroadcast(intent)
+
+        // 현재 로그인한 사용자의 전화번호를 가져옵니다.
+        val loginSession = LoginSession(this)
+        val phoneNumber = loginSession.phoneNumber
+
+        // 전화번호가 null이 아닌 경우에만 데이터베이스에 값을 저장합니다.
+        if (phoneNumber != null) {
+            val database = FirebaseDatabase.getInstance()
+            val myRef = database.getReference("users").child(phoneNumber)
+
+            // 센서 상태에 따라 userState 값을 설정합니다.
+            val userState = if (state == "상태 위험!!") 0 else 1
+
+            // userState 값을 데이터베이스에 저장합니다.
+            myRef.child("userState").setValue(userState)
+            Log.w("SensorService", "userState 값 DB에 저장: $userState")
+        }
     }
 
 }
