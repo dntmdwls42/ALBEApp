@@ -335,9 +335,9 @@ class HomeMenu : AppCompatActivity() {
 
 
     // 파이어베이스 실시간 데이터베이스에서 친구목록을 가져오는 역할
-    fun loadFriendsData(): MutableLiveData<List<Friend>> {
+    fun loadFriendsData(): MutableLiveData<List<Friendlist.Friend>> {
         val liveData = MutableLiveData<List<Friendlist.Friend>>()
-        val friendList = mutableListOf<Friendlist.Friend>()
+        val friendList = mutableListOf<Friendlist.Friend>() // 이 리스트를 초기화합니다.
 
         // 프로그레스 바를 보이게 합니다.
         binding.progressBar.visibility = View.VISIBLE
@@ -347,6 +347,8 @@ class HomeMenu : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val totalFriends = dataSnapshot.childrenCount
                     var loadedFriends = 0
+
+                    friendList.clear() // 친구 목록을 불러올 때마다 리스트를 초기화합니다.
 
                     for (friendSnapshot in dataSnapshot.children) {
                         val friendPhoneNumber = friendSnapshot.key
