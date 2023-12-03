@@ -252,17 +252,21 @@ class HomeMenu : AppCompatActivity() {
                 // 화면에 사용자 정보를 표시합니다.
                 binding.homeUsername.text = userName
                 binding.homeUserphonenumber.text = userPhoneNumber
-                if(userState.description == "활성"){
+                if(userState.description.equals("활성") ){
                     binding.homeUserstatusText.text = "활성 상태"
+                    binding.homeuserstatus.setImageResource(R.drawable.check)
                 }
-                else if(userState.description == "비활성"){
+                else if(userState.description.equals("비활성") ){
                     binding.homeUserstatusText.text = "비활성 상태"
+                    binding.homeuserstatus.setImageResource(R.drawable.noinfo)
                 }
-                else if(userState.description == "일시적 비활성"){
+                else if(userState.description.equals("일시적 비활성") ){
                     binding.homeUserstatusText.text = "일시적 비활성 상태"
+                    binding.homeuserstatus.setImageResource(R.drawable.away)
                 }
                 else{
                     binding.homeUserstatusText.text = "알 수 없음"
+                    binding.homeuserstatus.setImageResource(R.drawable.nothing)
                 }
             }
 

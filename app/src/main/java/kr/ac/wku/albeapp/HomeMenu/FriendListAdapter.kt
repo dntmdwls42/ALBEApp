@@ -91,22 +91,8 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
 
         Log.w("다시 어댑터","friend.userState 값 확인 : ${friend.userState}")
         // userState 값을 Long에서 Int로 변환한 후 UserState로 변환
-        val userStateValue = friend.userState as? String
-//        val userStateInt = userStateValue?.toInt()
-//        val userState = UserState.fromStatus(userStateInt ?: UserState.NOTHING.status)
-//
-//        Log.w("다시 어댑터","상태 숫자 확인 : ${userStateInt}")
-//        Log.w("다시 어댑터","상태 내용 확인 : ${userState}")
-//
-//        holder.userStateText.text = userState.description
+        val userStateValue = friend.userState
 
-        // 유저 상태 보고 이미지 결정
-//        when (userStateValue) {
-//            UserState.ACTIVE -> holder.userState.setImageResource(R.drawable.check)
-//            UserState.INACTIVE -> holder.userState.setImageResource(R.drawable.noinfo)
-//            UserState.TEMP_INACTIVE -> holder.userState.setImageResource(R.drawable.away)
-//            else -> holder.userState.setImageResource(R.drawable.nothing)
-//        }
         if(userStateValue.equals("활성")){
             holder.userState.setImageResource(R.drawable.check)
         }

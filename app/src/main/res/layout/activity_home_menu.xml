@@ -93,7 +93,7 @@
 
 
                     <ImageView
-                        android:id="@+id/home_userstatus"
+                        android:id="@+id/homeuserstatus"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/check" />
