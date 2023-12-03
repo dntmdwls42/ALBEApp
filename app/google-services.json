@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1088633522705",
+    "firebase_url": "https://albe-a5bea-default-rtdb.firebaseio.com",
     "project_id": "albe-a5bea",
     "storage_bucket": "albe-a5bea.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "kr.ac.wku.albeapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1088633522705-66mjkaquvive9dggfoa5nptb1gbrnaq3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.ac.wku.albeapp",
+            "certificate_hash": "dca05368dd5466a243c24c39149f4439dc942e77"
+          }
+        },
+        {
+          "client_id": "1088633522705-i6vdv85hco7s7563rmu3bmbg8vu9j76i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBZIFirAb06l2Sum_X7sxB3FWlHjqsjQYc"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088633522705-i6vdv85hco7s7563rmu3bmbg8vu9j76i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

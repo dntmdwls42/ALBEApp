@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="X축 : " />
+
+        <TextView
+            android:id="@+id/sensorX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0.0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Y축 : " />
+
+        <TextView
+            android:id="@+id/sensorY"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0.0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Z축 : " />
+
+        <TextView
+            android:id="@+id/sensorZ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0.0" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <TextView
+        android:id="@+id/sensorState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="센서 미동작" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="타이머 : " />
+
+        <TextView
+            android:id="@+id/nowDay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="n일" />
+
+        <Chronometer
+            android:id="@+id/stateTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="이동값"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="X값 : "/>
+            <TextView
+                android:id="@+id/gravityX"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="0.0"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Y값 : "/>
+            <TextView
+                android:id="@+id/gravityY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="0.0"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Z값 : "/>
+            <TextView
+                android:id="@+id/gravityZ"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="0.0"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

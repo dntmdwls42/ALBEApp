@@ -4,35 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SENDTO"/>
+    <uses-permission android:name="android.permission.SENDTO" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/albeicon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
-        <activity android:name=".logins.UserSignUp"
-            android:exported="true"/>
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_icon"
+            android:resource="@drawable/ic_stat_ic_notification" />
+
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_channel_id"
+            android:value="fcm_default_channel" />
+        <service
+            android:name=".message.MessagingService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".sensor.SensorService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".sensor.ALBEService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="dataSync|mediaPlayback" />
+
+
+
         <activity
-            android:name=".photos.PhotoActivity"
+            android:name=".logins.FindMyId"
             android:exported="false" />
         <activity
-            android:name=".logins.LoginPageActivity"
+            android:name=".logins.UserSignUp"
+            android:exported="true" />
+        <activity
+            android:name=".HomeMenu.HomeMenu"
+            android:exported="true" />
+        <activity
+            android:name=".photos.PhotoActivity"
+            android:exported="false" /> <!-- 첫 화면을 login 화면으로 설정해야해서 중복 지움 -->
+        <!-- <activity -->
+        <!-- android:name=".logins.LoginPageActivity" -->
+        <!-- android:exported="true" /> -->
+        <activity
+            android:name=".MainActivity"
             android:exported="true" />
         <activity
             android:name=".photos.AddPhotoActivity"
             android:exported="false" />
         <activity
             android:name=".setting.SettingActivity"
-            android:exported="true" />
+            android:exported="true" /> <!-- 첫 화면을 login 화면으로 설정 -->
         <activity
-            android:name=".MainActivity"
+            android:name=".logins.LoginPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,6 +96,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".sensor.MyBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="kr.ac.wku.albeapp.sensor.SENSOR_STATE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

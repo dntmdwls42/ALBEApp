@@ -1,39 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF8C9"
     tools:context=".photos.AddPhotoActivity">
 
-    <ImageView
-        android:id="@+id/image_iv"
-        android:layout_width="150dp"
-        android:layout_height="150dp">
-
-    </ImageView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/text_et"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:inputType="textMultiLine">
+        <ImageView
+            android:id="@+id/image_iv"
+            android:layout_width="150dp"
+            android:layout_height="150dp">
 
-        </EditText>
+        </ImageView>
 
-        <Button
-            android:id="@+id/upload_btn"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="업로드">
+            android:orientation="vertical">
 
-        </Button>
+
+            <EditText
+                android:id="@+id/text_et"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:hint="간단하게 설명을 작성해 주세요."
+                android:inputType="textMultiLine">
+
+            </EditText>
+
+            <Button
+                android:id="@+id/upload_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="업로드">
+
+            </Button>
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

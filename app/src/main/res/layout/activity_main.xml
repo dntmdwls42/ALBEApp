@@ -9,6 +9,15 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="테스트모드">
+
+        </TextView>
+
 
         <Button
             android:id="@+id/fromSetting"
@@ -42,7 +51,31 @@
 
         </Button>
 
+        <Button
+            android:id="@+id/frommain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="메인으로 가기">
 
+        </Button>
+
+        <Button
+            android:id="@+id/fromsensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="센서 테스트하러 가기">
+
+        </Button>
+
+        <TextView
+            android:id="@+id/tv_token"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello DynamicLink!"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView

@@ -55,6 +55,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
     implementation("com.google.firebase:firebase-firestore:24.9.1")
     implementation("com.google.firebase:firebase-auth:22.2.0")
+    implementation("com.google.firebase:firebase-messaging:23.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -84,4 +85,21 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics:21.5.0")
     implementation("com.google.firebase:firebase-core:21.1.1")
     implementation("com.google.firebase:firebase-database:20.3.0")
+
+    // 파이어베이스 전화 인증 설정
+    implementation("com.google.firebase:firebase-auth:21.0.1")
+
+    // 화면 잡아당기는 라이브러리 추가
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // 백그라운드 서비스 관련
+    implementation("androidx.core:core:1.12.0")
+
+    // 알림 요청
+    // TedPermission
+    implementation ("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
+
+    // 파이어베이스 클라우드 메시징
+    implementation ("com.google.firebase:firebase-messaging-ktx:23.3.1")
+    implementation ("com.google.firebase:firebase-analytics-ktx")
 }
