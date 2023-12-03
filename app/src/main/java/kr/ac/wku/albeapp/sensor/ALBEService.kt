@@ -35,24 +35,6 @@ class ALBEService : Service() {
         override fun run() {
             // 1분마다 실행할 작업을 작성합니다.
             Log.w("알비 서비스", "runnable 시작")
-//            // 현재 로그인한 사용자의 전화번호를 가져옵니다.
-//            val loginSession = LoginSession(this@ALBEService)
-//            val phoneNumber = loginSession.phoneNumber
-//
-//            // 전화번호가 null이 아닌 경우에만 데이터베이스에 값을 저장합니다.
-//            if (phoneNumber != null) {
-//                // SharedPreferences에서 setState 값을 가져옵니다.
-//                val sharedPref = getSharedPreferences("shared_pref", Context.MODE_PRIVATE)
-//                val setState = sharedPref.getInt("setState", 0)
-//
-//                val database = FirebaseDatabase.getInstance()
-//                val myRef = database.getReference("users").child(phoneNumber)
-//
-//                // setState 값을 데이터베이스에 저장합니다.
-//                Log.w("알비 서비스", "전화번호: $phoneNumber, setState: $setState")
-//                myRef.child("userState").setValue(setState)
-//                Log.w("알비 서비스", "userState 값 DB에 저장 완료")
-//            }
 
             // 다음 실행을 위해 자신을 다시 호출합니다.
             Log.w("알비 서비스", "runnable 종료")
