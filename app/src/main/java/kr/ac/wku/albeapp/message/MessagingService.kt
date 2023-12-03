@@ -14,6 +14,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.R
+import kr.ac.wku.albeapp.logins.LoginPageActivity
 
 class MessagingService : FirebaseMessagingService() {
     var msg = ""
@@ -44,7 +45,7 @@ class MessagingService : FirebaseMessagingService() {
     }
 
     private fun sendNotification(messageBody: String?) {
-        val intent = Intent(this, HomeMenu::class.java).apply {
+        val intent = Intent(this, LoginPageActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
