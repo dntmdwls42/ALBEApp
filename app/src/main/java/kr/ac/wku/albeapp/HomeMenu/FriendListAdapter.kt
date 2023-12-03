@@ -42,7 +42,9 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
         val storage: FirebaseStorage = FirebaseStorage.getInstance()
         val friend = friendList[position]
         val phoneNumber = friend.userID
+        val userState = UserState.fromDescription(friend.userState ?: UserState.NOTHING.description)
         Log.w("친구 어댑터","바인딩 데이타: $friend")
+        Log.w("새 어댑터"," 상태 값 확인 : ${userState}")
 
         val imageRef = storage.getReference().child("image/$phoneNumber")
 
@@ -58,6 +60,8 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
         holder.userName.text = friend.userName
         // 번호가 없어도 일단 나오게 수정
         holder.userPhoneNumber.text = friend.userID ?: "번호 없음"
+        holder.userState.setImageResource(userState.imageResId) // 여기에 수정된 코드 추가함
+        holder.userStateText.text = userState.description // 사용자 상태를 텍스트로 표시합니다.
 
         holder.itemView.setOnLongClickListener {
             // 롱 클릭 시 친구 삭제 다이얼로그 표시
@@ -88,25 +92,7 @@ class FriendListAdapter(var friendList: List<Friendlist.Friend>) :
 
             true
         }
-
-        Log.w("다시 어댑터","friend.userState 값 확인 : ${friend.userState}")
-        // userState 값을 Long에서 Int로 변환한 후 UserState로 변환
-        val userStateValue = friend.userState
-
-        if(userStateValue.equals("활성")){
-            holder.userState.setImageResource(R.drawable.check)
-        }
-        else if(userStateValue.equals("비활성")){
-            holder.userState.setImageResource(R.drawable.noinfo)
-        }
-        else if(userStateValue.equals("일시적 비활성")){
-            holder.userState.setImageResource(R.drawable.away)
-        }
-        else{
-            holder.userState.setImageResource(R.drawable.nothing)
-        }
     }
-
 
     override fun getItemCount(): Int {
         return friendList.size

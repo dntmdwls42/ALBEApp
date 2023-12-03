@@ -379,7 +379,7 @@ class HomeMenu : AppCompatActivity() {
                                         Log.w("홈 메뉴 친구목록", "내 친구들 먼저 확인 : ${userState.description}")
                                         Log.w("홈 메뉴 친구목록", "내 친구들 아이디 : ${userID}")
                                         Log.w("홈 메뉴 친구목록", "내 친구들 이름 : ${userName}")
-                                        Log.w("홈 메뉴 친구목록", "내 친구들 상태 확인 : ${userState.status}")
+                                        Log.w("홈 메뉴 친구목록", "내 친구들 상태 확인 : ${userStateInt}")
 
                                         val imageRef =
                                             storage.getReference().child("image/$friendPhoneNumber")
@@ -387,11 +387,18 @@ class HomeMenu : AppCompatActivity() {
                                         imageRef.downloadUrl.addOnSuccessListener { uri ->
                                             val imageUrl = uri.toString()
 
+                                            val userStateDescription: String = when (userState) {
+                                                UserState.ACTIVE -> "활성"
+                                                UserState.INACTIVE -> "비활성"
+                                                UserState.TEMP_INACTIVE -> "일시적 비활성"
+                                                else -> "NOTHING"
+                                            }
+
                                             val friend = Friendlist.Friend(
                                                 imageUrl,
                                                 userName,
                                                 userID,
-                                                userState.description // 상태 설명으로 바꾸었습니다.
+                                                userStateDescription
                                             )
                                             friendList.add(friend)
 
@@ -401,11 +408,23 @@ class HomeMenu : AppCompatActivity() {
                                             }
                                         }.addOnFailureListener {
                                             val imageUrl = "https://via.placeholder.com/150"
+
+                                            val userStateDescription : String?
+                                            Log.w("이미지 로딩 실패시 친구 상태", "내 친구들 이름 : ${userName}")
+                                            Log.w("이미지 로딩 실패시 친구 상태", "내 친구들 상태 확인 : ${userState.description}")
+
+                                            userStateDescription = when (userState) {
+                                                UserState.ACTIVE -> "활성"
+                                                UserState.INACTIVE -> "비활성"
+                                                UserState.TEMP_INACTIVE -> "일시적 비활성"
+                                                else -> "NOTHING"
+                                            }
+
                                             val friend = Friendlist.Friend(
                                                 imageUrl,
                                                 userName,
                                                 userID,
-                                                userState.description
+                                                userStateDescription
                                             )
                                             friendList.add(friend)
 
