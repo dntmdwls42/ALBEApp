@@ -100,6 +100,6 @@ dependencies {
     implementation ("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
 
     // 파이어베이스 클라우드 메시징
-    implementation ("com.google.firebase:firebase-messaging-ktx")
+    implementation ("com.google.firebase:firebase-messaging-ktx:23.3.1")
     implementation ("com.google.firebase:firebase-analytics-ktx")
 }

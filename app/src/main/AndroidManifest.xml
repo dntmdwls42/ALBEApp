@@ -31,12 +31,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_icon"
+            android:resource="@drawable/ic_stat_ic_notification" />
+
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_channel_id"
+            android:value="fcm_default_channel" />
         <service
             android:name=".message.MessagingService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:stopWithTask="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
@@ -48,6 +60,8 @@
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="dataSync|mediaPlayback" />
+
+
 
         <activity
             android:name=".logins.FindMyId"
