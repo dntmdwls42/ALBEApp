@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kr.ac.wku.albeapp.logins.LoginSession
+import kr.ac.wku.albeapp.logins.UserState
 
 
 // 센서'액티비티' -> 센서'서비스'
@@ -45,12 +46,7 @@ class SensorService : Service(), SensorEventListener {
     // 실시간 데이터베이스에서 인스턴스 가져옴
     val database = FirebaseDatabase.getInstance()
     lateinit var myRef: DatabaseReference
-
-    private val ACTIVE = 1 // 센서 감지 = 활성 상태
-    private val INACTIVE = 0 // 센서 감지 없음 = 비활성 상태
-    private val TEMP_INACTIVE = 2 // 설정에서 비활성화 = 일시적 비활성 상태
-
-    private var userStatus = ACTIVE
+    private var userStatus = UserState.ACTIVE.status
 
     // SensorManager와 Sensor 변수 추가
     private lateinit var sensorManager: SensorManager
@@ -160,10 +156,10 @@ class SensorService : Service(), SensorEventListener {
                 gravitySensor,
                 SensorManager.SENSOR_DELAY_UI
             )
-            userStatus = ACTIVE
+            userStatus = UserState.ACTIVE.status
         } else { // 이게 비활성화 했을때
             sensorManager.unregisterListener(this)
-            userStatus = TEMP_INACTIVE
+            userStatus = UserState.TEMP_INACTIVE.status
         }
 
         // Runnable 시작
@@ -176,7 +172,7 @@ class SensorService : Service(), SensorEventListener {
     override fun onDestroy() {
         super.onDestroy()
         sensorManager.unregisterListener(this)
-        userStatus = INACTIVE
+        userStatus = UserState.INACTIVE.status
         // Runnable 중지
         handler.removeCallbacks(runnable)
     }
