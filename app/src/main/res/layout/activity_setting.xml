@@ -41,7 +41,15 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#ED5A5A"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="백그라운드 어플 끄기" />
+            android:text="백그라운드 센서 끄기" />
+
+        <Button
+            android:id="@+id/backgroundon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#8BC34A"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="백그라운드 센서 켜기" />
 
         <Space
             android:layout_width="match_parent"

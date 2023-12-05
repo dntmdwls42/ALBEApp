@@ -20,6 +20,8 @@ import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivitySettingBinding
 import kr.ac.wku.albeapp.logins.LoginPageActivity
 import kr.ac.wku.albeapp.logins.UserData
+import kr.ac.wku.albeapp.sensor.ALBEService
+import kr.ac.wku.albeapp.sensor.SensorService
 
 // 설정 화면 액티비티
 class SettingActivity : AppCompatActivity() {
@@ -98,10 +100,21 @@ class SettingActivity : AppCompatActivity() {
             }
         })
 
-        //백그라운드버튼 -> 앱 종료
+        //백그라운드버튼 -> ALBE , 센서 서비스 종료
         binding.backgroundoff.setOnClickListener {
-            Toast.makeText(this, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
+            // ALBEService와 SensorService를 종료하는 Intent를 보냅니다.
+            stopService(Intent(this, ALBEService::class.java))
+            stopService(Intent(this, SensorService::class.java))
+
+            Toast.makeText(this, "백그라운드 센서를 종료합니다.", Toast.LENGTH_SHORT).show()
             finish()
+        }
+
+        binding.backgroundon.setOnClickListener {
+            // ALBEService와 SensorService를 종료하는 Intent를 보냅니다.
+            startService(Intent(this, ALBEService::class.java))
+            startService(Intent(this, SensorService::class.java))
+            Toast.makeText(this@SettingActivity, "백그라운드 센서를 시작합니다.", Toast.LENGTH_SHORT).show()
         }
 
         // 센서별 비활성화 라디오 버튼 이벤트
@@ -114,7 +127,19 @@ class SettingActivity : AppCompatActivity() {
 
             // userState를 2로 설정합니다.
             myRef.child("userState").setValue(if (isChecked) 2 else 1)
+
+            // SensorService를 종료하거나 시작합니다.
+            if (isChecked) {
+                stopService(Intent(this, SensorService::class.java))
+                Toast.makeText(this@SettingActivity, "센서 사용을 종료합니다.", Toast.LENGTH_SHORT).show()
+                Log.w("설정 서비스","센서 서비스 종료")
+            } else {
+                startService(Intent(this, SensorService::class.java))
+                Toast.makeText(this@SettingActivity, "센서를 다시 사용합니다.", Toast.LENGTH_SHORT).show()
+                Log.w("설정 서비스","센서 서비스 시작")
+            }
         }
+
 
         // seekbar = 설정창에서 센서 시간 1시간 단위로 조정하는 내용
         binding.sensorsetting.setOnSeekBarChangeListener(object :
