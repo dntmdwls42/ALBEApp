@@ -1,16 +1,12 @@
 package kr.ac.wku.albeapp.logins
 
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,6 +15,7 @@ import com.google.firebase.database.ValueEventListener
 import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.MainActivity
 import android.Manifest
+import android.content.SharedPreferences
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import kr.ac.wku.albeapp.R
@@ -26,10 +23,12 @@ import kr.ac.wku.albeapp.databinding.ActivityLoginPageBinding
 import kr.ac.wku.albeapp.sensor.ALBEService
 import kr.ac.wku.albeapp.sensor.SensorService
 
-
 // 로그인 페이지 액티비티
 class LoginPageActivity : AppCompatActivity() {
+
     lateinit var binding: ActivityLoginPageBinding
+
+    lateinit var mSharedPrefs: SharedPreferences
 
     // 실시간 데이터베이스에서 인스턴스 가져옴
     val database = FirebaseDatabase.getInstance()
@@ -43,7 +42,7 @@ class LoginPageActivity : AppCompatActivity() {
 
         // 알림 권한 받는것
         TedPermission.create()
-            .setPermissionListener(object:PermissionListener{
+            .setPermissionListener(object : PermissionListener {
                 override fun onPermissionGranted() {
                     Toast.makeText(this@LoginPageActivity, "알림 권한 허용됨.", Toast.LENGTH_SHORT).show()
                 }
@@ -58,13 +57,15 @@ class LoginPageActivity : AppCompatActivity() {
 
         // 생체 신호 센서 권한 받는것
         TedPermission.create()
-            .setPermissionListener(object:PermissionListener{
+            .setPermissionListener(object : PermissionListener {
                 override fun onPermissionGranted() {
-                    Toast.makeText(this@LoginPageActivity, "생체 신호 센서 권한 허용됨.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginPageActivity, "생체 신호 센서 권한 허용됨.", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-                    Toast.makeText(this@LoginPageActivity, "생체 신호 센서 권한 거부됨.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginPageActivity, "생체 신호 센서 권한 거부됨.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
             .setDeniedMessage("권한을 주시지 않으면 생체 신호 센서를 사용할 수 없습니다.")
@@ -128,19 +129,23 @@ class LoginPageActivity : AppCompatActivity() {
                         if (savedPassword == inputPassword) {
 
                             // 센서 동작 시작
-                            val SensorIntent = Intent(this@LoginPageActivity, SensorService::class.java)
+                            val SensorIntent =
+                                Intent(this@LoginPageActivity, SensorService::class.java)
                             startService(SensorIntent)
 
                             // ALBEService를 시작
-                            val serviceIntent = Intent(this@LoginPageActivity, ALBEService::class.java)
+                            val serviceIntent =
+                                Intent(this@LoginPageActivity, ALBEService::class.java)
                             startService(serviceIntent)
-                            Log.w("ALBEService","센서값을 전달하는 서비스가 동작하고 있음.")
+                            Log.w("ALBEService", "센서값을 전달하는 서비스가 동작하고 있음.")
 
                             Toast.makeText(
                                 this@LoginPageActivity,
                                 "${userName}님 환영합니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+//                            savetoken() // firestore database에 FCM 토큰 저장
 
                             // SharedPreferences(세션)에 전화번호와 사용자 이름 저장함
                             val sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE)
@@ -196,7 +201,4 @@ class LoginPageActivity : AppCompatActivity() {
             true
         }
     }
-
-
-
 }
