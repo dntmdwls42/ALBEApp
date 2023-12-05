@@ -175,6 +175,7 @@ class SensorService : Service(), SensorEventListener {
         userStatus = UserState.INACTIVE.status
         // Runnable 중지
         handler.removeCallbacks(runnable)
+        Log.w("센서 서비스","센서 서비스 중지됨.")
     }
 
 

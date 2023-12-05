@@ -105,7 +105,7 @@ class ALBEService : Service() {
         super.onDestroy()
         unregisterReceiver(sensorStateReceiver)
         handler.removeCallbacks(timerRunnable)
-        Log.w("ALBEService", "센서 멈춤")
+        Log.w("알비 서비스", "센서 서비스 중지됨.")
     }
 
     private fun createNotificationChannel() {
