@@ -231,7 +231,7 @@ class HomeMenu : AppCompatActivity() {
 
         // 로그인 한 사용자 정보를 보여주는 내용
         val userRef = database.child("users").child(userPhoneNumber!!)
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 println("데이타 스냅샷: $dataSnapshot") // 제대로 나오는지 로그 찍는거
                 val userName = dataSnapshot.child("userName").value as? String
