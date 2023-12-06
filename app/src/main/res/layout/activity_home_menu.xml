@@ -24,19 +24,25 @@
                 android:layout_height="1dp"
                 android:layout_weight="1"></View>
 
-            <Button
-                android:id="@+id/fromSetting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="환경설정"></Button>
-
             <ImageButton
                 android:id="@+id/addFriend"
-                android:layout_width="70dp"
+                android:layout_width="35dp"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:scaleType="centerInside"
-                android:src="@drawable/friendaddreverse"></ImageButton>
+                android:src="@drawable/addfriend"></ImageButton>
+            
+            <Space
+                android:layout_width="15dp"
+                android:layout_height="0dp"/>
+
+            <ImageButton
+                android:id="@+id/fromSetting"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:scaleType="centerInside"
+                android:src="@drawable/settingicon"></ImageButton>
         </LinearLayout>
 
         <Space
