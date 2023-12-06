@@ -16,6 +16,8 @@ import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.MainActivity
 import android.Manifest
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import com.google.firebase.messaging.FirebaseMessaging
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
@@ -210,6 +212,23 @@ class LoginPageActivity : AppCompatActivity() {
             Toast.makeText(this, "디버깅 메뉴로 진입합니다.", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, MainActivity::class.java))
             true
+        }
+
+        val customerSupportButton: Button = findViewById(R.id.loginpage_customer_support_button)
+        customerSupportButton.setOnClickListener {
+            Toast.makeText(this, "이메일 앱으로 이동합니다..", Toast.LENGTH_SHORT).show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                Toast.makeText(this, "문의하시려는 내용을 이메일로 작성 해 주세요.", Toast.LENGTH_LONG).show()
+            }, 4000)//3sec
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:dntmdwls42@gmail.com")
+                putExtra(Intent.EXTRA_SUBJECT, "Albe앱에 문제가 발생했습니다.")
+                putExtra(Intent.EXTRA_TEXT, "Albe앱 사용 중 도움이 필요합니다.")
+            }
+
+            startActivity(Intent.createChooser(emailIntent, "이메일 클라이언트 선택:"))
         }
     }
 }
