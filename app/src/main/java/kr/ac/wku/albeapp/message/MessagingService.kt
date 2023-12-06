@@ -1,22 +1,22 @@
 package kr.ac.wku.albeapp.message
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.media.RingtoneManager
-import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.core.app.NotificationCompat
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kr.ac.wku.albeapp.HomeMenu.HomeMenu
-import kr.ac.wku.albeapp.R
-import kr.ac.wku.albeapp.logins.LoginPageActivity
 
 class MessagingService : FirebaseMessagingService() {
     // FCM 토큰 관련 코드 작성
+
+    // 이거는 토큰이 전달이 됐을때 , call 되는 함수
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+        Log.d("FCM","FCM TOKEN : ${token}")
+    }
+
+    override fun onMessageReceived(message: RemoteMessage) {
+        super.onMessageReceived(message)
+        // message.data 는 getdata() 로 서버에서 받아 온 데이터를 말함.
+        Log.d("FCM","SERVER MESSAGE : ${message.data}")
+    }
 }
