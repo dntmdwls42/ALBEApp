@@ -18,6 +18,7 @@ import android.Manifest
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
+import com.google.firebase.messaging.FirebaseMessaging
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import kr.ac.wku.albeapp.R
@@ -41,6 +42,16 @@ class LoginPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "FCM TOKEN Failed...", task.exception)
+                return@addOnCompleteListener
+            }
+
+            val token = task.result
+            Log.d("FCM","FCM TOKEN : ${token}")
+        }
 
         // 알림 권한 받는것
         TedPermission.create()

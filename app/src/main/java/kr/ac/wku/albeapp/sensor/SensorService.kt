@@ -236,7 +236,7 @@ class SensorService : Service(), SensorEventListener {
             }
         }
     }
-
+    //
     // 센서 상태가 변경될때 ALBE 서비스로 알림
     private fun sendSensorState(state: String) {
         Log.w("센서 서비스", "sendSensorState 호출: $state")
