@@ -56,6 +56,11 @@ class SettingActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("user_info", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.contains("phoneNumber") // phoneNumber 키가 존재하는지 확인
 
+        // 세션에 유저별 seekbar 설정 정보 저장
+        val seekBarProgress = sharedPreferences.getInt("seekBarProgress", 0) // 기본값은 0입니다.
+
+        binding.sensorsetting.progress = seekBarProgress // SeekBar의 상태를 설정합니다.
+
         // 로그아웃 버튼의 가시성 설정
         binding.userdelete.visibility = if (isLoggedIn) View.VISIBLE else View.GONE
 
@@ -149,8 +154,12 @@ class SettingActivity : AppCompatActivity() {
                 progress: Int,
                 fromUser: Boolean
             ) {
-                // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
-                binding.sensorvalue.text = progress.toString() // 값
+
+
+                // SeekBar를 조절할 때마다 값을 SharedPreferences에 저장합니다.
+                val editor = sharedPreferences.edit()
+                editor.putInt("seekBarProgress", progress)
+                editor.apply()
 
                 var toastMessage = ""
 
