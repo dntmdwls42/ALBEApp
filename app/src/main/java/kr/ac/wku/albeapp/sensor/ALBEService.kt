@@ -126,7 +126,7 @@ class ALBEService : Service() {
             .setContentTitle("ALBE")
             .setContentText(contentText)
             .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
-            .setSmallIcon(R.drawable.albe)
+            .setSmallIcon(R.mipmap.albeicontransparent_round)
 
         return builder.build()
     }
