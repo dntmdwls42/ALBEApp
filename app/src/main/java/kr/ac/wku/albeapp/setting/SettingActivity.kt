@@ -152,8 +152,41 @@ class SettingActivity : AppCompatActivity() {
                 // seekbar 조정하는 강도에 따라서 진행도가 TextView로 보여짐
                 binding.sensorvalue.text = progress.toString() // 값
 
+                var toastMessage = ""
+
+                when (progress) {
+                    0 -> {
+                        SensorService.interval = 10 * 1000L
+                        toastMessage = "설정 시간: 10초"
+                    }
+                    1 -> {
+                        SensorService.interval = 4 * 60 * 60 * 1000L
+                        toastMessage = "설정 시간: 4시간"
+                    }
+                    2 -> {
+                        SensorService.interval = 8 * 60 * 60 * 1000L
+                        toastMessage = "설정 시간: 8시간"
+                    }
+                    3 -> {
+                        SensorService.interval = 12 * 60 * 60 * 1000L
+                        toastMessage = "설정 시간: 12시간"
+                    }
+                    4 -> {
+                        SensorService.interval = 16 * 60 * 60 * 1000L
+                        toastMessage = "설정 시간: 16시간"
+                    }
+                    5 -> {
+                        SensorService.interval = 20 * 60 * 60 * 1000L
+                        toastMessage = "설정 시간: 20시간"
+                    }
+                    6 -> {
+                        SensorService.interval = 24 * 60 * 60 * 1000L
+                        toastMessage = "설정 시간: 24시간"
+                    }
+                }
+
                 // Toast 메시지로 SeekBar의 값을 표시
-                Toast.makeText(this@SettingActivity, "현재 센서 값: $progress", Toast.LENGTH_SHORT)
+                Toast.makeText(this@SettingActivity, toastMessage, Toast.LENGTH_SHORT)
                     .show()
             }
 

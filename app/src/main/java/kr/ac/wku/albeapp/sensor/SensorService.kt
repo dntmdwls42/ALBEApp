@@ -61,6 +61,10 @@ class SensorService : Service(), SensorEventListener {
     // Handler 선언 = 타이머 관련
     private val handler = Handler(Looper.getMainLooper())
 
+    companion object{
+        var interval: Long = 10 * 1000 // 10초
+    }
+
     // Runnable 선언
     private val runnable = object : Runnable {
         override fun run() {
@@ -80,7 +84,7 @@ class SensorService : Service(), SensorEventListener {
 
             // 다음 실행을 위해 자신을 다시 호출합니다.
             Log.w("센서 서비스", "runnable 종료")
-            handler.postDelayed(this, 10 * 1000L) // 10초마다 실행
+            handler.postDelayed(this, interval) // 10초마다 실행
         }
     }
 
@@ -175,7 +179,7 @@ class SensorService : Service(), SensorEventListener {
         userStatus = UserState.INACTIVE.status
         // Runnable 중지
         handler.removeCallbacks(runnable)
-        Log.w("센서 서비스","센서 서비스 중지됨.")
+        Log.w("센서 서비스", "센서 서비스 중지됨.")
     }
 
 
@@ -184,8 +188,7 @@ class SensorService : Service(), SensorEventListener {
     }
 
     //추가할 메서드 : 센서 동작 시간 설정 min : 10s, max : 24h
-    fun setSensorAlarmTimer()
-    {
+    fun setSensorAlarmTimer() {
 
     }
 
@@ -228,8 +231,8 @@ class SensorService : Service(), SensorEventListener {
                 val fixGravityVar: Float = 0.01f    //이동값 오차 범위
                 val checkGravity: Boolean =
                     (getGravityValue[0] >= fixGravityValue[0] + fixGravityVar || getGravityValue[0] <= fixGravityValue[0] - fixGravityVar)
-                        || (getGravityValue[1] >= fixGravityValue[1] + fixGravityVar || getGravityValue[1] <= fixGravityValue[1] - fixGravityVar)
-                        || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
+                            || (getGravityValue[1] >= fixGravityValue[1] + fixGravityVar || getGravityValue[1] <= fixGravityValue[1] - fixGravityVar)
+                            || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
                 /*
 
                 val fixSensorVar : Float = 1.0f //오차 범위
@@ -253,6 +256,7 @@ class SensorService : Service(), SensorEventListener {
             }
         }
     }
+
     //
     // 센서 상태가 변경될때 ALBE 서비스로 알림
     private fun sendSensorState(state: String) {
