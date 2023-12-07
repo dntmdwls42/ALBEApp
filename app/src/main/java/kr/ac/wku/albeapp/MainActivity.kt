@@ -28,6 +28,7 @@ import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
 import kr.ac.wku.albeapp.photos.PhotoActivity
 import kr.ac.wku.albeapp.photos.PhotoAdapter
+import kr.ac.wku.albeapp.sensor.ALBEService
 import kr.ac.wku.albeapp.sensor.SensorService
 
 // 초기 로그인 화면 액티비티
@@ -163,7 +164,9 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         }
 
         binding.fromsensor.setOnClickListener {
-            Toast.makeText(this@MainActivity, "더이상 동작하지 않음.", Toast.LENGTH_SHORT).show()
+            startService(Intent(this, ALBEService::class.java))
+            startService(Intent(this, SensorService::class.java))
+            Toast.makeText(this@MainActivity, "센서 테스트 시작.", Toast.LENGTH_SHORT).show()
         }
 
     }

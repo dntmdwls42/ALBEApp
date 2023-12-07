@@ -111,7 +111,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         binding.backgroundon.setOnClickListener {
-            // ALBEService와 SensorService를 종료하는 Intent를 보냅니다.
+            // ALBEService와 SensorService를 시작하는 Intent를 보냅니다.
             startService(Intent(this, ALBEService::class.java))
             startService(Intent(this, SensorService::class.java))
             Toast.makeText(this@SettingActivity, "백그라운드 센서를 시작합니다.", Toast.LENGTH_SHORT).show()
