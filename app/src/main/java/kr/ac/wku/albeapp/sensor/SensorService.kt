@@ -61,6 +61,10 @@ class SensorService : Service(), SensorEventListener {
     // Handler 선언 = 타이머 관련
     private val handler = Handler(Looper.getMainLooper())
 
+    companion object{
+        var interval: Long = 10 * 1000 // 10초
+    }
+
     // Runnable 선언
     private val runnable = object : Runnable {
         override fun run() {
@@ -80,7 +84,7 @@ class SensorService : Service(), SensorEventListener {
 
             // 다음 실행을 위해 자신을 다시 호출합니다.
             Log.w("센서 서비스", "runnable 종료")
-            handler.postDelayed(this, 10 * 1000L) // 10초마다 실행
+            handler.postDelayed(this, interval) // 10초마다 실행
         }
     }
 
@@ -175,7 +179,7 @@ class SensorService : Service(), SensorEventListener {
         userStatus = UserState.INACTIVE.status
         // Runnable 중지
         handler.removeCallbacks(runnable)
-        Log.w("센서 서비스","센서 서비스 중지됨.")
+        Log.w("센서 서비스", "센서 서비스 중지됨.")
     }
 
 
@@ -183,6 +187,10 @@ class SensorService : Service(), SensorEventListener {
         //이 메서드는 onSensorChanged를 사용하기 위해 필요한 함수이다 그리고 메인 클래스에서 SensorEventListener를 상속받아야 한다 (interface 상속)
     }
 
+    //추가할 메서드 : 센서 동작 시간 설정 min : 10s, max : 24h
+    fun setSensorAlarmTimer() {
+
+    }
 
     override fun onSensorChanged(event: SensorEvent?) {               // 센서 값 변경시
         //타이머 리셋 (동작시 상태 활성)
@@ -215,16 +223,28 @@ class SensorService : Service(), SensorEventListener {
                     }
                 }
 
-                val fixSensorVar: Float = 1.0f //오차 범위
+                val fixGyroscopeVar: Float = 1.0f //회전값 오차 범위
                 val checkSensor: Boolean =
-                    (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
-                            || (getSensorValue[1] >= fixSensorVar || getSensorValue[1] <= -fixSensorVar)
-                            || (getSensorValue[2] >= fixSensorVar || getSensorValue[2] <= -fixSensorVar) //자이로센서값이 동작할 때
-                val fixGravityVar: Float = 0.01f
+                    (getSensorValue[0] >= fixGyroscopeVar || getSensorValue[0] <= -fixGyroscopeVar) //getSensorValue값이 fixGyroscopeVar보다 넘어갈 때
+                            || (getSensorValue[1] >= fixGyroscopeVar || getSensorValue[1] <= -fixGyroscopeVar)
+                            || (getSensorValue[2] >= fixGyroscopeVar || getSensorValue[2] <= -fixGyroscopeVar) //자이로센서값이 동작할 때
+                val fixGravityVar: Float = 0.01f    //이동값 오차 범위
                 val checkGravity: Boolean =
-                    (getGravityValue[0] <= fixGravityValue[0] - fixGravityVar || getGravityValue[0] >= fixGravityValue[0] + fixGravityVar)
-                            || (getGravityValue[1] <= fixGravityValue[1] - fixGravityVar || getGravityValue[1] >= fixGravityValue[1] + fixGravityVar)
-                            || (getGravityValue[2] <= fixGravityValue[2] - fixGravityVar || getGravityValue[2] >= fixGravityValue[2] + fixGravityVar)
+                    (getGravityValue[0] >= fixGravityValue[0] + fixGravityVar || getGravityValue[0] <= fixGravityValue[0] - fixGravityVar)
+                            || (getGravityValue[1] >= fixGravityValue[1] + fixGravityVar || getGravityValue[1] <= fixGravityValue[1] - fixGravityVar)
+                            || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
+                /*
+
+                val fixSensorVar : Float = 1.0f //오차 범위
+                checkGyroscope = (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
+                        || (getSensorValue[1] >= fixSensorVar || getSensorValue[1] <= -fixSensorVar)
+                        || (getSensorValue[2] >= fixSensorVar || getSensorValue[2] <= -fixSensorVar) //자이로센서값이 동작할 때
+                val fixGravityVar : Float = 0.01f   //이동값 오차 범위
+                checkGravity = (getGravityValue[0] >= fixGravityValue[0] + fixGravityVar || getGravityValue[0] <= fixGravityValue[0] - fixGravityVar)
+                        || (getGravityValue[1] >= fixGravityValue[1] + fixGravityVar || getGravityValue[1] <= fixGravityValue[1] - fixGravityVar)
+                        || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
+
+                 */
 
                 if (checkSensor || checkGravity) { // 센서 동작
                     isTimer = false
@@ -236,6 +256,7 @@ class SensorService : Service(), SensorEventListener {
             }
         }
     }
+
     //
     // 센서 상태가 변경될때 ALBE 서비스로 알림
     private fun sendSensorState(state: String) {

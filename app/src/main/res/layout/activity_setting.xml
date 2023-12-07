@@ -114,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="센서 시간 설정">
+            android:text="센서 감지시간 설정">
 
         </TextView>
 
@@ -122,7 +122,7 @@
             android:id="@+id/sensorsetting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="12"
+            android:max="6"
             android:progress="0">
 
         </SeekBar>
@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="1시간 단위 조정">
+            android:text="4시간 단위 센서감지 시간 조정">
 
         </TextView>
 
@@ -141,27 +141,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/soyo_maple_bold"
-                android:text="설정된 센서 감도 시간 : ">
-
-            </TextView>
-
-
-            <TextView
-                android:id="@+id/sensorvalue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/soyo_maple_bold"
-                android:hint="0">
-
-            </TextView>
-
 
         </LinearLayout>
 
