@@ -153,13 +153,13 @@
         </TextView>
 
         <Button
-            android:id="@+id/alloff"
+            android:id="@+id/allnotifyoff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:backgroundTint="#ED5A5A"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="모든 알림 끄기" />
+            android:text="앱 내 알림 설정하기" />
 
 
     </LinearLayout>
