@@ -2,6 +2,7 @@ package kr.ac.wku.albeapp.setting
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,6 +23,7 @@ import kr.ac.wku.albeapp.logins.LoginPageActivity
 import kr.ac.wku.albeapp.logins.UserData
 import kr.ac.wku.albeapp.sensor.ALBEService
 import kr.ac.wku.albeapp.sensor.SensorService
+import android.provider.Settings
 
 // 설정 화면 액티비티
 class SettingActivity : AppCompatActivity() {
@@ -241,8 +243,21 @@ class SettingActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("아니오", null)
                 .show()
+        }
 
-
+        binding.allnotifyoff.setOnClickListener {
+            val intent = Intent()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            } else {
+                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                intent.putExtra("app_package", packageName)
+                intent.putExtra("app_uid", applicationInfo.uid)
+            }
+            startActivity(intent)
+            Toast.makeText(this, "앱 알림 설정 화면으로 이동합니다", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "정책에 따라 원하시는 알림을 직접 선택해 주세요", Toast.LENGTH_LONG).show()
         }
     }
 }
