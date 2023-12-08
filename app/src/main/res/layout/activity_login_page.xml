@@ -33,7 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:fontFamily="@font/soyo_maple_bold"
-            android:hint=" 휴대전화 번호 입력 (-없이)" />
+            android:hint=" 휴대전화 번호 입력 (-없이)"
+            android:inputType="number"
+            />
 
         <TextView
             android:layout_width="wrap_content"
