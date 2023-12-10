@@ -2,6 +2,7 @@ package kr.ac.wku.albeapp.logins
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
@@ -11,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.FirebaseMessaging
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityUserSignupBinding
 import kr.ac.wku.albeapp.photos.AddPhotoActivity
@@ -22,18 +26,20 @@ data class UserData(
     var userPW: String? = null,
     // 필요한 정보가 더 있다면 추가하세요.
     var userState: Int? = null, // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
-    var Friends: Map<String, Any>? = null // 새로운 노드 추가, Map 타입으로 변경
+    var Friends: Map<String, Any>? = null,// 새로운 노드 추가, Map 타입으로 변경
+    var FCMToken: String? = null // FCM 토큰 추가
 )
 
 // 회원 가입 페이지 레이아웃의 액티비티
 class UserSignUp : AppCompatActivity() {
     lateinit var addPhotoBtn: Button //이미지 업로드 버튼
-
-
     lateinit var binding: ActivityUserSignupBinding
 
     // 실시간 데이터베이스 관련
     private lateinit var database: DatabaseReference
+
+    // Firebase Cloud Messaging 토큰
+    private lateinit var fcmToken: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +50,15 @@ class UserSignUp : AppCompatActivity() {
         // 실시간 데이터베이스 관련2 , users 라는 노드를 생성해서 회원정보 저장
         database = FirebaseDatabase.getInstance().getReference("users")
 
+        // Firebase Cloud Messaging 토큰을 얻습니다
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("UserSignUp", "FCM 등록 토큰 얻기 실패", task.exception)
+                return@addOnCompleteListener
+            }
+            fcmToken = task.result.toString()
+            Log.d("UserSignUp", "FCM 토큰: $fcmToken")
+        }
 
         // 이미지 업로드 하기 버튼을 눌렀을때 동작할 이벤트
         // 이미지를 업로드 하는 별도의 레이아웃으로 이동함.
@@ -85,6 +100,9 @@ class UserSignUp : AppCompatActivity() {
             var user = UserData(userName, userID, userPW, userState = 1, Friends = null) // 유저 상태 기본값 1
             database.child(userID).setValue(user)
 
+            // FCM 토큰을 Firestore에 저장
+            saveTokenToFirestore(userID, fcmToken)
+
             var myIntent = Intent(this, LoginPageActivity::class.java)
             startActivity(myIntent)
         }
@@ -106,6 +124,24 @@ class UserSignUp : AppCompatActivity() {
         btnTermspolicy.setOnClickListener {
             showTermsDialogpolicy()
         }
+    }
+
+    private fun saveTokenToFirestore(userID: String, token: String) {
+        val firestore = FirebaseFirestore.getInstance()
+        val userRef = firestore.collection("users").document(userID)
+
+        val data = hashMapOf(
+            "fcmToken" to token
+            // 필요에 따라 추가 필드를 더합니다
+        )
+
+        userRef.set(data, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.d("UserSignUp", "FCM 토큰이 Firestore에 성공적으로 저장되었습니다")
+            }
+            .addOnFailureListener { e ->
+                Log.e("UserSignUp", "FCM 토큰을 Firestore에 저장하는 중 오류 발생", e)
+            }
     }
 
     private fun showTermsDialog() {
