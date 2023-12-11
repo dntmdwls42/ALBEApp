@@ -24,11 +24,6 @@ import kr.ac.wku.albeapp.logins.UserState
 // Handler 선언
 private val handler = Handler(Looper.getMainLooper())
 
-// 세션 정보 받아오기(클래스를 통해 받아옴)
-private lateinit var loginSession: LoginSession
-
-// 실시간 데이터베이스에서 인스턴스 가져옴
-val database = FirebaseDatabase.getInstance()
 
 // 센서 액티비티 백그라운드 동작을 담당하는곳
 class ALBEService : Service() {
@@ -54,7 +49,7 @@ class ALBEService : Service() {
                 updateNotification(sensorState, true)
             }
 
-            handler.postDelayed(this, 1000L) // 1초마다 실행
+            handler.postDelayed(this, 10000L) // 1초마다 실행
         }
     }
 
@@ -87,11 +82,6 @@ class ALBEService : Service() {
         createNotificationChannel()
 
         Log.w("ALBEService", "서비스 생성됨.")
-
-        // 로그인 세션 확인
-        loginSession = LoginSession(this)
-        Log.w("알비 서비스", "로그인 세션 상태: ${loginSession.isLoggedIn}")
-        Log.w("알비 서비스", "로그인 한 ID 확인 : ${loginSession.phoneNumber}")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -113,10 +103,6 @@ class ALBEService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // 특정 사용자(로그인한 사용자를 말함)을 참조
-        val myRef = database.getReference("users").child(loginSession.phoneNumber!!)
-        // userState를 2로 설정합니다.
-        myRef.child("userState").setValue(2)
         unregisterReceiver(sensorStateReceiver)
         handler.removeCallbacks(timerRunnable)
         Log.w("알비 서비스", "센서 서비스 중지됨.")
