@@ -55,7 +55,6 @@ class SensorService : Service(), SensorEventListener {
 
     // 센서 값 저장을 위한 변수
     private var getSensorValue = FloatArray(3)
-    private var fixGravityValue = FloatArray(3)
     private var getGravityValue = FloatArray(3)
 
     // Handler 선언 = 타이머 관련
@@ -209,17 +208,13 @@ class SensorService : Service(), SensorEventListener {
                     }
 
                     Sensor.TYPE_ACCELEROMETER -> {
-                        if (fixGravityValue[0] == 0f) fixGravityValue[0] = event.values[0]
-                        if (fixGravityValue[1] == 0f) fixGravityValue[1] = event.values[1]
-                        if (fixGravityValue[2] == 0f) fixGravityValue[2] = event.values[2]
-
                         gravityX = event.values[0]
                         gravityY = event.values[1]
                         gravityZ = event.values[2]
 
-                        getGravityValue[0] = gravityX
-                        getGravityValue[1] = gravityY
-                        getGravityValue[2] = gravityZ
+                        getGravityValue[0] = gravityX / SensorManager.GRAVITY_EARTH
+                        getGravityValue[1] = gravityY / SensorManager.GRAVITY_EARTH
+                        getGravityValue[2] = gravityZ / SensorManager.GRAVITY_EARTH
                     }
                 }
 
@@ -228,12 +223,12 @@ class SensorService : Service(), SensorEventListener {
                     (getSensorValue[0] >= fixGyroscopeVar || getSensorValue[0] <= -fixGyroscopeVar) //getSensorValue값이 fixGyroscopeVar보다 넘어갈 때
                             || (getSensorValue[1] >= fixGyroscopeVar || getSensorValue[1] <= -fixGyroscopeVar)
                             || (getSensorValue[2] >= fixGyroscopeVar || getSensorValue[2] <= -fixGyroscopeVar) //자이로센서값이 동작할 때
-                val fixGravityVar: Float = 0.01f    //이동값 오차 범위
-                val checkGravity: Boolean =
-                    (getGravityValue[0] >= fixGravityValue[0] + fixGravityVar || getGravityValue[0] <= fixGravityValue[0] - fixGravityVar)
-                            || (getGravityValue[1] >= fixGravityValue[1] + fixGravityVar || getGravityValue[1] <= fixGravityValue[1] - fixGravityVar)
-                            || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
-                /*
+                val acceleratorValue: Double = Math.sqrt( ((getGravityValue[0]*getGravityValue[0])
+                        + (getGravityValue[1]*getGravityValue[1])
+                        + (getGravityValue[2]*getGravityValue[2])).toDouble() ) //가속도 값
+                val checkGravity: Boolean = acceleratorValue != 1.000340463377946 //가속도 센서 감지 Double실수가 가속도 센서 멈출때 (1.000340463377946)값이 멈추는 값
+
+                    /*
 
                 val fixSensorVar : Float = 1.0f //오차 범위
                 checkGyroscope = (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
@@ -245,7 +240,6 @@ class SensorService : Service(), SensorEventListener {
                         || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
 
                  */
-
                 if (checkSensor || checkGravity) { // 센서 동작
                     isTimer = false
                     setState = 1
@@ -253,6 +247,8 @@ class SensorService : Service(), SensorEventListener {
                     isTimer = true
                     setState = 0
                 }
+                Log.d("SensorService","${acceleratorValue}")
+                Log.d("SensorService","${setState}")
             }
         }
     }
