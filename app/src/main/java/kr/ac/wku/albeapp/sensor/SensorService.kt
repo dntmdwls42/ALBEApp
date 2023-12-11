@@ -226,7 +226,9 @@ class SensorService : Service(), SensorEventListener {
                 val acceleratorValue: Double = Math.sqrt( ((getGravityValue[0]*getGravityValue[0])
                         + (getGravityValue[1]*getGravityValue[1])
                         + (getGravityValue[2]*getGravityValue[2])).toDouble() ) //가속도 값
-                val checkGravity: Boolean = acceleratorValue != 1.000340463377946 //가속도 센서 감지 Double실수가 가속도 센서 멈출때 (1.000340463377946)값이 멈추는 값
+                val fixGravityVar: Double = 0.1
+                val checkGravity: Boolean = acceleratorValue >= 1.000340463377946 + fixGravityVar ||
+                        acceleratorValue <= 1.000340463377946 - fixGravityVar   //가속도 센서 감지 Double실수가 가속도 센서 멈출때 (1.000340463377946)값이 멈추는 값
 
                     /*
 
@@ -247,8 +249,7 @@ class SensorService : Service(), SensorEventListener {
                     isTimer = true
                     setState = 0
                 }
-                Log.d("SensorService","${acceleratorValue}")
-                Log.d("SensorService","${setState}")
+                Log.d("SensorService","${setState}, ${acceleratorValue}")
             }
         }
     }
