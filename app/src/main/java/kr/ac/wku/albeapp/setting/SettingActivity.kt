@@ -229,16 +229,15 @@ class SettingActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-
+                        stopService(Intent(this, ALBEService::class.java))
+                        stopService(Intent(this, SensorService::class.java))
 
                         // 로그인 액티비티로 이동하는 인텐트 생성
                         val intent = Intent(this, LoginPageActivity::class.java)
                         // 액티비티 시작
                         startActivity(intent)
                         // SettingActivity 종료
-                        stopService(Intent(this, ALBEService::class.java))
-                        stopService(Intent(this, SensorService::class.java))
-                        System.exit(0)
+                        finish()
 
                     }.addOnFailureListener {
                         Toast.makeText(
