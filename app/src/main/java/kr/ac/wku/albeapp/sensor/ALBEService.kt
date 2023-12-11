@@ -49,7 +49,7 @@ class ALBEService : Service() {
                 updateNotification(sensorState, true)
             }
 
-            handler.postDelayed(this, 1000L) // 1초마다 실행
+            handler.postDelayed(this, 10000L) // 1초마다 실행
         }
     }
 
