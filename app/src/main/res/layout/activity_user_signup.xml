@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
             android:fontFamily="@font/soyo_maple_bold"
-            android:hint="비밀번호는 8자 이상 입니다."
+            android:hint="비밀번호는 4자 이상 입니다."
             android:inputType="textPassword">
 
         </EditText>
