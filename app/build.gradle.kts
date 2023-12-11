@@ -100,4 +100,5 @@ dependencies {
     // 파이어베이스 클라우드 메시징
     implementation ("com.google.firebase:firebase-analytics-ktx")
     implementation ("com.google.firebase:firebase-messaging:23.4.0")
+    implementation ("com.google.firebase:firebase-messaging-ktx:23.4.0")
 }

@@ -230,18 +230,18 @@ class SensorService : Service(), SensorEventListener {
                 val checkGravity: Boolean = acceleratorValue >= 1.000340463377946 + fixGravityVar ||
                         acceleratorValue <= 1.000340463377946 - fixGravityVar   //가속도 센서 감지 Double실수가 가속도 센서 멈출때 (1.000340463377946)값이 멈추는 값
 
-                    /*
+                /*
 
-                val fixSensorVar : Float = 1.0f //오차 범위
-                checkGyroscope = (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
-                        || (getSensorValue[1] >= fixSensorVar || getSensorValue[1] <= -fixSensorVar)
-                        || (getSensorValue[2] >= fixSensorVar || getSensorValue[2] <= -fixSensorVar) //자이로센서값이 동작할 때
-                val fixGravityVar : Float = 0.01f   //이동값 오차 범위
-                checkGravity = (getGravityValue[0] >= fixGravityValue[0] + fixGravityVar || getGravityValue[0] <= fixGravityValue[0] - fixGravityVar)
-                        || (getGravityValue[1] >= fixGravityValue[1] + fixGravityVar || getGravityValue[1] <= fixGravityValue[1] - fixGravityVar)
-                        || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
+            val fixSensorVar : Float = 1.0f //오차 범위
+            checkGyroscope = (getSensorValue[0] >= fixSensorVar || getSensorValue[0] <= -fixSensorVar)
+                    || (getSensorValue[1] >= fixSensorVar || getSensorValue[1] <= -fixSensorVar)
+                    || (getSensorValue[2] >= fixSensorVar || getSensorValue[2] <= -fixSensorVar) //자이로센서값이 동작할 때
+            val fixGravityVar : Float = 0.01f   //이동값 오차 범위
+            checkGravity = (getGravityValue[0] >= fixGravityValue[0] + fixGravityVar || getGravityValue[0] <= fixGravityValue[0] - fixGravityVar)
+                    || (getGravityValue[1] >= fixGravityValue[1] + fixGravityVar || getGravityValue[1] <= fixGravityValue[1] - fixGravityVar)
+                    || (getGravityValue[2] >= fixGravityValue[2] + fixGravityVar || getGravityValue[2] <= fixGravityValue[2] - fixGravityVar)
 
-                 */
+             */
                 if (checkSensor || checkGravity) { // 센서 동작
                     isTimer = false
                     setState = 1
