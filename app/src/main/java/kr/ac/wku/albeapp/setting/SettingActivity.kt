@@ -132,8 +132,9 @@ class SettingActivity : AppCompatActivity() {
             editor.putBoolean("sensor_off", isChecked)
             editor.apply()
 
-            // userState를 2로 설정합니다.
-            myRef.child("userState").setValue(if (isChecked) 2 else 1)
+            Log.w("설정 서비스","로그인 한 사람 : ${myRef}")
+
+
 
             // SensorService를 종료하거나 시작합니다.
             if (isChecked) {
@@ -142,6 +143,8 @@ class SettingActivity : AppCompatActivity() {
                 Log.w("설정 서비스","센서 서비스 종료")
             } else {
                 startService(Intent(this, SensorService::class.java))
+                // userState를 2로 설정합니다.
+                myRef.child("userState").setValue(1)
                 Toast.makeText(this@SettingActivity, "센서를 다시 사용합니다.", Toast.LENGTH_SHORT).show()
                 Log.w("설정 서비스","센서 서비스 시작")
             }
@@ -226,12 +229,16 @@ class SettingActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
+
+
                         // 로그인 액티비티로 이동하는 인텐트 생성
                         val intent = Intent(this, LoginPageActivity::class.java)
                         // 액티비티 시작
                         startActivity(intent)
                         // SettingActivity 종료
-                        finish()
+                        stopService(Intent(this, ALBEService::class.java))
+                        stopService(Intent(this, SensorService::class.java))
+                        System.exit(0)
 
                     }.addOnFailureListener {
                         Toast.makeText(
