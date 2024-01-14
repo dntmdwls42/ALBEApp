@@ -29,7 +29,7 @@
 
 <!--        휴대전화 번호 ID 입력칸 -->
         <EditText
-            android:id="@+id/loginpage_phonenumber"
+            android:id="@+id/loginpage_email"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:fontFamily="@font/soyo_maple_bold"

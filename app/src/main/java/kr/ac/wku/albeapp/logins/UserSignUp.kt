@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,6 +20,7 @@ import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityUserSignupBinding
 import kr.ac.wku.albeapp.photos.AddPhotoActivity
 
+// 2024년 1월 기준 구 버전의 로그인 방식임
 // 사용자 데이터를 담을 데이터 클래스 정의
 data class UserData(
     var userName: String? = null,
@@ -27,7 +29,8 @@ data class UserData(
     // 필요한 정보가 더 있다면 추가하세요.
     var userState: Int? = null, // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
     var Friends: Map<String, Any>? = null,// 새로운 노드 추가, Map 타입으로 변경
-    var FCMToken: String? = null // FCM 토큰 추가
+    var FCMToken: String? = null, // FCM 토큰 추가
+    var email: String? = null // 2024.01 신규 로그인 방식 : 이메일 추가
 )
 
 // 회원 가입 페이지 레이아웃의 액티비티
@@ -41,10 +44,16 @@ class UserSignUp : AppCompatActivity() {
     // Firebase Cloud Messaging 토큰
     private lateinit var fcmToken: String
 
+    // Firebase Authentication 관련
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_signup)
+
+        // Firebase Authentication 초기화
+        auth = FirebaseAuth.getInstance()
+
         addPhotoBtn = findViewById(R.id.imageUpload)
 
         // 실시간 데이터베이스 관련2 , users 라는 노드를 생성해서 회원정보 저장
@@ -95,10 +104,40 @@ class UserSignUp : AppCompatActivity() {
             var userPW = binding.newPW.text.toString()
             // 이 밑에 하단에 성별 , 이용약관 등 데이터 추가하라. 일단은 3개만
 
+            // Firebase Authentication을 사용하여 회원가입
+            auth.createUserWithEmailAndPassword(userID,userPW)
+                .addOnCompleteListener(this){task ->
+                    if(task.isSuccessful){
+                        // 회원 가입 성공
+                        Log.d("회원 가입 액티비티","createUserWithEmail:success")
+                        val uid = auth.currentUser?.uid // 사용자의 uid 얻음
+                        
+                        // 파이어베이스 실시간 데이터베이스 저장
+                        var user = auth.currentUser
 
-            // 파이어베이스 실시간 데이터베이스에 저장
-            var user = UserData(userName, userID, userPW, userState = 1, Friends = null) // 유저 상태 기본값 1
-            database.child(userID).setValue(user)
+                        // 이메일 인증 메일 보내기
+                        user?.sendEmailVerification()
+                            ?.addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d("회원 가입 액티비티","Email sent.")
+                                }
+                            }
+
+                        database.child(uid!!).setValue(user) // uid 밑에 데이터 저장되게
+
+                        // FCM 토큰을 Firestore에 저장
+                        saveTokenToFirestore(uid, fcmToken)
+
+                        // 회원가입 성공후 로그인 페이지로 다시 이동하게 함
+                        var myIntent = Intent(this, LoginPageActivity::class.java)
+                        startActivity(myIntent)
+                    }else{
+                        // 회원가입 실패
+                        Log.w("회원 가입 액티비티", "createUserWithEmail:failure", task.exception)
+                        Toast.makeText(baseContext, "인증 기능 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
 
             // FCM 토큰을 Firestore에 저장
             saveTokenToFirestore(userID, fcmToken)
