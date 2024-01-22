@@ -15,28 +15,24 @@ import com.google.firebase.database.ValueEventListener
 import kr.ac.wku.albeapp.HomeMenu.HomeMenu
 import kr.ac.wku.albeapp.MainActivity
 import android.Manifest
-import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import kr.ac.wku.albeapp.R
 import kr.ac.wku.albeapp.databinding.ActivityLoginPageBinding
-import kr.ac.wku.albeapp.logins.LoginAuth.Companion.auth
-import kr.ac.wku.albeapp.sensor.ALBEService
-import kr.ac.wku.albeapp.sensor.SensorService
 
 // 2024년 1월 기준 새 로그인 방식으로 변경중
 // 로그인 페이지 액티비티 , 주 기능은 유저 데이터 유효성 검사
 class LoginPageActivity : AppCompatActivity() {
-
+    // 데이터 바인딩
     lateinit var binding: ActivityLoginPageBinding
+
+    // 파이어베이스 인증 관련
     lateinit var mAuth: FirebaseAuth
 
     // 실시간 데이터베이스에서 인스턴스 가져옴
@@ -47,7 +43,9 @@ class LoginPageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
+//        binding = DataBindingUtil.setContentView(this, R.layout.activity_login_page)
+        binding = ActivityLoginPageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // 인증 기능 초기화
         mAuth = FirebaseAuth.getInstance()
@@ -133,35 +131,11 @@ class LoginPageActivity : AppCompatActivity() {
             }
         })
 
-        // 로그인 버튼을 눌렀을때 전화번호와 비밀번호를 검증함
-        binding.loginpageProceedButton.setOnClickListener {
-            val email = binding.loginpageEmail.text.toString()
-            val password = binding.loginpagePassword.text.toString()
-
-            // Firebase Authentication을 사용하여 로그인
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // 로그인 성공
-                        Log.d("로그인 액티비티","signInWithEmail:success")
-                        val user = auth.currentUser
-
-                        if (user?.isEmailVerified == true) {
-                            // 로그인 성공후 홈메뉴로 이동하게함
-                            var myIntent = Intent(this, HomeMenu::class.java)
-                            startActivity(myIntent)
-                        } else {
-                            // 이메일 인증이 완료되지 않은 경우
-                            // 사용자에게 이메일 인증을 요구합니다
-                            Toast.makeText(baseContext, "이메일 인증이 필요합니다", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        // 로그인 실패
-                        Log.w("로그인 액티비티", "signInWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, "인증 기능 실패", Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
+//        // 로그인 버튼을 눌렀을때 전화번호와 비밀번호를 검증함
+//        binding.loginpageProceedButton.setOnClickListener {
+//            val email = binding.loginpageEmail.text.toString()
+//            val password = binding.loginpagePassword.text.toString()
+//        }
 
         // 비밀번호 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
         binding.loginpageSearchIdButton.setOnClickListener {
@@ -199,16 +173,20 @@ class LoginPageActivity : AppCompatActivity() {
         // onCreate 공간
 
     }
-    
+
     override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null)
-        val currentUser = mAuth.currentUser
-        if (currentUser != null) {
-            // 자동으로 인증되면 홈 메뉴로 들가게
-            val intent = Intent(this, HomeMenu::class.java)
-            startActivity(intent)
+        // 유저 체크 한번함
+        if (!ALBEAuth.checkAuth()) {
+            Toast.makeText(this@LoginPageActivity, "성공", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this@LoginPageActivity, "실패", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        startActivity(Intent(this, AuthActivity::class.java))
+        return super.onOptionsItemSelected(item)
     }
 
 }

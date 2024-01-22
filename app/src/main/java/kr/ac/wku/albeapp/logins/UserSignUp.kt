@@ -21,17 +21,7 @@ import kr.ac.wku.albeapp.databinding.ActivityUserSignupBinding
 import kr.ac.wku.albeapp.photos.AddPhotoActivity
 
 // 2024년 1월 기준 구 버전의 로그인 방식임
-// 사용자 데이터를 담을 데이터 클래스 정의
-data class UserData(
-    var userName: String? = null,
-    var userID: String? = null,
-    var userPW: String? = null,
-    // 필요한 정보가 더 있다면 추가하세요.
-    var userState: Int? = null, // 유저 상태 정상 : 1 , 비활성 : 0 이외 : 2
-    var Friends: Map<String, Any>? = null,// 새로운 노드 추가, Map 타입으로 변경
-    var FCMToken: String? = null, // FCM 토큰 추가
-    var email: String? = null // 2024.01 신규 로그인 방식 : 이메일 추가
-)
+// 1/22 기준 리뉴얼 진행중
 
 // 회원 가입 페이지 레이아웃의 액티비티
 class UserSignUp : AppCompatActivity() {
@@ -72,12 +62,12 @@ class UserSignUp : AppCompatActivity() {
         // 이미지 업로드 하기 버튼을 눌렀을때 동작할 이벤트
         // 이미지를 업로드 하는 별도의 레이아웃으로 이동함.
         addPhotoBtn.setOnClickListener {
-            val userID = binding.newPhoneID.text.toString()  // 사용자의 전화번호를 가져옵니다.
+            val userID = binding.newEmail.text.toString()  // 사용자의 이메일을 가져옵니다.
             if (userID.isEmpty()) {
-                Toast.makeText(this, "전화번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(this, AddPhotoActivity::class.java)
-                intent.putExtra("phoneNumber", userID)  // 전화번호를 Intent에 추가
+                intent.putExtra("phoneNumber", userID)  // 이메일을 Intent에 추가
                 startActivity(intent)
             }
         }
@@ -98,52 +88,87 @@ class UserSignUp : AppCompatActivity() {
         checkBox2.setOnCheckedChangeListener(checkListener)
 
 
+//        binding.completeSignup.setOnClickListener {
+//            var userName = binding.newName.text.toString()
+//            var userID = binding.newPhoneID.text.toString()
+//            var userPW = binding.newPW.text.toString()
+//            // 이 밑에 하단에 성별 , 이용약관 등 데이터 추가하라. 일단은 3개만
+//
+//            // Firebase Authentication을 사용하여 회원가입
+//            auth.createUserWithEmailAndPassword(userID,userPW)
+//                .addOnCompleteListener(this){task ->
+//                    if(task.isSuccessful){
+//                        // 회원 가입 성공
+//                        Log.d("회원 가입 액티비티","createUserWithEmail:success")
+//                        val uid = auth.currentUser?.uid // 사용자의 uid 얻음
+//
+//                        // 파이어베이스 실시간 데이터베이스 저장
+//                        var user = auth.currentUser
+//
+//                        // 이메일 인증 메일 보내기
+//                        user?.sendEmailVerification()
+//                            ?.addOnCompleteListener { task ->
+//                                if (task.isSuccessful) {
+//                                    Log.d("회원 가입 액티비티","Email sent.")
+//                                }
+//                            }
+//
+//                        database.child(uid!!).setValue(user) // uid 밑에 데이터 저장되게
+//
+//                        // FCM 토큰을 Firestore에 저장
+//                        saveTokenToFirestore(uid, fcmToken)
+//
+//                        // 회원가입 성공후 로그인 페이지로 다시 이동하게 함
+//                        var myIntent = Intent(this, LoginPageActivity::class.java)
+//                        startActivity(myIntent)
+//                    }else{
+//                        // 회원가입 실패
+//                        Log.w("회원 가입 액티비티", "createUserWithEmail:failure", task.exception)
+//                        Toast.makeText(baseContext, "인증 기능 실패", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//
+//
+//            // FCM 토큰을 Firestore에 저장
+//            saveTokenToFirestore(userID, fcmToken)
+//
+//            var myIntent = Intent(this, LoginPageActivity::class.java)
+//            startActivity(myIntent)
+//        }
+
+        // 2024/01/22 수정본
         binding.completeSignup.setOnClickListener {
-            var userName = binding.newName.text.toString()
-            var userID = binding.newPhoneID.text.toString()
-            var userPW = binding.newPW.text.toString()
-            // 이 밑에 하단에 성별 , 이용약관 등 데이터 추가하라. 일단은 3개만
+            // 이메일 비밀번호 회원가입
+            val email = binding.newEmail.text.toString() // 이메일
+            val password = binding.newPW.text.toString() // 비밀번호
+            ALBEAuth.auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    binding.newEmail.text.clear() // 이메일
+                    binding.newPW.text.clear() // 비밀번호
 
-            // Firebase Authentication을 사용하여 회원가입
-            auth.createUserWithEmailAndPassword(userID,userPW)
-                .addOnCompleteListener(this){task ->
-                    if(task.isSuccessful){
-                        // 회원 가입 성공
-                        Log.d("회원 가입 액티비티","createUserWithEmail:success")
-                        val uid = auth.currentUser?.uid // 사용자의 uid 얻음
-                        
-                        // 파이어베이스 실시간 데이터베이스 저장
-                        var user = auth.currentUser
-
-                        // 이메일 인증 메일 보내기
-                        user?.sendEmailVerification()
-                            ?.addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Log.d("회원 가입 액티비티","Email sent.")
+                    if (task.isSuccessful) {
+                        ALBEAuth.auth.currentUser?.sendEmailVerification()
+                            ?.addOnCompleteListener { sendTask ->
+                                if (sendTask.isSuccessful) {
+                                    Toast.makeText(
+                                        baseContext,
+                                        "회원가입에서 성공 , 전송된 메일을 확인해주세요.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        baseContext, "메일 발송 실패",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Toast.makeText(
+                                        this@UserSignUp,
+                                        "인증 액티비티 : 메일 발송 실패",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
-
-                        database.child(uid!!).setValue(user) // uid 밑에 데이터 저장되게
-
-                        // FCM 토큰을 Firestore에 저장
-                        saveTokenToFirestore(uid, fcmToken)
-
-                        // 회원가입 성공후 로그인 페이지로 다시 이동하게 함
-                        var myIntent = Intent(this, LoginPageActivity::class.java)
-                        startActivity(myIntent)
-                    }else{
-                        // 회원가입 실패
-                        Log.w("회원 가입 액티비티", "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, "인증 기능 실패", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-
-            // FCM 토큰을 Firestore에 저장
-            saveTokenToFirestore(userID, fcmToken)
-
-            var myIntent = Intent(this, LoginPageActivity::class.java)
-            startActivity(myIntent)
         }
 
         val cancelSignup: Button = findViewById(R.id.cancelSignup)
@@ -193,7 +218,8 @@ class UserSignUp : AppCompatActivity() {
 
     private fun showTermsDialogpolicy() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("AliveBeacon 개인정보 이용 동의").setMessage(resources.getString(R.string.user_agree_policy))
+        builder.setTitle("AliveBeacon 개인정보 이용 동의")
+            .setMessage(resources.getString(R.string.user_agree_policy))
         builder.setPositiveButton("이해했습니다", null)
         val alertDialog = builder.create()
         alertDialog.show()

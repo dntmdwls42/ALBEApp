@@ -13,8 +13,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
 
         <Space
             android:layout_width="0dp"
-            android:layout_height="70dp"/>
+            android:layout_height="70dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
         </TextView>
 
         <EditText
-            android:id="@+id/newPhoneID"
+            android:id="@+id/newEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
@@ -101,9 +101,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#E3BBEA"
-            android:textColor="@color/black"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="이미지 업로드 하기">
+            android:text="이미지 업로드 하기"
+            android:textColor="@color/black">
 
         </Button>
 
@@ -151,7 +151,7 @@
 
         <Space
             android:layout_width="0dp"
-            android:layout_height="20dp"/>
+            android:layout_height="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -162,22 +162,21 @@
                 android:id="@+id/access1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="이용 약관에 동의합니다.">
-            </CheckBox>
+                android:text="이용 약관에 동의합니다."></CheckBox>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/> <!-- 체크박스와 버튼 사이의 빈 공간 -->
+                android:layout_weight="1" /> <!-- 체크박스와 버튼 사이의 빈 공간 -->
 
             <Button
                 android:id="@+id/btn_terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="약관 보기"
                 android:backgroundTint="#E3BBEA"
-                android:textColor="@color/black"
-                android:fontFamily="@font/soyo_maple_bold"/>
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="약관 보기"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -190,22 +189,21 @@
                 android:id="@+id/access2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="개인정보 이용 약관에 동의합니다.">
-            </CheckBox>
+                android:text="개인정보 이용 약관에 동의합니다."></CheckBox>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/btn_terms_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="약관 보기"
                 android:backgroundTint="#E3BBEA"
-                android:textColor="@color/black"
-                android:fontFamily="@font/soyo_maple_bold"/>
+                android:fontFamily="@font/soyo_maple_bold"
+                android:text="약관 보기"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
@@ -220,8 +218,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/completeSignup"
@@ -244,8 +242,7 @@
                 android:backgroundTint="#E3BBEA"
                 android:fontFamily="@font/soyo_maple_bold"
                 android:text="취소"
-                android:textColor="@color/black">
-            </Button>
+                android:textColor="@color/black"></Button>
 
         </LinearLayout>
 

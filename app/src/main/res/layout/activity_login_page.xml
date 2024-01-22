@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -7,7 +8,7 @@
         android:paddingLeft="60dp"
         android:paddingRight="60dp">
 
-<!--        앱 이름 -->
+        <!--        앱 이름 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="202dp"
@@ -21,105 +22,104 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/soyo_maple_bold"
             android:text="환영합니다!"
-            android:textAlignment="center"/>
+            android:textAlignment="center" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
-<!--        휴대전화 번호 ID 입력칸 -->
+        <!--        휴대전화 번호 ID 입력칸 -->
         <EditText
             android:id="@+id/loginpage_email"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:fontFamily="@font/soyo_maple_bold"
             android:hint=" 이메일 입력"
-            android:inputType="textEmailAddress"
-            />
+            android:inputType="textEmailAddress" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
-<!--        비밀번호 입력칸 -->
+        <!--        비밀번호 입력칸 -->
         <EditText
             android:id="@+id/loginpage_password"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:fontFamily="@font/soyo_maple_bold"
             android:hint=" 비밀번호 입력"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
-<!--        회원가입과 아이디 찾기 버튼-->
+        <!--        회원가입과 아이디 찾기 버튼-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
             android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:weightSum="2">
 
-<!--            회원가입 버튼 -->
+            <!--            회원가입 버튼 -->
             <Button
                 android:id="@+id/loginpage_join_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:fontFamily="@font/soyo_maple_bold"
                 android:text="회원가입"
                 android:textAlignment="center"
-                android:textColor="#000000"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"/>
+                android:textColor="#000000" />
 
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-<!--            아이디 찾기 버튼 -->
+            <!--            아이디 찾기 버튼 -->
             <Button
                 android:id="@+id/loginpage_search_id_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/soyo_maple_bold"
                 android:text="비밀번호 찾기"
                 android:textAlignment="center"
-                android:fontFamily="@font/soyo_maple_bold"
-                android:textColor="#000000"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"/>
+                android:textColor="#000000" />
 
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-<!--            로그인 진행 버튼 -->
+            <!--            로그인 진행 버튼 -->
             <Button
                 android:id="@+id/loginpage_proceed_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
                 android:text="로그인"
-                android:textAlignment="center"/>
+                android:textAlignment="center" />
 
-<!--            <Button-->
-<!--                android:id="@+id/loginpage_google_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Google로 로그인"-->
-<!--                android:textAlignment="center"-->
-<!--                android:fontFamily="@font/soyo_maple_bold"-->
-<!--                android:textColor="#000000"-->
-<!--                android:layout_weight="1"-->
-<!--                android:background="@android:color/transparent"/>-->
+            <!--            <Button-->
+            <!--                android:id="@+id/loginpage_google_button"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="Google로 로그인"-->
+            <!--                android:textAlignment="center"-->
+            <!--                android:fontFamily="@font/soyo_maple_bold"-->
+            <!--                android:textColor="#000000"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:background="@android:color/transparent"/>-->
         </LinearLayout>
 
 
@@ -135,18 +135,17 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15sp">
 
-<!--            고객지원과 연결 버튼 -->
+            <!--            고객지원과 연결 버튼 -->
             <Button
                 android:id="@+id/loginpage_customer_support_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:fontFamily="@font/soyo_maple_bold"
                 android:text="문제가 발생했나요?"
-                android:textSize="35px"
                 android:textAlignment="center"
                 android:textColor="#000000"
-                android:background="@android:color/transparent"
-                />
+                android:textSize="35px" />
 
         </LinearLayout>
 
