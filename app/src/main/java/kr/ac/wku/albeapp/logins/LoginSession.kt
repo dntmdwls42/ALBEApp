@@ -3,6 +3,7 @@ package kr.ac.wku.albeapp.logins
 import android.content.Context
 
 // 로그인 세션 확인하는 클래스
+//
 class LoginSession(private val context: Context) {
     private val sharedPreferences = context.getSharedPreferences("user_info", Context.MODE_PRIVATE)
 
