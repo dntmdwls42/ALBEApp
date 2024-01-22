@@ -131,11 +131,18 @@ class LoginPageActivity : AppCompatActivity() {
             }
         })
 
-//        // 로그인 버튼을 눌렀을때 전화번호와 비밀번호를 검증함
-//        binding.loginpageProceedButton.setOnClickListener {
-//            val email = binding.loginpageEmail.text.toString()
-//            val password = binding.loginpagePassword.text.toString()
-//        }
+        // 로그인 버튼을 눌렀을때 전화번호와 비밀번호를 검증함
+        binding.loginpageProceedButton.setOnClickListener {
+            val email = binding.loginpageEmail.text.toString()
+            val password = binding.loginpagePassword.text.toString()
+
+            val intent = Intent(this, AuthActivity::class.java)
+            intent.putExtra("email", email) // 이메일 전달 authAct로
+            intent.putExtra("password", password) // 비번 전달 authAct로
+            startActivity(intent)
+            
+            Toast.makeText(this@LoginPageActivity, "로그인을 시도합니다", Toast.LENGTH_SHORT).show()
+        }
 
         // 비밀번호 찾기 버튼을 눌렀을때 아이디찾기 화면으로 이동하는 이벤트
         binding.loginpageSearchIdButton.setOnClickListener {

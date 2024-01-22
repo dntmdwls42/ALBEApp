@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -137,6 +138,8 @@ class UserSignUp : AppCompatActivity() {
 //        }
 
         // 2024/01/22 수정본
+        // 2. 회원가입 후 사용자 정보 저장
+        // 3. 이메일 인증이 성공했을 때 사용자 정보를 RealtimeDatabase에 저장
         binding.completeSignup.setOnClickListener {
             // 이메일 비밀번호 회원가입
             val email = binding.newEmail.text.toString() // 이메일
@@ -147,26 +150,51 @@ class UserSignUp : AppCompatActivity() {
                     binding.newPW.text.clear() // 비밀번호
 
                     if (task.isSuccessful) {
-                        ALBEAuth.auth.currentUser?.sendEmailVerification()
-                            ?.addOnCompleteListener { sendTask ->
-                                if (sendTask.isSuccessful) {
-                                    Toast.makeText(
-                                        baseContext,
-                                        "회원가입에서 성공 , 전송된 메일을 확인해주세요.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                        val user = ALBEAuth.auth.currentUser
+                        user?.sendEmailVerification()
+                            ?.addOnCompleteListener { emailVerificationTask ->
+                                if (emailVerificationTask.isSuccessful) {
+                                    ALBEAuth.auth.signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(this) { loginTask ->
+                                            if (loginTask.isSuccessful) {
+                                                // 로그인이 성공하면 사용자 정보를 Firebase Realtime Database에 저장
+                                                val userData = UserData(
+                                                    userName = user.displayName,
+                                                    userID = user.uid,
+                                                    email = email
+                                                )
+                                                database.child("users").child(user.uid ?: "")
+                                                    .setValue(userData)
+                                            } else {
+                                                // 로그인 실패시 오류 메시지 출력
+                                                Log.e("Login", "로그인 실패", loginTask.exception)
+                                                Toast.makeText(
+                                                    baseContext, "로그인 실패",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
                                 } else {
                                     Toast.makeText(
-                                        baseContext, "메일 발송 실패",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    Toast.makeText(
-                                        this@UserSignUp,
-                                        "인증 액티비티 : 메일 발송 실패",
+                                        baseContext, "인증 메일 발송에 실패했습니다.",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
                             }
+                    } else {
+                        // 회원가입 실패시 오류 메시지 출력
+                        if (task.exception is FirebaseAuthUserCollisionException) {
+                            Toast.makeText(
+                                baseContext, "이미 사용 중인 이메일 주소입니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Log.e("SignUp", "회원가입 실패", task.exception)
+                            Toast.makeText(
+                                baseContext, "회원가입 실패",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
         }

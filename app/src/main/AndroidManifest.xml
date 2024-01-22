@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
+        android:name=".logins.ALBEAuth"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -30,8 +31,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.ALBEApp"
-        tools:targetApi="31"
-        android:name=".logins.ALBEAuth">
+        tools:targetApi="31">
         <meta-data
             android:name="com.google.firebase.message.default_notification_icon"
             android:resource="@drawable/ic_stat_ic_notification" />
@@ -43,6 +43,7 @@
         <meta-data
             android:name="com.google.firebase.message.default_notification_channel_id"
             android:value="fcm_default_channel" />
+
         <service
             android:name=".message.MessagingService"
             android:enabled="true"
@@ -63,7 +64,10 @@
             android:foregroundServiceType="dataSync|mediaPlayback" />
 
 
-
+        <activity
+            android:name=".logins.AuthActivity"
+            android:exported="true">
+        </activity>
         <activity
             android:name=".logins.FindMyId"
             android:exported="false" />

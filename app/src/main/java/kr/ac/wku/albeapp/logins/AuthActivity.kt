@@ -76,39 +76,82 @@ class AuthActivity : AppCompatActivity() {
 //            requestLauncher.launch(signInIntent)
 //        }
 
+        // 1. 로그인 기능
+//        binding.loginpageProceedButton.setOnClickListener {
+//            // 이메일 , 비밀번호 로그인
+//            val email = binding.loginpageEmail.text.toString() // 이메일
+//            val password = binding.loginpagePassword.text.toString() // 비밀번호
+//            Log.d("JOE", "email:$email,password:$password")
+//
+//            ALBEAuth.auth.signInWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this) { task ->
+//                    binding.loginpageEmail.text.clear() // 이메일
+//                    binding.loginpagePassword.text.clear() // 비밀번호
+//                    if (task.isSuccessful) {
+//                        if (ALBEAuth.checkAuth()) {
+//                            ALBEAuth.email = email
+//                            Toast.makeText(
+//                                this@AuthActivity,
+//                                "인증 액티비티가 일 잘하고있음",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        } else {
+//                            Toast.makeText(
+//                                baseContext,
+//                                "전송된 메일로 이메일 인증이 되지 않았습니다.",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    } else {
+//                        // 로그인 실패시 오류 메시지 출력
+//                        Log.e("Login", "로그인 실패", task.exception)
+//                        Toast.makeText(
+//                            baseContext, "로그인 실패",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//        }
 
-        binding.loginpageProceedButton.setOnClickListener {
-            // 이메일 , 비밀번호 로그인
-            val email = binding.loginpageEmail.text.toString() // 이메일
-            val password = binding.loginpagePassword.text.toString() // 비밀번호
-            Log.d("JOE", "email:$email,password:$password")
+        val email = intent.getStringExtra("email")
+        val password = intent.getStringExtra("password")
 
-            ALBEAuth.auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    binding.loginpageEmail.text.clear() // 이메일
-                    binding.loginpagePassword.text.clear() // 비밀번호
-                    if (task.isSuccessful) {
-                        if (ALBEAuth.checkAuth()) {
-                            ALBEAuth.email = email
-                            Toast.makeText(
-                                this@AuthActivity,
-                                "인증 액티비티가 일 잘하고있음",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                baseContext,
-                                "전송된 메일로 이메일 인증이 되지 않았습니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+        if (email != null && password != null) {
+            // 이메일, 비밀번호를 이용해 로그인을 시도합니다.
+            signInWithEmailAndPassword(email, password)
+        }
+
+
+    }
+
+    // 이메일과 비밀번호로 로그인 인증 하는 메소드
+    fun signInWithEmailAndPassword(email: String, password: String) {
+        ALBEAuth.auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // 로그인 성공
+                    if (ALBEAuth.checkAuth()) {
+                        ALBEAuth.email = email
+                        Toast.makeText(
+                            this@AuthActivity,
+                            "인증 액티비티가 일 잘하고있음",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         Toast.makeText(
-                            baseContext, "로그인 실패",
+                            baseContext,
+                            "전송된 메일로 이메일 인증이 되지 않았습니다.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                } else {
+                    // 로그인 실패
+                    Log.e("Login", "로그인 실패", task.exception)
+                    Toast.makeText(
+                        baseContext, "로그인 실패",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-        }
+            }
     }
 }
