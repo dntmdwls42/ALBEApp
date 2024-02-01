@@ -21,9 +21,9 @@ class AuthActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (ALBEAuth.checkAuth()) {
-            Toast.makeText(this@AuthActivity, "인증 테스트1", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AuthActivity, "인증된 이메일 확인", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this@AuthActivity, "인증 테스트2", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AuthActivity, "인증되지 않은 이메일", Toast.LENGTH_SHORT).show()
         }
 
         val requestLauncher = registerForActivityResult(
