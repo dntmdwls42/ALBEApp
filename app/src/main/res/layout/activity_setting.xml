@@ -6,19 +6,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFF8C9"
         android:orientation="vertical"
-        android:padding="10dp"
+        android:paddingVertical="30dp"
+        android:paddingHorizontal="20dp"
         tools:context=".MainActivity">
 
         <!--        개인 설정 -->
-        <TextView
-            android:id="@+id/i_settings"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="개인 설정"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/baseline_arrow_back_24"
+                android:background="@android:color/transparent"/>
+            <TextView
+                android:id="@+id/i_settings"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="5dp"
+                android:gravity="center_vertical"
+                android:text="환경 설정"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
 
         <!--        계정 로그아웃 버튼 -->
         <Button
@@ -31,38 +48,72 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-
-        <!--        백그라운드 어플 끄기 버튼 -->
-        <Button
-            android:id="@+id/backgroundoff"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#ED5A5A"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="백그라운드 센서 끄기" />
-
-        <Button
-            android:id="@+id/backgroundon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#8BC34A"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="백그라운드 센서 켜기" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
+            android:layout_height="20dp" />
 
         <!--        중요 설정 버튼 (회원 탈퇴) -->
         <Switch
             android:id="@+id/moresetting"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/soyo_maple_bold"
+            android:layout_height="70dp"
             android:text="중요 설정"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:background="@drawable/rounded_background"
+            android:paddingHorizontal="20dp"
+            android:track="@drawable/switch_track_selector"
+            android:thumb="@drawable/switch_thumb"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_warningbackground">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/baseline_change_history_24"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="계정 탈퇴 전 반드시 확인 바랍니다."
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="계정 탈퇴 화면에 진입했습니다. 탈퇴가 완료된 후에는 되돌릴 수 없습니다. 정말로 삭제하시겠습니까?"
+                android:textSize="13sp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="end"
+                android:background="@android:color/transparent"
+                android:text="회원 탈퇴"
+                android:textStyle="bold"
+                android:textColor="#895900"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <Button
             android:id="@+id/userdelete"
@@ -71,8 +122,7 @@
             android:backgroundTint="#FFEB3B"
             android:fontFamily="@font/soyo_maple_bold"
             android:text="계정 탈퇴"
-            android:textColor="#0E0E0E"
-            android:textStyle="bold" />
+            android:textColor="#0E0E0E"/>
 
         <Space
             android:layout_width="match_parent"
@@ -135,6 +185,27 @@
             android:text="4시간 단위 센서감지 시간 조정">
 
         </TextView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <!--        백그라운드 센서 끄기 버튼 -->
+        <Button
+            android:id="@+id/backgroundoff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#ED5A5A"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="백그라운드 센서 끄기" />
+
+        <Button
+            android:id="@+id/backgroundon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#8BC34A"
+            android:fontFamily="@font/soyo_maple_bold"
+            android:text="백그라운드 센서 켜기" />
 
         <LinearLayout
             android:layout_width="match_parent"
