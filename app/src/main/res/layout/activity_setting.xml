@@ -7,8 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingVertical="30dp"
-        android:paddingHorizontal="20dp"
+        android:padding="20dp"
         tools:context=".MainActivity">
 
         <!--        개인 설정 -->
