@@ -50,6 +50,10 @@
 
         </EditText>
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="30dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,6 +73,9 @@
 
         </Button>
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
