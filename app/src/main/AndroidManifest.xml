@@ -33,7 +33,7 @@
         android:theme="@style/Theme.ALBEApp"
         tools:targetApi="31">
         <activity
-            android:name=".activity_user_signup2"
+            android:name=".logins.UserSignUp_Auth"
             android:exported="false" />
 
         <meta-data

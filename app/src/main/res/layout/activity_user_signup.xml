@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
             android:fontFamily="@font/soyo_maple_bold"
-            android:hint="아이디는 이메일 형식입니다."
+            android:hint="사용할 이메일을 작성하세요."
             android:inputType="textEmailAddress">
 
         </EditText>
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#2196F3"
             android:fontFamily="@font/soyo_maple_bold"
-            android:hint="비밀번호는 4자 이상 입니다."
+            android:hint="비밀번호 입력"
             android:inputType="textPassword"></EditText>
 
         <Space
@@ -107,6 +107,7 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/SignupAuth"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/arrow_forward_fill0_wght400_grad0_opsz24"
