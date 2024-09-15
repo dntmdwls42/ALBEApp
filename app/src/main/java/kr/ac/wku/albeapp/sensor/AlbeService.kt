@@ -31,7 +31,7 @@ private lateinit var loginSession: LoginSession
 val database = FirebaseDatabase.getInstance()
 
 // 센서 액티비티 백그라운드 동작을 담당하는곳
-class ALBEService : Service() {
+class AlbeService : Service() {
     private lateinit var sensorManager: SensorManager
     private val CHANNEL_ID = "ForegroundServiceChannel"
 
