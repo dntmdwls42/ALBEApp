@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="kr.ac.wku.albeapp.setting.SettingViewModel" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="20dp"
-        tools:context=".MainActivity">
+        android:padding="20dp">
 
-        <!--        개인 설정 -->
-
+        <!-- 개인 설정 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageButton
+                android:id="@+id/backButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/baseline_arrow_back_24"
-                android:background="@android:color/transparent"/>
+                android:background="@android:color/transparent"
+                android:onClick="@{() -> viewModel.onBackButtonClicked()}" />
+
             <TextView
                 android:id="@+id/i_settings"
                 android:layout_width="match_parent"
@@ -32,24 +39,26 @@
                 android:textSize="20sp" />
         </LinearLayout>
 
-        <Space
+        <!-- 간격을 margin으로 대체 -->
+        <View
             android:layout_width="match_parent"
             android:layout_height="20dp" />
 
-        <!--        계정 로그아웃 버튼 -->
+        <!-- 계정 로그아웃 버튼 -->
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#5A5151"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="계정 로그아웃" />
+            android:text="계정 로그아웃"
+            android:onClick="@{() -> viewModel.logout()}" />
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="20dp" />
 
-        <!--        중요 설정 버튼 (회원 탈퇴) -->
+        <!-- 중요 설정 버튼 (회원 탈퇴) -->
         <Switch
             android:id="@+id/moresetting"
             android:layout_width="match_parent"
@@ -59,25 +68,30 @@
             android:background="@drawable/rounded_background"
             android:paddingHorizontal="20dp"
             android:track="@drawable/switch_track_selector"
-            android:thumb="@drawable/switch_thumb"/>
+            android:thumb="@drawable/switch_thumb"
+            android:checked="@={viewModel.isMoreSettingChecked}"
+            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.toggleUserDeleteVisibility(isChecked)}" />
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
+        <!-- 경고 메시지 영역 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/rounded_warningbackground">
+            android:background="@drawable/rounded_warningbackground"
+            android:visibility="@{viewModel.isUserDeleteVisible ? View.VISIBLE : View.GONE}">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/baseline_change_history_24"/>
+                android:src="@drawable/baseline_change_history_24" />
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="5dp" />
 
@@ -88,7 +102,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="계정 탈퇴 전 반드시 확인 바랍니다."
                 android:textStyle="bold"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -96,9 +110,10 @@
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginBottom="10dp"
                 android:text="계정 탈퇴 화면에 진입했습니다. 탈퇴가 완료된 후에는 되돌릴 수 없습니다. 정말로 삭제하시겠습니까?"
-                android:textSize="13sp"/>
+                android:textSize="13sp" />
 
             <Button
+                android:id="@+id/userdelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
@@ -107,26 +122,18 @@
                 android:background="@android:color/transparent"
                 android:text="회원 탈퇴"
                 android:textStyle="bold"
-                android:textColor="#895900"/>
+                android:textColor="#895900"
+                android:onClick="@{() -> viewModel.showDeleteAccountDialog()}" />
         </LinearLayout>
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <Button
-            android:id="@+id/userdelete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFEB3B"
-            android:fontFamily="@font/soyo_maple_bold"
-            android:text="계정 탈퇴"
-            android:textColor="#0E0E0E"/>
+        <!-- 계정 탈퇴 버튼 -->
+        <!-- 필요 없다면 제거하거나 위의 경고 메시지 영역에 포함시킵니다 -->
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
+        <!-- 센서별 설정 -->
         <TextView
             android:id="@+id/appsettings"
             android:layout_width="match_parent"
@@ -144,9 +151,7 @@
                 android:layout_width="150dp"
                 android:layout_height="40dp"
                 android:entries="@array/sensor_list"
-                android:fontFamily="@font/soyo_maple_bold">
-
-            </Spinner>
+                android:fontFamily="@font/soyo_maple_bold" />
 
             <Switch
                 android:id="@+id/sensoroff"
@@ -154,49 +159,44 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/soyo_maple_bold"
                 android:text="비활성화"
-                android:textStyle="bold" />
-
-
+                android:textStyle="bold"
+                android:checked="@={viewModel.sensorOff}"
+                android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.setSensorUsage(isChecked)}" />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="센서 감지시간 설정">
-
-        </TextView>
+            android:text="센서 감지시간 설정" />
 
         <SeekBar
             android:id="@+id/sensorsetting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="6"
-            android:progress="0">
-
-        </SeekBar>
+            android:progress="@={viewModel.seekBarProgress}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="4시간 단위 센서감지 시간 조정">
+            android:text="4시간 단위 센서감지 시간 조정" />
 
-        </TextView>
-
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="30dp" />
 
-        <!--        백그라운드 센서 끄기 버튼 -->
+        <!-- 백그라운드 센서 끄기 버튼 -->
         <Button
             android:id="@+id/backgroundoff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#ED5A5A"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="백그라운드 센서 끄기" />
+            android:text="백그라운드 센서 끄기"
+            android:onClick="@{() -> viewModel.stopServices()}" />
 
         <Button
             android:id="@+id/backgroundon"
@@ -204,24 +204,24 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#8BC34A"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="백그라운드 센서 켜기" />
+            android:text="백그라운드 센서 켜기"
+            android:onClick="@{() -> viewModel.startServices()}" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-
+            <!-- 필요에 따라 내용 추가 -->
         </LinearLayout>
 
-
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- 화면 하단 공간 채우기 -->
+        <View
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1" />
 
-        </TextView>
-
+        <!-- 앱 내 알림 설정하기 버튼 -->
         <Button
             android:id="@+id/allnotifyoff"
             android:layout_width="match_parent"
@@ -229,8 +229,7 @@
             android:layout_margin="30dp"
             android:backgroundTint="#ED5A5A"
             android:fontFamily="@font/soyo_maple_bold"
-            android:text="앱 내 알림 설정하기" />
-
-
+            android:text="앱 내 알림 설정하기"
+            android:onClick="@{() -> viewModel.openNotificationSettings()}" />
     </LinearLayout>
 </layout>

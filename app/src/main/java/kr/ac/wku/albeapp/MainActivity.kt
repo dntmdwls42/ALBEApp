@@ -12,6 +12,7 @@ import kr.ac.wku.albeapp.databinding.ActivityMainBinding
 import kr.ac.wku.albeapp.setting.SettingActivity
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +29,7 @@ import kr.ac.wku.albeapp.logins.UserSignUp
 import kr.ac.wku.albeapp.photos.Photo
 import kr.ac.wku.albeapp.photos.PhotoActivity
 import kr.ac.wku.albeapp.photos.PhotoAdapter
-import kr.ac.wku.albeapp.sensor.ALBEService
+import kr.ac.wku.albeapp.sensor.AlbeService
 import kr.ac.wku.albeapp.sensor.SensorService
 
 // 초기 로그인 화면 액티비티
@@ -60,12 +61,12 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         // 사진 업로드 세팅 2
         auth = FirebaseAuth.getInstance()
 
-        email = findViewById(R.id.email_tv)
+        val email: TextView = findViewById(R.id.email_tv)
         email.text = auth.currentUser?.email
 
         firestore = FirebaseFirestore.getInstance()
 
-        
+
         listRv = findViewById(R.id.list_rv)
 
         photoList = ArrayList()
@@ -77,11 +78,16 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         photoAdapter.onItemClickListener = this
 
         firestore.collection("photo")
-            .addSnapshotListener { querySnapshot, FirebaseFIrestoreException ->
+            .addSnapshotListener { querySnapshot, e ->
+                if (e != null) {
+                    Log.w("[메인 액티비티] Firestore Error", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
                 if (querySnapshot != null) {
                     for (dc in querySnapshot.documentChanges) {
                         if (dc.type == DocumentChange.Type.ADDED) {
-                            var photo = dc.document.toObject(Photo::class.java)
+                            val photo = dc.document.toObject(Photo::class.java)
                             photo.id = dc.document.id
                             photoList.add(photo)
                         }
@@ -104,7 +110,8 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val userData = dataSnapshot.getValue(UserData::class.java)
-                    val userName = userData?.userName ?: "알 수 없음" // 사용자 이름 가져오기, 없는 경우 "알 수 없음"으로 설정
+                    val userName =
+                        userData?.userName ?: "알 수 없음" // 사용자 이름 가져오기, 없는 경우 "알 수 없음"으로 설정
 
                     Log.d("로그인 사용자 확인", "로그인 사용자 이름: $userName")
                 }
@@ -115,9 +122,9 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             })
         }
 
-        
 
-        binding.fromSetting.setOnClickListener {
+        // 디버그모드(메인액티비티)에서 환경설정 테스트 하는 버튼명 변경
+        binding.buttonFromSetting.setOnClickListener {
             // 환경 설정 화면으로 이동하는 이벤트
 
             // 화면 이동 :  intent
@@ -131,8 +138,8 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             startActivity(intent)
 
         }
-        
-        binding.fromSignup.setOnClickListener { 
+
+        binding.fromSignup.setOnClickListener {
             // 회원 가입 화면으로 이동하는 이벤트
             var myIntent = Intent(this, UserSignUp::class.java)
 
@@ -148,7 +155,7 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
             startActivity(myIntent)
         }
 
-        
+
         binding.textUpload.setOnClickListener {
             // 데이터 쓰기 버튼 했을때 파이어베이스에 쓰이는지
             writeValue("센서값 : 12")
@@ -164,8 +171,14 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.OnItemClickListener {
         }
 
         binding.fromsensor.setOnClickListener {
-            startService(Intent(this, ALBEService::class.java))
-            startService(Intent(this, SensorService::class.java))
+            ContextCompat.startForegroundService(
+                this,
+                Intent(this, AlbeService::class.java)
+            ) // 8.0이상부터 백그라운드 서비스 시작에 제한있어서 문법 변경
+            ContextCompat.startForegroundService(
+                this,
+                Intent(this, SensorService::class.java)
+            )// startService -> ContextCompat 변경
             Toast.makeText(this@MainActivity, "센서 테스트 시작.", Toast.LENGTH_SHORT).show()
         }
 
