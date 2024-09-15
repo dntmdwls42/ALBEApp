@@ -16,7 +16,7 @@ import kr.ac.wku.albeapp.sensor.AlbeService
 import kr.ac.wku.albeapp.sensor.SensorService
 
 /**
- * MVVM 패턴으로 구현된 환경 설정 관련 ViewModel입니다.
+ * MVVM 패턴으로 구현된 환경 설정 관련 ViewModel
  */
 class SettingViewModel(application: Application) : AndroidViewModel(application) {
 
